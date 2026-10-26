@@ -9,7 +9,7 @@ LUNA STUDIO(다온) 작업과는 별개 프로젝트다. 이 저장소만 본다
 3. 대본·프롬프트는 `EPISODES.md`.
 
 ## 원칙
-- 주인공 기준 그림 `asset3/front-v6.png`. 편집은 기준 그림에서 1번만(겹치면 GPT 같은 그림으로 변함). 새 컷은 Seedream + 기준 그림 + 그림체 레퍼런스로 한 번에.
+- 주인공 기준 그림 `asset3/front-v11-brown.png`(색감 `tools/anime_grade.py … 0.7`). 편집은 기준 그림에서 1번만(겹치면 GPT 같은 그림으로 변함). 새 컷은 Seedream + 기준 그림 + 그림체 레퍼런스로 한 번에.
 - 영상 전에 그림 먼저 혁에게 확인받기. 크레딧은 돌리기 전에 `higgsfield generate cost …` 로 확인하고 말하기.
 - 릴스 틀·글꼴은 README '릴스 틀 확정' 그대로(`tools/fonts/`).
 - 혁이 보낸 레퍼런스(핀터·인스타 캡처)는 남의 작품이라 저장소에 넣지 않는다.
