@@ -106,6 +106,7 @@
 - 만드는 법(고정): `--image 기준그림 --image 진짜 90년대 애니 캡처 2~3장` + 프롬프트 "authentic early-1990s Japanese TV anime frame… bold black cel outlines, flat cel paint, one hard shadow, angular hair highlights, 90s eyes, hand-painted pastel background, film grain". 캡처(혁이 보낸 kkum.byeol · 파란 머리 · 햄스터 애)는 남의 작품이라 저장소에 없음 → 새 세션에서 다시 받기.
 - 왜: Seedream 은 넣은 인물 그림을 그대로 베껴서 그림체가 안 바뀜. 요즘 핀터 AI 그림을 레퍼런스로 쓰면 요즘 그림이 나옴 → **진짜 90년대 캡처만** 레퍼런스로.
 - 필터는 거의 필요 없음(원본이 이미 TV 캡처 느낌). 쓰면 아주 약하게.
+- **캐릭터 에셋 v3** `presets/v3/sheet-gyul-model-01.png` (GPT Image 2.5 high 2k 16:9 · 2.75cr): 전신 4방향 + 키 가이드 · 얼굴 6방향 · 표정 8(앞: 반짝 천사 웃음 · ^^ · 어색한 땀 웃음 / 뒤: 그림자 진 무표정 · 핏대 분노 · 이 악문 욕 · 세로 줄 충격 · 폭포 눈물). 복장: 빨간 가디건 · 흰 티 · 남색 사원증 · 크림 주름 롱스커트 · 흰 양말 · 갈색 로퍼.
 
 ## ✅ 캐릭터 확정 (10/26 혁) — 귤이 = 앞에선 천사, 뒤에선 찐 직장인
 - **얼굴 고정**: `asset3/gyul-gpt-01.png` (그림체 확정 섹션) · 원래 얼굴 `asset3/gyul-front-03.png` (D · 동글 아기 얼굴 · 회갈색 큰 눈 · 긴 검정 머리 · 일자 앞머리 · 빨간 가디건 · 흰 티). 이제 그림체·얼굴 안 바꿈.
