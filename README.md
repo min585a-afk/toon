@@ -65,7 +65,8 @@
 
 ## ▶ 이어서 하기 (10/26 최신 · 새 채팅/다른 계정은 여기부터)
 - **주인공 기준 그림: `asset3/front-v11-brown.png`** (10/26 확정 · front-v7[Seedream] 에서 눈 1.15배 + 반짝이 1.4, 갈색 눈 · 0cr 도구로). 편집은 이 그림에서 1번만, 겹치지 않기. 이전 기준 front-v6.
-- **색 보정 안 함**(10/26 혁: 원본이 더 나음). 기준 그림 원본 색 그대로. `tools/anime_grade.py` 는 참고용으로만.
+- **색: 넣는 그림은 원본, 완성본만 보정** — 모델에 넣는 기준·컷 그림은 원본 색 그대로, 영상 완성 후(자막 전) `python3 tools/anime_grade.py … 0.7` 한 번.
+- 정면 얼굴 클로즈업(오리 없음): `asset3/face-front-01.png` (Seedream 2k · 2.5cr), 보정본 `face-front-01-grade0.7.jpg`.
 - 그림 모델 = Seedream 5.0 Pro(새로 그리기) · 나노바나나 프로(편집 1번) · 영상 = MiniMax H3(2cr/초). 크레딧 확인 `higgsfield generate cost …`.
 - 릴스 틀 확정: `asset3/reel-title-B-jua.jpg` (아래 '릴스 틀 확정' 참고). 글꼴 `tools/fonts/`.
 - 톤: 공감 + 유머, 오리 = 장난꾸러기 팩폭형. 대본·프롬프트 = `EPISODES.md` (EP01 「월요일 + 카드값」 4컷).
