@@ -4,7 +4,7 @@
 2. **GitHub 연결**: https://claude.ai/connect-github 에서 GitHub 계정 연결 → Claude GitHub App 을 `toon` 저장소에 설치(권한 허용).
 3. **클라우드 환경 만들기** (claude.ai/code → 환경 설정 → Edit):
    - Network access 에 Allowed domains 추가: `higgsfield.ai`, `*.higgsfield.ai`, `*.cloudfront.net` (결과 파일 받기).
-   - Setup script 에 `npm i -g @higgsfield/cli` 한 줄.
+   - Setup script 에 `npm i -g @higgsfield/cli` 와 `pip install opencv-python-headless` (anime_grade.py 용).
 4. **새 세션 시작**: 저장소 `toon` 선택 → 첫 메시지
    > "README.md 의 '이어서 하기'부터 이어서 해줘"
    그리고 그림체 레퍼런스 2장(책 읽는 애 · 햄스터 애) 다시 올리기.
