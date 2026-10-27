@@ -46,8 +46,8 @@ for f in range(31): frames.append(mob_frame(f))                         # 출근
 for k in range(34):                                                     # 틸트 업 1.4초
     t = (k - k % 2) / 33; e = t * t * (3 - 2 * t); frames.append(mob_frame(31 + k, TOFF * (1 - e)))
 top = mob_frame(65, 0)
-for k in range(44):                                                     # 제목 1.8초 (0.5초 페이드 인)
-    frames.append(title(top, min(1, k / 12)))
+for k in range(44):                                                     # 제목 1.8초 (0.9초 부드럽게 페이드 인)
+    t = min(1, k / 22); frames.append(title(top, t * t * (3 - 2 * t)))
 # 컷 → 팀장 걸어옴 1.6초: 살짝 다가오는 느낌(아주 작게 커짐, 12fps)
 W0 = cv2.imread('ep01b/c0-boss-walk.png'); H0, Wd = W0.shape[:2]
 for k in range(38):
