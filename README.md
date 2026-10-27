@@ -67,7 +67,7 @@
 - **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
 - 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
 - 영상 모델: Kling 안 씀. 다음 = **영상 1개 시험**(MiniMax H3 10cr/5초 · Seedance 2.0 Mini 5cr/5초) + **TTS 목소리 시험**(`tools/talk.py --audio` 로 입 자동).
-- 정석 체크리스트 `STYLE_GUIDE.md` · 대본 `EPISODES.md`. 예전 시도(asset·asset2·asset3·presets v1/v2·ep01·ep02 옛 그림체)는 참고용 기록.
+- 정석 체크리스트 `STYLE_GUIDE.md` · 대본 `EPISODES.md`. 예전 시도 폴더(asset·asset2·asset3·presets·ep01·ep02·v2·video)는 10/27 삭제 — 필요하면 git 기록에서 되살리기. 릴스 틀 기준 `frame/`, 목소리 샘플 `voice/ref/`.
 - 힉스필드 로그인: `higgsfield auth login` → 링크 승인 → 오류 페이지 주소 그대로 curl → `higgsfield workspace set <id>`.
 
 ## ▷ 예전 이어서 하기 (10/26)
@@ -75,7 +75,7 @@
 - **색: 넣는 그림은 원본, 완성본만 보정** — 모델에 넣는 기준·컷 그림은 원본 색 그대로, 영상 완성 후(자막 전) `python3 tools/anime_grade.py … 0.7` 한 번.
 - 정면 얼굴 클로즈업(오리 없음): `asset3/face-front-01.png` (Seedream 2k · 2.5cr), 보정본 `face-front-01-grade0.7.jpg`.
 - 그림 모델 = Seedream 5.0 Pro(새로 그리기) · 나노바나나 프로(편집 1번) · 영상 = MiniMax H3(2cr/초). 크레딧 확인 `higgsfield generate cost …`.
-- 릴스 틀 확정: `asset3/reel-title-B-jua.jpg` (아래 '릴스 틀 확정' 참고). 글꼴 `tools/fonts/`.
+- 릴스 틀 확정: `frame/reel-title-B-jua.jpg` (아래 '릴스 틀 확정' 참고). 글꼴 `tools/fonts/`.
 - 톤: 공감 + 유머, 오리 = 장난꾸러기 팩폭형. 대본·프롬프트 = `EPISODES.md` (EP01 「월요일 + 카드값」 4컷).
 - 입은 옛날 애니처럼 뻐끔. 과장 표정(하얀 점 눈 · 불타는 배경 · SD 개그)은 따로 그림 → 컷 전환.
 - 배경은 장소별 시점 세트(정면 · 반대편 · 옆 · 책상).
@@ -170,7 +170,7 @@
 - "흐린 게 아니야" — 2000년대 TV 애니는 **선명 · 고대비 · 진한 채도**, 그림자는 진하고 색이 들어감(피부 자두/마젠타, 머리 남색), 하이라이트는 깨끗하게. 바랜 색 · 뿌연 필터 · 블러 쓰지 않기. TV 재질(tv_look)도 빼거나 아주 약하게.
 - 기준 장면: `ep01/cut1-v2.png` (Seedream + 레퍼런스: 90년대 사무실 장면 · 90년대 얼굴 클로즈업 · base-final).
 
-## ✅ 릴스 틀 확정 (10/26 혁 "이거 좋다") — `asset3/reel-title-B-jua.jpg`
+## ✅ 릴스 틀 확정 (10/26 혁 "이거 좋다") — `frame/reel-title-B-jua.jpg`
 - 기준 캐릭터 그림: `asset3/front-v6.png` (base-final 얼굴 · 3등신 몸 · 중간보다 긴 검정 머리 · 따뜻한 레퍼런스 색감).
 - 1080×1920 검정. **영상 4:3(1080×810)을 위에서 420px**부터(세이프존 · 시선 위 1/3).
 - **제목**: 주아(Jua) 120px · 노랑 #FFE45C · 영상 위 50px 띄움.

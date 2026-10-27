@@ -1,5 +1,5 @@
 """옛날 애니 '적게 움직이고 많이 움직이는 척' — 멈춘 그림으로 줌 · 흔들림 · 번쩍 · 속도선 · 배경 흐름. 크레딧 0.
-usage: python3 animatic.py out.mp4   (EP02 컷 4장 데모)
+usage: python3 animatic.py out.mp4 컷1.png 컷2.png 컷3.png 컷4.png   (컷1 줌인 · 컷2 번쩍+펀치줌 · 컷3 빨강 번쩍+떨림 · 컷4 도망 배경 흐름)
 """
 import sys, subprocess, math, os, tempfile
 import numpy as np
@@ -24,7 +24,7 @@ def speedlines(fr, n, seed, horizontal=False):
             d.line([(W/2 + math.cos(a)*r0, H/2 + math.sin(a)*r0), (W/2 + math.cos(a)*900, H/2 + math.sin(a)*900)], fill=(255, 255, 255), width=int(r.integers(2, 7)))
     return fr
 frames = []
-c1, c2, c3, c4 = [load(f'ep02/cut{i}.png') for i in (1, 2, 3, 4)]
+c1, c2, c3, c4 = [load(p) for p in sys.argv[2:6]]
 # 컷1 3초: 천천히 줌인 (긴장)
 for i in range(72):
     t = i / 71; frames.append(view(c1, 1.0 + 0.12 * t, 0.62, 0.42))
