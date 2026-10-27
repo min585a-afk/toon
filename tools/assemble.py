@@ -1,7 +1,7 @@
 """컷 이어붙이기 → 무드 25% → 화 제목 얹기 → 배경음 깔기(대사 땐 작게) → 9:16 릴스 틀 + 컷마다 자막. 크레딧 0.
 usage: python3 tools/assemble.py spec.json out.mp4
 spec = {"title": ["두 얼굴", "TWO FACES", 시작초, 길이초],
-        "bgm": "brand/bgm/opening-A.mp3", "bgm_vol": 0.5, "bgm_duck": 0.18, "duck_from": 5.9,
+        "bgm": "brand/bgm/opening-A.mp3", "bgm_vol": 0.5, "bgm_duck": 0.18, "duck_from": 5.9, "bgm_until": 3.9,
         "cuts": [{"file": "...mp4", "ko": "", "en": "", "sec": null}, ...]}
 """
 import json, os, subprocess, sys, tempfile
@@ -61,7 +61,8 @@ def main():
     if spec.get('bgm'):
         cmd += ['-i', spec['bgm']]; bi = len(pngs) + 1
         vol, duck, df = spec.get('bgm_vol', 0.5), spec.get('bgm_duck', 0.18), spec.get('duck_from', total)
-        fc += (f"[{bi}:a]atrim=0:{total},volume='if(lt(t,{df}),{vol},{duck})':eval=frame,afade=t=out:st={max(0, total - 1)}:d=1[bg];"
+        until = spec.get('bgm_until', total)  # 이 초까지만 배경음 (끝 0.8초 페이드 아웃)
+        fc += (f"[{bi}:a]atrim=0:{until},volume='if(lt(t,{df}),{vol},{duck})':eval=frame,afade=t=out:st={max(0, until - 0.8)}:d=0.8,apad[bg];"
                f"[0:a][bg]amix=inputs=2:duration=first:normalize=0[a]")
         amap = '[a]'
     else:
