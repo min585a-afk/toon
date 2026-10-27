@@ -1,4 +1,4 @@
-"""EP01 앞부분 (혁 10/27 순서): 귤이 타닥타닥(또각또각 들려옴) → 팀장 걸어옴(H3, 12fps · 1.6배) → 귤이 눈만 살짝 위로 → (컷 1: 서류 내밂 → 얼굴 클로즈업 대사). 크레딧 0.
+"""EP01 앞부분 (혁 10/27 순서) — 귤이는 H3 영상 하나(ep01b/video/c00-gyul-type-look-h3.mp4: 타닥타닥 → 눈만 위로)를 앞뒤로 나눠 씀: 귤이 타닥타닥(또각또각 들려옴) → 팀장 걸어옴(H3, 12fps · 1.6배) → 귤이 눈만 살짝 위로 → (컷 1: 서류 내밂 → 얼굴 클로즈업 대사). 크레딧 0.
 usage: python3 ep01b/build_c00.py  → ep01b/c00-gyul-work.mp4 · ep01b/c0-boss-walk.mp4 · ep01b/c00b-gyul-look.mp4
 """
 import subprocess, tempfile
@@ -84,5 +84,22 @@ write(frames, f"[1:a]atrim={hs}:{hs + WALK_SEC},asetpts=PTS-STARTPTS,volume=0.6,
 # 컷 00b: 계속 타닥타닥 (또각또각 가까이서 멈춤) → 잠깐 뒤 눈만 살짝 위로
 write(typing(int(LOOK_SEC * FPS), seed=2, look_from=int(LOOK_LAG * FPS)),
       f"[1:a]atrim=0.3:{0.3 + LOOK_LAG},asetpts=PTS-STARTPTS,volume=0.8,afade=t=out:st={LOOK_LAG - 0.1}:d=0.1[t];"
+      f"[2:a]atrim={hs + WALK_SEC}:{hs + WALK_SEC + 0.45},asetpts=PTS-STARTPTS,volume=0.7,afade=t=out:st=0.3:d=0.15[h];"
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing.mp3', 'sfx/ep01/heels.mp3'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)
+
+
+# ── H3 영상으로 교체 (혁 10/27): 앞 = 타닥타닥, 끝 = 눈만 위로 → 마지막 장면에서 멈춤
+cap = cv2.VideoCapture('ep01b/video/c00-gyul-type-look-h3.mp4'); gf = cap.get(cv2.CAP_PROP_FPS) or 24; gv = []
+while True:
+    ok, fr = cap.read()
+    if not ok: break
+    gv.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA))
+at = lambda sec: gv[min(len(gv) - 1, int(sec * gf))]
+TYPE_V = [at((k - k % 2) / FPS) for k in range(int(TYPE_SEC * FPS))]                       # 0 ~ 2.2초 (12fps)
+LOOK_V0 = len(gv) / gf - 0.9                                                               # 끝 0.9초 = 손 멈추고 눈 위로
+LOOK_V = [at(LOOK_V0 - LOOK_LAG + (k - k % 2) / FPS) for k in range(int(LOOK_SEC * FPS))]  # 조금 더 치다가 → 눈 위로 → 끝 장면 멈춤
+write(TYPE_V, f"[1:a]atrim=0:{TYPE_SEC},volume=0.8[t];[2:a]atrim=0:{TYPE_SEC - HEELS_AT},volume=0.3,adelay={int(HEELS_AT * 1000)}:all=1[h];"
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing.mp3', 'sfx/ep01/heels.mp3'], 'ep01b/c00-gyul-work.mp4', TYPE_SEC)
+write(LOOK_V, f"[1:a]atrim=0.3:{0.3 + LOOK_LAG},asetpts=PTS-STARTPTS,volume=0.8,afade=t=out:st={LOOK_LAG - 0.1}:d=0.1[t];"
       f"[2:a]atrim={hs + WALK_SEC}:{hs + WALK_SEC + 0.45},asetpts=PTS-STARTPTS,volume=0.7,afade=t=out:st=0.3:d=0.15[h];"
       f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing.mp3', 'sfx/ep01/heels.mp3'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)
