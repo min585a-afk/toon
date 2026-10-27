@@ -8,9 +8,9 @@
 | 1 | 팀장이 서류 뭉치 들고 책상 앞 | 팀장: "이것 오늘까지 좀 부탁해요." | `ep01b/c1-boss-papers.png` |
 | 2 | 귤이 반짝 천사 웃음 ✨ | 귤이: "아 넵! 바로 할게요!" | `char/gyul/exp/01-angel.png` |
 | 3 | 팀장 뒤돌아 감 | (또각또각) | `ep01b/c3-boss-leave.png` |
-| 4 | **정색 + 그림자로 눈 가림** · 뒤에서 만화식 불꽃 솟음 · 빨간 깜빡임 · 흔들림 · 머리 일렁임 (기준 얼굴 편집 1cr + `tools/rage_fx.py` 0cr, 배경 제거 `c4-devil-cut.png` 1cr) · 머리 휘날림은 H3 후보 | (으흐흐… · 두둥) | `ep01b/c4-devil.png` |
-| 5 | 귤이 자리 시점 · 통로 멀리서 팀장 멈칫, 어깨 너머로 휙 · 안경 번쩍 | (휙!) | `ep01b/c5-boss-turn.png` |
-| 6 | 0.1초 만에 천사 미소 ✨✨ | (반짝) | `exp/01-angel` 재사용 |
+| 4 | **정색 + 그림자로 눈 가림** · 뒤에서 만화식 불꽃 솟음 · 빨간 깜빡임 · 흔들림 · 머리 일렁임 (기준 얼굴 편집 1cr + `tools/rage_fx.py` 0cr, 배경 제거 `c4-devil-cut.png` 1cr) · 머리 휘날림은 H3 후보 | (쿵 + 화르륵 + 불티 — `tools/sfx_sound.py` rage) | `ep01b/c4-devil.png` → `c4-rage-fx.mp4` |
+| 5 | 귤이 자리 시점 · 통로 멀리서 팀장 멈칫, 어깨 너머로 휙 · 안경 번쩍 | (휙! · 띵) | 뒤통수 `ep01b/c5-boss-back.png` → 1장 번짐 → 돌아봄 `c5-boss-turn.png` · `ep01b/build_c5.py` → `c5-boss-turn.mp4` (확 돌아봄) |
+| 6 | 0.1초 만에 천사 미소 ✨✨ | (반짝반짝 종소리) | 흰 번쩍 → 꽃이 하나씩 피어나며 금빛 반짝 · `exp/01-angel-clean.png` + `ep01b/build_c6.py` → `c6-angel.mp4` (컷 2 도 재사용) |
 | 6b | 천사 미소 그대로 자리에서 신나게 타자 ✨ | (타닥타닥) | `ep01b/c6b-type-angel.png` |
 | 7 | 메모장 凸凸凸 3줄 타닥타닥으로 끝 | (타닥타닥) | `ep01b/c7-notepad.mp4` (`tools/notepad_screen.py`, 0cr) |
 - 제목(위): **천사와 악마** · 완성 영상에 `tools/mood.py`(25%) 마지막에 적용.
