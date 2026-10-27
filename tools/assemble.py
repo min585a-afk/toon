@@ -57,18 +57,25 @@ def main():
     for i, (a, b) in enumerate(pngs):
         fc += f"[v{i}][{i + 1}:v]overlay=0:0:enable='between(t,{a:.3f},{b - 0.001:.3f})'[v{i + 1}];"
     vlast = f'[v{len(pngs)}]'
+    # 효과음: spec["sfx"] = [["파일", 초, 볼륨], ...] (영상 전체 시간 기준)
+    sfx = spec.get('sfx', []); si0 = len(pngs) + 1
+    for f, at, vol in sfx: cmd += ['-i', f]
+    vmain = '0:a'
+    if sfx:
+        for k, (f, at, vol) in enumerate(sfx): fc += f"[{si0 + k}:a]volume={vol},adelay={int(at * 1000)}:all=1,apad[s{k}];"
+        fc += '[0:a]' + ''.join(f'[s{k}]' for k in range(len(sfx))) + f'amix=inputs={len(sfx) + 1}:duration=first:normalize=0[am];'; vmain = '[am]'
     if spec.get('bgm'):
-        cmd += ['-i', spec['bgm']]; bi = len(pngs) + 1
+        cmd += ['-i', spec['bgm']]; bi = si0 + len(sfx)
         vol, duck, df = spec.get('bgm_vol', 0.5), spec.get('bgm_duck', 0.18), spec.get('duck_from', total)
         until = spec.get('bgm_until', total)  # 이 초까지만 배경음 (끝 0.8초 페이드 아웃)
         fc += (f"[{bi}:a]atrim=0:{until},volume='if(lt(t,{df}),{vol},{duck})':eval=frame,afade=t=out:st={max(0, until - 0.8)}:d=0.8,apad[bg];"
-               f"[0:a][bg]amix=inputs=2:duration=first:normalize=0[a]")
+               f"{vmain if vmain != '0:a' else '[0:a]'}[bg]amix=inputs=2:duration=first:normalize=0[a]")
         amap = '[a]'
     else:
-        amap = '0:a'
+        amap = vmain
     cmd += ['-filter_complex', fc.rstrip(';'), '-map', vlast, '-map', amap, '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', out]
     subprocess.run(cmd, check=True)
-    print(out, round(total, 1), 's')
+    print(out, round(total, 1), 's'); [print(f'  {round(a, 2):6.2f}~{round(b, 2):6.2f}  {k}') for a, b, k, _ in times]
 
 
 if __name__ == '__main__':

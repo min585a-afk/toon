@@ -13,13 +13,19 @@
    "file": "brand/opening/opening.mp4"
   },
   {
-   "file": "ep01b/c00-gyul-work.mp4"
+   "file": "ep01b/c00-gyul-work.mp4",
+   "ko": "타닥타닥타닥",
+   "en": "tap tap tap tap"
   },
   {
-   "file": "ep01b/c0-boss-walk.mp4"
+   "file": "ep01b/c0-boss-walk.mp4",
+   "ko": "또각 또각 (너한테 가는 중)",
+   "en": "click clack (coming for you)"
   },
   {
-   "file": "ep01b/c00b-gyul-look.mp4"
+   "file": "ep01b/c00b-gyul-look.mp4",
+   "ko": "(…설마 나?)",
+   "en": "(…don't tell me it's me?)"
   },
   {
    "file": "ep01b/c1-boss-talk.mp4",
@@ -28,13 +34,35 @@
   },
   {
    "file": "ep01b/c2-gyul-huh.mp4",
-   "ko": "예?",
-   "en": "Huh?"
+   "ko": "네?..",
+   "en": "Yes?.."
   },
   {
    "file": "ep01b/c3-boss-why.mp4",
    "ko": "왜요? 어려운가요?",
    "en": "Why? Is it too hard?"
   }
+ ],
+ "sfx": [
+  [
+   "sfx/ep01/paper-thud.wav",
+   11.5,
+   0.8
+  ],
+  [
+   "sfx/ep01/slide-down.wav",
+   16.06,
+   0.6
+  ],
+  [
+   "sfx/ep01/boing.wav",
+   16.3,
+   0.7
+  ],
+  [
+   "sfx/ep01/glint.wav",
+   18.33,
+   0.7
+  ]
  ]
 }

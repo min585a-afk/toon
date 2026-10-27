@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 FPS, W, H = 24, 1080, 810
-GLARE_SEC = 0.7
+GLARE_SEC = 0.5
 H3 = 'ep01b/video/c3-boss-glasses-h3.mp4'          # 안경 번쩍 → 고쳐 씀 (있으면 씀)
 tmp = tempfile.mkdtemp()
 subprocess.run(['python3', 'tools/talk_mouth.py', 'char/boss/talk/mouth-1-closed.png', 'char/boss/talk/mouth-2-open.png', 'voice/ep01/c3-boss-why.wav',
@@ -21,7 +21,7 @@ lens = cv2.GaussianBlur(lens.astype(np.float32), (0, 0), 2)[..., None]
 glare = (face0 * (1 - lens) + gl * lens).astype(np.uint8)           # 번쩍은 렌즈 안에서만
 yy, xx = np.mgrid[0:face0.shape[0], 0:face0.shape[1]].astype(np.float32); diag = (xx + yy * 0.6)
 lo, hi = diag[lens[..., 0] > 0.3].min(), diag[lens[..., 0] > 0.3].max()
-REVEAL = 10                                                          # 빛이 쓸고 지나가는 프레임 수 (12fps → 0.8초)
+REVEAL = 6                                                           # 빛이 쓸고 지나가는 프레임 수 (24fps → 0.25초, 혁 10/27: 빠르게)
 def reveal(p):
     edge = lo + (hi - lo) * p; w = (hi - lo) * 0.12
     show = np.clip((edge - diag) / w, 0, 1)[..., None]               # 지나간 곳 = 눈 보임
@@ -29,8 +29,8 @@ def reveal(p):
     o = gl * (1 - show) + face0 * show; o = o + 255 * streak * 0.6
     return np.clip(face0 * (1 - lens) + o * lens, 0, 255).astype(np.uint8)
 frames = [cv2.resize(glare, (W, H), interpolation=cv2.INTER_AREA)] * int(GLARE_SEC * FPS)
-for k in range(REVEAL * 2):
-    frames.append(cv2.resize(reveal(((k - k % 2) / 2 + 1) / REVEAL), (W, H), interpolation=cv2.INTER_AREA))
+for k in range(REVEAL):
+    frames.append(cv2.resize(reveal((k + 1) / REVEAL), (W, H), interpolation=cv2.INTER_AREA))
 if os.path.exists(H3):
     cap = cv2.VideoCapture(H3); f = cap.get(cv2.CAP_PROP_FPS) or 24; v = []
     while True:
