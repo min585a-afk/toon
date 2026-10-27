@@ -30,7 +30,7 @@ def at(buf, sec, s, vol=1.0):
 # 1) 물음표: 떨어지는 동안(0~6프레임) 휘익 내려가는 휘슬 → 착지(6프레임) 퐁! → 통(8→10프레임) 폭 → 흔들(12→14) 톡
 q = np.zeros(int(1.0 * SR))
 fall = tone(1900, 950, 6 / FPS, vib=0.02); fall *= np.linspace(0.6, 1, len(fall)); at(q, 0, fall, 0.45)
-pon = tone(820, 420, 0.16, d=22) + 0.4 * tone(1640, 840, 0.1, d=35); at(q, 6 / FPS, pon, 1.0)
+at(q, 6 / FPS, tone(820, 420, 0.16, d=22), 1.0); at(q, 6 / FPS, tone(1640, 840, 0.1, d=35), 0.4)
 at(q, 10 / FPS, tone(900, 520, 0.11, d=30), 0.55)
 at(q, 14 / FPS, tone(1100, 700, 0.07, d=45), 0.3)
 save('sfx/ep01/q-drop.wav', q)
