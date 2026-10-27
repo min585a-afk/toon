@@ -61,7 +61,6 @@ for f in range(END):
         if t < 3:  # 확 도는 충격: 화면 살짝 흔들
             fr = cv2.warpAffine(fr, np.float32([[1, 0, [6, -5, 3][t]], [0, 1, [-4, 3, 0][t]]]), (W, H), borderMode=cv2.BORDER_REFLECT)
         fr = glint(fr, t)
-        fr = sfx(fr, '휙!', 760, 200, 110, 12, t)
     frames.append(fr)
 
 # 소리: 휙(바람 가르는 노이즈) + 반짝(띵)
