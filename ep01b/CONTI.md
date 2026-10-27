@@ -60,7 +60,7 @@ Camera completely still. No music, no text, no subtitles.
 - **소리**: 발소리 · 제목 "딩~" · 또각또각
 - **만들기**: `python3 ep01b/build_intro.py` → `ep01b/intro.mp4`
 
-### 컷 1 · 팀장 "이것 오늘까지 좀 부탁해요." (약 2.3초) ⬜ H3 10cr
+### 컷 1 · 팀장 "이것 오늘까지 좀 부탁해요." (약 3.0초) ⬜ 목소리 있음 → 입 코드 0cr
 - **화면**: 책상 옆에서 서류 뭉치를 두 손으로 내미는 팀장, 냉정한 무표정, 안경 하얗게 번쩍.
 - **그림**: `ep01b/c1-boss-papers.png` ✅
   - 프롬프트: `Medium shot in the office of the office reference: B stands next to the desk facing the viewer, holding out a thick stack of documents with both hands, cold and expressionless, as if handing over a big task.` + STY
@@ -68,7 +68,7 @@ Camera completely still. No music, no text, no subtitles.
 - **효과/소리**: 서류 내밀 때 "툭" (종이 소리) · 효과 글자 없음
 - **자막**: 이것 오늘까지 좀 부탁해요. / Could you get this done by today?
 
-### 컷 2 · 귤이 천사 "네 알겠습니다!" (약 2.0초) ⬜ H3 10cr
+### 컷 2 · 귤이 천사 "네 알겠습니다!" (약 2.2초) ⬜ 목소리 있음 → 입 코드 0cr
 - **화면**: 흰 번쩍 → 활짝 천사 웃음, 꽃이 하나씩 빙글 피어나고 금빛 별 반짝반짝.
 - **그림**: `char/gyul/exp/01-angel-clean.png` ✅ (꽃·반짝이 뺀 판 — 효과는 영상 위에 직접 얹음)
 - **대사 프롬프트(H3)**: `The girl smiles brightly with sparkling eyes and says in Korean in a bright, cheerful, high and lively voice, eager and overly sweet: "네 알겠습니다!" Voiced like a cheerful young heroine in a 1990s Korean TV anime dub.` + VSTY · ref `voice/ref/gyul-h3.wav`
