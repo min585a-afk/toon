@@ -131,6 +131,7 @@
 - 감정 6: `08-sad` · `09-surprised` · `10-shadow`(눈 안 보이는 그림자, 번짐 → 셀 그림자로 다시 고려) · `11-shy` · `12-flutter` · `13-teary`. 모음 `gyul-exp-batch3.jpg`.
 - **입 모양 3** `presets/v3/mouth/gyul-mouth-1-closed.png` · `2-half` · `3-open` — 다문/반은 GPT 2장(2cr) 뽑아 **입 부분만 잘라 기준 그림에 붙임**(입 말고 픽셀 동일 → 바꿔도 안 떨림). 뻐끔 시험 `mouth/mouth-flap-test.mp4`.
   - **쓰는 것 = 키운 버전 `gyul-mouth-1-closed-big.png` · `2-half-big` · `3-open-big`** (입만 1.45배, 혁 "키운 게 나은 듯" · 폰에서 잘 보임). 시험 `mouth-flap-test-big.mp4`.
+- **눈 깜빡 3** `presets/v3/eyes/gyul-eyes-1-open.png` · `2-half` · `3-closed` — 입처럼 눈 부분만 합성(2cr). 눈·입 자리가 안 겹쳐서 눈 3 × 입 3 자유 조합. 말하기+깜빡 시험 `eyes/talk-blink-test.mp4`.
 - SD 개그 3: `presets/v3/sd/gyul-sd-01-stomp.png`(발 구르기 · 핏대) · `02-flail`(> < 폭포 눈물 버둥) · `03-run`(도망 · 먼지) — 평소 복장, 단색 배경 (3cr).
 - **캐릭터 도안 v1 `presets/v3/gyul-model-sheet-v1.png`** (`python3 tools/model_sheet.py out.png`, 0cr) — 평소 복장 · 턴어라운드 5 · 얼굴 3 · 입 3 · 표정 13 · SD 3.
 - 영상 모델: **Kling 안 씀**(혁 "별로"). MiniMax H3 / Seedance 쪽으로 시험.
