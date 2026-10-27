@@ -68,6 +68,7 @@
 - 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
 - **인스타 계정 = 별툰 `@byeoltoon.kr`** (10/27 혁 가입). 계정 = 채널, 그 안에 시리즈(직장 개그 · 커플 드라마 · …). 영상 제목은 시리즈 이름을 앞에.
 - 릴스 틀 도구 `python3 tools/reel_frame.py 그림 out.jpg "제목" "한글" "영어" [--guide]` · 샘플 `frame/reel-ep01-sample.jpg`. 그림·영상은 4:3(2336×1744 / 1080×810) → 최종 9:16.
+- **목소리**: 귤이 = `seed_audio --audio-references voice/ref/girl-voice.wav` (목소리 복제 · 한 줄 0.1cr → 편마다 같은 목소리). 팀장 = `seed_audio --voice_id <preset>` 후보 Vera/Helena 또는 `text2speech_v2 --variant minimax`. 후처리 `rubberband=pitch=1.06:formant=preserved,highpass=f=200,lowpass=f=6000`. 시험 `voice/test/voice-test-01.mp4`.
 - 조연 팀장 `char/boss/` · 사무실 배경 `bg/office-desk.png`.
 - **1화 = EP01 「팀장님의 아아」** (`EPISODES.md` 맨 위). 다음: 팀장 캐릭터 → 배경 2 → 컷 그림 → 영상.
 - 영상 모델: Kling 안 씀. 다음 = **영상 1개 시험**(MiniMax H3 10cr/5초 · Seedance 2.0 Mini 5cr/5초) + **TTS 목소리 시험**(`tools/talk.py --audio` 로 입 자동).
