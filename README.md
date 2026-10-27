@@ -67,6 +67,7 @@
 - **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
 - 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
 - **인스타 계정 = 별툰 `@byeoltoon.kr`** (10/27 혁 가입). 계정 = 채널, 그 안에 시리즈(직장 개그 · 커플 드라마 · …). 영상 제목은 시리즈 이름을 앞에.
+- **기본 칠 = 25% 무드** (10/27 혁): `python3 tools/mood.py in out` — 그림자 살짝 깊게 · 비네트 · 채도 조금 낮춤 · 그레인. 완성 영상 마지막에 한 번(자막 전). 예시 `char/gyul/face/front-mood-25.png`. 극장판 칠(`front-drama-test.png`)은 너무 무거워서 안 씀.
 - 릴스 틀 도구 `python3 tools/reel_frame.py 그림 out.jpg "제목" "한글" "영어" [--guide]` · 샘플 `frame/reel-ep01-sample.jpg`. 그림·영상은 4:3(2336×1744 / 1080×810) → 최종 9:16.
 - **목소리**: 귤이 = `seed_audio --audio-references voice/ref/girl-voice.wav` (목소리 복제 · 한 줄 0.1cr → 편마다 같은 목소리). 팀장 = `seed_audio --voice_id <preset>` 후보 Vera/Helena 또는 `text2speech_v2 --variant minimax`. 후처리 `rubberband=pitch=1.06:formant=preserved,highpass=f=200,lowpass=f=6000`. 시험 `voice/test/voice-test-01.mp4`.
 - 조연 팀장 `char/boss/` · 사무실 배경 `bg/office-desk.png`.
