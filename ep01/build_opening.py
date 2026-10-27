@@ -1,4 +1,4 @@
-"""EP01 오프닝: 회사 입구(반투명 동글 실루엣 출근 인파) → 컷 → 장면 1 타닥타닥 → 컷 → 장면 2 채팅 타자 (줌 없음). 크레딧 0.
+"""EP01 오프닝: 회사 입구(반투명 동글 실루엣 출근 인파) → 빌딩 위로 틸트 업 → 컷 → 장면 1 타닥타닥 → 컷 → 장면 2 채팅 타자 (줌 없음). 크레딧 0.
 usage: python3 ep01/build_opening.py ep01/opening.mp4
 """
 import math, os, subprocess, sys, tempfile, wave
@@ -48,7 +48,8 @@ def clock_at(hh, mm, ss):
 
 frames, clicks, ticks = [], [], []
 # 1) 회사 입구 2.2초: 반투명 동글 실루엣 사람들이 오가며 출근 (옛날 애니 엑스트라)
-BLD = cv2.resize(cv2.imread('bg/office-building.png'), (OW, OH), interpolation=cv2.INTER_AREA)
+_t = cv2.imread('bg/office-building-tall.png'); TALL = cv2.resize(_t, (OW, int(_t.shape[0] * OW / _t.shape[1])), interpolation=cv2.INTER_AREA)
+TOFF = TALL.shape[0] - OH  # 아래 화면(입구)이 시작하는 y
 rng0 = np.random.default_rng(11)
 MOB = []  # (시작 x, y(발), 크기, 속도 px/프레임, 색 톤)
 for i in range(14):
@@ -58,27 +59,34 @@ for i in range(14):
 TONES = [(205, 170, 185), (190, 160, 175), (215, 185, 200)]  # BGR 라벤더 톤
 
 
-def mob_frame(f):
-    base = BLD.copy(); lay = base.copy()
+def mob_frame(f, cam=None):
+    """cam = 화면 위쪽 y (TOFF = 입구, 0 = 빌딩 꼭대기)."""
+    cam = TOFF if cam is None else int(cam)
+    base = TALL.copy(); lay = base.copy()
     for x0, y, sc, v, tone in sorted(MOB, key=lambda m: m[1]):
         x = (x0 + v * (f - f % 3)) % (OW + 240) - 120
         bob = 6 * sc * abs(math.sin((f - f % 3) * 0.55 + x0))
         hr, bw, bh = 26 * sc, 34 * sc, 92 * sc
-        cy = int(y - bh - bob); col = TONES[tone]
+        y = y + TOFF; cy = int(y - bh - bob); col = TONES[tone]
         cv2.ellipse(lay, (int(x), int(y)), (int(bw * 0.9), int(8 * sc)), 0, 0, 360, (120, 110, 140), -1, cv2.LINE_AA)  # 그림자
         cv2.rectangle(lay, (int(x - bw / 2), cy + int(bw / 2)), (int(x + bw / 2), int(y - bw / 2 - bob)), col, -1, cv2.LINE_AA)
         cv2.circle(lay, (int(x), cy + int(bw / 2)), int(bw / 2), col, -1, cv2.LINE_AA)
         cv2.circle(lay, (int(x), int(y - bw / 2 - bob)), int(bw / 2), col, -1, cv2.LINE_AA)
         cv2.circle(lay, (int(x), int(cy - hr * 0.9)), int(hr), col, -1, cv2.LINE_AA)
-    return cv2.addWeighted(lay, 0.7, base, 0.3, 0)
+    return cv2.addWeighted(lay, 0.7, base, 0.3, 0)[cam:cam + OH]
 
 
-for f in range(54): frames.append(mob_frame(f))
+# 입구 1.3초 → 빌딩 위로 틸트 업 1.4초(12fps 로 끊김, 천천히 출발·멈춤) → 꼭대기 0.4초
+for f in range(31): frames.append(mob_frame(f))
+for k in range(34):
+    t = (k - k % 2) / 33; e = t * t * (3 - 2 * t)
+    frames.append(mob_frame(31 + k, TOFF * (1 - e)))
+for k in range(10): frames.append(mob_frame(65 + k, 0))
 # 2) 컷 → 장면 1 (그림 속 시계 그대로 10:00)
 img2 = CUT1
 # 3) 장면 1 전체 (타자 소리) → 컷 → 채팅 화면 (줌 효과 없음, 혁 10/27)
 for f in range(48): frames.append(view(1.0))  # 장면 1 = 2초
-type_start = 54 + 10
+type_start = 75 + 10
 for f in range(type_start, len(frames), 3):
     if np.random.default_rng(f).random() < 0.8: clicks.append(f)
 # 4) 장면 2 채팅 타자 (chat_screen 과 같은 타이밍) — 글자 하나마다 딸깍
@@ -110,7 +118,7 @@ def tick():
     return (np.sin(2 * np.pi * 3200 * t) * np.exp(-t * 250) * 0.5).astype(np.float32)
 for f in ticks: add(f, tick())
 # 출근길 발소리 (가볍게)
-for f in range(0, 54, 6): add(f + rng.uniform(0, 2), click(0.08))
+for f in range(0, 60, 6): add(f + rng.uniform(0, 2), click(0.08 * (1 - f / 70)))
 for f in clicks: add(f + rng.uniform(0, 1.5), click(rng.uniform(0.25, 0.45)))
 audio = np.clip(audio, -1, 1)
 
