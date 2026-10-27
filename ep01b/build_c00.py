@@ -68,7 +68,7 @@ def write(frames, audio_filter, inputs, out, secs):
 
 # 컷 00: 타닥타닥 + 또각또각 (멀리서 작게)
 write(typing(int(TYPE_SEC * FPS), blink_at=int(1.3 * FPS)), f"[1:a]atrim=0:{TYPE_SEC},volume=0.9[t];[2:a]atrim=0:{TYPE_SEC - HEELS_AT},volume=0.3,adelay={int(HEELS_AT * 1000)}:all=1[h];"
-      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels.mp3'], 'ep01b/c00-gyul-work.mp4', TYPE_SEC)
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels-norm.wav'], 'ep01b/c00-gyul-work.mp4', TYPE_SEC)
 
 # 컷 0: 팀장 걸어옴 — 1.6배 빠르게 · 12fps (2프레임씩)
 cap = cv2.VideoCapture('ep01b/video/c0-boss-walk-h3.mp4'); sf = cap.get(cv2.CAP_PROP_FPS) or 24; vf = []
@@ -79,13 +79,13 @@ while True:
 n = int(WALK_SEC * FPS)
 frames = [vf[min(len(vf) - 1, int((WALK_FROM + (k - k % 2) / FPS * SPEED) * sf))] for k in range(n)]
 hs = TYPE_SEC - HEELS_AT
-write(frames, f"[1:a]atrim={hs}:{hs + WALK_SEC},asetpts=PTS-STARTPTS,volume=0.6,apad[a]", ['sfx/ep01/heels.mp3'], 'ep01b/c0-boss-walk.mp4', WALK_SEC)
+write(frames, f"[1:a]atrim={hs}:{hs + WALK_SEC},asetpts=PTS-STARTPTS,volume=0.6,apad[a]", ['sfx/ep01/heels-norm.wav'], 'ep01b/c0-boss-walk.mp4', WALK_SEC)
 
 # 컷 00b: 계속 타닥타닥 (또각또각 가까이서 멈춤) → 잠깐 뒤 눈만 살짝 위로
 write(typing(int(LOOK_SEC * FPS), seed=2, look_from=int(LOOK_LAG * FPS)),
       f"[1:a]atrim=0.3:{0.3 + LOOK_LAG},asetpts=PTS-STARTPTS,volume=0.8,afade=t=out:st={LOOK_LAG - 0.1}:d=0.1[t];"
       f"[2:a]atrim={hs + WALK_SEC}:{hs + WALK_SEC + 0.45},asetpts=PTS-STARTPTS,volume=0.7,afade=t=out:st=0.3:d=0.15[h];"
-      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels.mp3'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels-norm.wav'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)
 
 
 # ── H3 영상으로 교체 (혁 10/27): 앞 = 타닥타닥, 끝 = 눈만 위로 → 마지막 장면에서 멈춤
@@ -99,7 +99,7 @@ TYPE_V = [at((k - k % 2) / FPS) for k in range(int(TYPE_SEC * FPS))]            
 LOOK_V0 = len(gv) / gf - 0.9                                                               # 끝 0.9초 = 손 멈추고 눈 위로
 LOOK_V = [at(LOOK_V0 - LOOK_LAG + (k - k % 2) / FPS) for k in range(int(LOOK_SEC * FPS))]  # 조금 더 치다가 → 눈 위로 → 끝 장면 멈춤
 write(TYPE_V, f"[1:a]atrim=0:{TYPE_SEC},volume=0.9[t];[2:a]atrim=0:{TYPE_SEC - HEELS_AT},volume=0.3,adelay={int(HEELS_AT * 1000)}:all=1[h];"
-      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels.mp3'], 'ep01b/c00-gyul-work.mp4', TYPE_SEC)
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels-norm.wav'], 'ep01b/c00-gyul-work.mp4', TYPE_SEC)
 write(LOOK_V, f"[1:a]atrim=0.3:{0.3 + LOOK_LAG},asetpts=PTS-STARTPTS,volume=0.8,afade=t=out:st={LOOK_LAG - 0.1}:d=0.1[t];"
       f"[2:a]atrim={hs + WALK_SEC}:{hs + WALK_SEC + 0.45},asetpts=PTS-STARTPTS,volume=0.7,afade=t=out:st=0.3:d=0.15[h];"
-      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels.mp3'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)
+      f"[t][h]amix=inputs=2:duration=longest:normalize=0,apad[a]", ['sfx/ep01/typing-norm.wav', 'sfx/ep01/heels-norm.wav'], 'ep01b/c00b-gyul-look.mp4', LOOK_SEC)

@@ -10,8 +10,6 @@ sys.path.insert(0, 'tools')
 from reel_frame import W, H, TOP, VH, FJ, FG, slanted
 
 FPS = 24
-
-
 def dur(p):
     return float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p], capture_output=True, text=True).stdout)
 
@@ -39,7 +37,8 @@ def main():
         if not has_audio(c['file']): cmd += ['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo']
         cmd += ['-t', str(d), '-vf', f'scale=1080:810,fps={FPS},setsar=1', '-map', '0:v', '-map', '0:a' if has_audio(c['file']) else '1:a',
                 '-ar', '44100', '-ac', '2', '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', p]
-        subprocess.run(cmd, check=True); parts.append(p); times.append((t, t + d, c.get('ko', ''), c.get('en', ''))); t += d
+        subprocess.run(cmd, check=True)
+        parts.append(p); times.append((t, t + d, c.get('ko', ''), c.get('en', ''))); t += d
     open(f'{tmp}/l.txt', 'w').write(''.join(f"file '{p}'\n" for p in parts))
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/l.txt', '-c', 'copy', f'{tmp}/cat.mp4'], check=True)
     # 2) 무드 25% → 3) 화 제목
