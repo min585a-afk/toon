@@ -1,27 +1,23 @@
-"""EP01 컷 '네…': 귤이 눈 위로 본 채 → 옆에 노랑 '?' 툭(살짝 기울어짐) → 시무룩한 입·눈썹 + "네…" (혁 10/27: '예?' 대신). 크레딧 0.
+"""EP01 컷 '네?..': 귤이 H3 영상(눈 위로 본 채 → 시무룩해지며 '네…' 입 움직임) + 목소리 + 물음표가 위에서 떨어짐. 크레딧 0.
 usage: python3 ep01b/build_c2huh.py  → ep01b/c2-gyul-huh.mp4
 """
 import subprocess, sys, tempfile
-import numpy as np
 import cv2
 sys.path.insert(0, 'tools'); from qmark import qmark_drop
 
 FPS, W, H = 24, 1080, 810
-Q_AT, PRE, SEC = 0.5, 0.45, 2.0                      # ? 떨어지는 순간(네… 하면서) · 시무룩 + 목소리 시작 · 컷 길이
-look = cv2.imread('ep01b/c00-gyul-look.png'); oo = cv2.resize(cv2.imread('ep01b/talk/c00-mouth-sulk-raw.png'), (look.shape[1], look.shape[0]))
-MOUTH = (1150, 835)
-x0, y0 = MOUTH[0] - 200, MOUTH[1] - 150
-g = lambda im: cv2.cvtColor(im[y0:y0 + 300, x0:x0 + 400], cv2.COLOR_BGR2GRAY).astype(np.float32)
-(dx, dy), _ = cv2.phaseCorrelate(g(look), g(oo))
-oo = cv2.warpAffine(oo, np.float32([[1, 0, -dx], [0, 1, -dy]]), (look.shape[1], look.shape[0]), borderMode=cv2.BORDER_REPLICATE)
-m = np.zeros(look.shape[:2], np.float32); cv2.ellipse(m, MOUTH, (90, 60), 0, 0, 360, 1, -1); cv2.ellipse(m, (1155, 610), (260, 70), 0, 0, 360, 1, -1); m = cv2.GaussianBlur(m, (0, 0), 10)[..., None]
-A = cv2.resize(look, (W, H), interpolation=cv2.INTER_AREA)
-B = cv2.resize((look * (1 - m) + oo * m).astype(np.uint8), (W, H), interpolation=cv2.INTER_AREA)
-tmp = tempfile.mkdtemp(); n = int(SEC * FPS); s = int(PRE * FPS); q = int(Q_AT * FPS)
-for f in range(n):
-    fr = qmark_drop((A if f < s else B).copy(), 815, 290, 200, f - q)   # 혁이 그린 위치
-    cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
+V, V_FROM = 'ep01b/video/c2-gyul-ne-h3.mp4', 2.6       # H3 에서 쓸 구간 시작 (입 움직이기 직전)
+VOICE_AT, SEC = 0.35, 2.4                              # 목소리 · 물음표 시작 · 컷 길이
+cap = cv2.VideoCapture(V); f = cap.get(cv2.CAP_PROP_FPS) or 24; v = []
+while True:
+    ok, fr = cap.read()
+    if not ok: break
+    v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA))
+tmp = tempfile.mkdtemp(); n = int(SEC * FPS); q = int(VOICE_AT * FPS)
+for k in range(n):
+    fr = v[min(len(v) - 1, int((V_FROM + (k - k % 2) / FPS) * f))].copy()   # 12fps
+    cv2.imwrite(f'{tmp}/{k:05d}.jpg', qmark_drop(fr, 815, 290, 200, k - q), [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', 'voice/ep01/c2-gyul-ne.wav',
-                '-filter_complex', f'[1:a]adelay={int(PRE * 1000)}:all=1,apad[a]', '-map', '0:v', '-map', '[a]', '-t', str(SEC),
+                '-filter_complex', f'[1:a]adelay={int(VOICE_AT * 1000)}:all=1,apad[a]', '-map', '0:v', '-map', '[a]', '-t', str(SEC),
                 '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', 'ep01b/c2-gyul-huh.mp4'], check=True)
 print('ep01b/c2-gyul-huh.mp4', SEC, 's')
