@@ -1,4 +1,4 @@
-"""EP01 오프닝: 벽시계 10:00 클로즈업(초침 째깍) → 줌 아웃 → 장면 1 타닥타닥 → 장면 2 채팅 타자. 크레딧 0.
+"""EP01 오프닝: 벽시계 9:59:57 클로즈업(째깍 → 10:00) → 컷 → 장면 1 타닥타닥 → 모니터로 → 장면 2 채팅 타자. 크레딧 0.
 usage: python3 ep01/build_opening.py ep01/opening.mp4
 """
 import math, os, subprocess, sys, tempfile, wave
@@ -21,27 +21,38 @@ def view(z):
     return cv2.warpAffine(img2, M, (OW, OH), flags=cv2.INTER_AREA if z > 0.3 else cv2.INTER_CUBIC)
 
 
-def with_second_hand(sec):
-    o = img.copy(); cx, cy, r = CLOCK; a = math.radians(sec * 6 - 90)
-    cv2.line(o, (cx, cy), (int(cx + math.cos(a) * r * 0.82), int(cy + math.sin(a) * r * 0.82)), (60, 60, 220), 4, cv2.LINE_AA)
-    cv2.circle(o, (cx, cy), 7, (60, 60, 220), -1, cv2.LINE_AA)
+# 그림 속 시계 바늘을 지우고(인페인트) 직접 그림
+_cx, _cy, _r = CLOCK
+_hm = np.zeros((H, W), np.uint8); cv2.circle(_hm, (_cx, _cy), int(_r * 0.66), 255, -1)
+_hm[_cy + 48:] = 0  # 아래 모니터 윗선은 건드리지 않음
+_dark = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) < 150
+_hm = (_hm > 0) & _dark
+_hm = cv2.dilate(_hm.astype(np.uint8) * 255, np.ones((7, 7), np.uint8))
+NOHANDS = cv2.inpaint(img, _hm, 6, cv2.INPAINT_TELEA)
+INKC = (60, 45, 55)
+
+
+def clock_at(hh, mm, ss):
+    o = NOHANDS.copy(); cx, cy, r = CLOCK
+    def hand(deg, length, width, col):
+        a = math.radians(deg - 90)
+        cv2.line(o, (cx, cy), (int(cx + math.cos(a) * length), int(cy + math.sin(a) * length)), col, width, cv2.LINE_AA)
+    hand((hh % 12) * 30 + mm * 0.5, r * 0.45, 12, INKC)
+    hand(mm * 6, r * 0.7, 8, INKC)
+    hand(ss * 6, r * 0.78, 4, (60, 60, 220))
+    cv2.circle(o, (cx, cy), 10, INKC, -1, cv2.LINE_AA); cv2.circle(o, (cx, cy), 5, (60, 60, 220), -1, cv2.LINE_AA)
     return o
 
 
 frames, clicks, ticks = [], [], []
-# 1) 시계 클로즈업 1.25초: 초침 2번 째깍
-for f in range(30):
-    sec = 58 + f // 12
-    if f % 12 == 0: ticks.append(len(frames))
-    img2 = with_second_hand(sec); frames.append(view(0.0))
-# 2) 줌 아웃 1.75초 (12fps 로 끊어서 옛날 카메라 느낌), 타닥타닥 시작
-img2 = with_second_hand(0)
-n = 42
-for f in range(n):
-    t = (f - f % 2) / (n - 1); z = 1 - (1 - t) ** 3
-    frames.append(view(z))
+# 1) 시계 클로즈업 ~1.7초: 9:59:57 → 58 → 59 → 10:00 (분침 딸깍)
+for k, (hh, mm, ss, n) in enumerate([(9, 59, 57, 10), (9, 59, 58, 10), (9, 59, 59, 10), (10, 0, 0, 12)]):
+    ticks.append(len(frames)); img2 = clock_at(hh, mm, ss); fr = view(0.0)
+    frames.extend([fr] * n)
+# 2) 컷 → 장면 1 (그림 속 시계 그대로 10:00)
+img2 = img
 # 3) 장면 1 전체 1.2초 (타자 소리) → 모니터 쪽으로 빠르게 들어가며 채팅 화면으로
-for f in range(28): frames.append(view(1.0))
+for f in range(40): frames.append(view(1.0))
 MON = (390, 730)
 for f in range(10):
     t = ((f - f % 2) / 9) ** 2; cw = W - (W - 900) * t; ch = cw * 3 / 4
@@ -49,7 +60,7 @@ for f in range(10):
     x0 = min(max(cx - cw / 2, 0), W - cw); y0 = min(max(cy - ch / 2, 0), H - ch)
     M = np.float32([[OW / cw, 0, -x0 * OW / cw], [0, OH / ch, -y0 * OH / ch]])
     frames.append(cv2.warpAffine(img2, M, (OW, OH), flags=cv2.INTER_AREA))
-type_start = 30 + 8
+type_start = 42 + 2
 for f in range(type_start, len(frames), 3):
     if np.random.default_rng(f).random() < 0.8: clicks.append(f)
 # 4) 장면 2 채팅 타자 (chat_screen 과 같은 타이밍) — 글자 하나마다 딸깍
