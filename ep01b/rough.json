@@ -45,21 +45,6 @@
  ],
  "sfx": [
   [
-   "sfx/ep01/paper-thud.wav",
-   11.5,
-   0.8
-  ],
-  [
-   "sfx/ep01/slide-down.wav",
-   16.06,
-   0.6
-  ],
-  [
-   "sfx/ep01/boing.wav",
-   16.3,
-   0.7
-  ],
-  [
    "sfx/ep01/glint.wav",
    18.33,
    0.7
