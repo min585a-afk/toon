@@ -4,10 +4,10 @@ usage: python3 ep01b/build_c2huh.py  → ep01b/c2-gyul-huh.mp4
 import subprocess, sys, tempfile
 import numpy as np
 import cv2
-sys.path.insert(0, 'tools'); from qmark import qmark
+sys.path.insert(0, 'tools'); from qmark import qmark_drop
 
 FPS, W, H = 24, 1080, 810
-Q_AT, PRE, SEC = 0.15, 0.6, 2.0                      # ? 뜨는 순간 · 시무룩 + 목소리 시작 · 컷 길이
+Q_AT, PRE, SEC = 0.5, 0.45, 2.0                      # ? 떨어지는 순간(네… 하면서) · 시무룩 + 목소리 시작 · 컷 길이
 look = cv2.imread('ep01b/c00-gyul-look.png'); oo = cv2.resize(cv2.imread('ep01b/talk/c00-mouth-sulk-raw.png'), (look.shape[1], look.shape[0]))
 MOUTH = (1150, 835)
 x0, y0 = MOUTH[0] - 200, MOUTH[1] - 150
@@ -19,7 +19,7 @@ A = cv2.resize(look, (W, H), interpolation=cv2.INTER_AREA)
 B = cv2.resize((look * (1 - m) + oo * m).astype(np.uint8), (W, H), interpolation=cv2.INTER_AREA)
 tmp = tempfile.mkdtemp(); n = int(SEC * FPS); s = int(PRE * FPS); q = int(Q_AT * FPS)
 for f in range(n):
-    fr = qmark((A if f < s else B).copy(), 800, 270, 210, f - q)
+    fr = qmark_drop((A if f < s else B).copy(), 815, 290, 200, f - q)   # 혁이 그린 위치
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', 'voice/ep01/c2-gyul-ne.wav',
                 '-filter_complex', f'[1:a]adelay={int(PRE * 1000)}:all=1,apad[a]', '-map', '0:v', '-map', '[a]', '-t', str(SEC),

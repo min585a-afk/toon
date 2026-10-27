@@ -17,11 +17,21 @@ def sprite(size):
     _cache[size] = im.resize((int(im.width * r), size), Image.LANCZOS); return _cache[size]
 
 
+def qmark_drop(fr, x, y, size, t, tilt=-12):
+    """애니메이션틱하게: 위에서 곡선 그리며 떨어져 툭 → 한 번 통 튀고 → 흔들흔들 멈춤 (12fps 느낌)."""
+    if t < 0: return fr
+    t = t - t % 2
+    path = [(40, -230, 25), (22, -120, 18), (8, -40, 8), (0, 0, -8), (0, -26, -14), (0, 0, -6), (0, -6, -16), (0, 0, -10)]  # (dx, dy, 각도)
+    dx, dy, ang = path[min(len(path) - 1, t // 2)]
+    if t // 2 >= len(path): ang = tilt
+    return qmark(fr, x + dx, y + dy, size, 99, ang)
+
+
 def qmark(fr, x, y, size, t, tilt=-14):
     """fr: BGR 프레임 · (x, y) 가운데 · t<0 이면 안 그림."""
     if t < 0: return fr
     sc = 1.3 if t < 2 else (1.1 if t < 4 else 1.0)
-    ang = tilt * min(1, t / 6)                                     # 뜬 뒤 6프레임 동안 살짝 기울어짐
+    ang = tilt * min(1, t / 6) if t < 99 else tilt                                     # 뜬 뒤 6프레임 동안 살짝 기울어짐
     sp = sprite(size); im = sp.resize((int(sp.width * sc), int(sp.height * sc)), Image.LANCZOS).rotate(ang, expand=True, resample=Image.BICUBIC)
     a = np.asarray(im).astype(np.float32); h, w = a.shape[:2]; x0, y0 = int(x - w / 2), int(y - h / 2)
     H, W = fr.shape[:2]; x1, y1, x2, y2 = max(0, x0), max(0, y0), min(W, x0 + w), min(H, y0 + h)
