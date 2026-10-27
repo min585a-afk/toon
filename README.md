@@ -130,6 +130,7 @@
 - 표정 7: 앞 `gyul-exp-01-angel`(반짝) · `02-hehe`(^^) / 뒤 `03-dark`(그림자 무표정) · `04-angry`(핏대) · `05-curse`(욕) · `06-shock`(세로 줄) · `07-cry`(폭포 눈물). 모음 `gyul-faces-exp-batch1.jpg` · `gyul-exp-batch2.jpg`.
 - 감정 6: `08-sad` · `09-surprised` · `10-shadow`(눈 안 보이는 그림자, 번짐 → 셀 그림자로 다시 고려) · `11-shy` · `12-flutter` · `13-teary`. 모음 `gyul-exp-batch3.jpg`.
 - **입 모양 3** `presets/v3/mouth/gyul-mouth-1-closed.png` · `2-half` · `3-open` — 다문/반은 GPT 2장(2cr) 뽑아 **입 부분만 잘라 기준 그림에 붙임**(입 말고 픽셀 동일 → 바꿔도 안 떨림). 뻐끔 시험 `mouth/mouth-flap-test.mp4`.
+  - **쓰는 것 = 키운 버전 `gyul-mouth-1-closed-big.png` · `2-half-big` · `3-open-big`** (입만 1.45배, 혁 "키운 게 나은 듯" · 폰에서 잘 보임). 시험 `mouth-flap-test-big.mp4`.
 - **정석 체크리스트 `STYLE_GUIDE.md`** — 그림 · 만화 기호 · 화면 · 움직임 · 편집 · 소리.
 - 다음: 2 얼굴 각도 → 3 앞 천사 표정 → 4 뒤 직장인 표정 → 5 입 모양 3 → 6 귤핀 · 오리.
 
