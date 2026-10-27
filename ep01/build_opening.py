@@ -9,7 +9,9 @@ import chat_screen as cs
 
 FPS, OW, OH, SR = 24, 1080, 810, 44100
 CLOCK = (517, 135, 118)  # 장면 1(2336x1744)에서 시계 가운데 · 반지름
-img = cv2.imread('ep01/cut01-work-v9.png'); H, W = img.shape[:2]
+img = cv2.imread('ep01/cut01-work-v9.png')            # 시계 클로즈업용 (바늘 다시 그림)
+CUT1 = cv2.imread('ep01/cut01-work-v10.png')          # 장면 1 (하품)
+H, W = img.shape[:2]
 
 
 def view(z):
@@ -50,10 +52,10 @@ for k, (hh, mm, ss, n) in enumerate([(9, 59, 57, 10), (9, 59, 58, 10), (9, 59, 5
     ticks.append(len(frames)); img2 = clock_at(hh, mm, ss); fr = view(0.0)
     frames.extend([fr] * n)
 # 2) 컷 → 장면 1 (그림 속 시계 그대로 10:00)
-img2 = img
+img2 = CUT1
 # 3) 장면 1 전체 (타자 소리) → 컷 → 채팅 화면 (줌 효과 없음, 혁 10/27)
-for f in range(40): frames.append(view(1.0))
-type_start = 42 + 2
+for f in range(48): frames.append(view(1.0))  # 장면 1 = 2초
+type_start = 42 + 10
 for f in range(type_start, len(frames), 3):
     if np.random.default_rng(f).random() < 0.8: clicks.append(f)
 # 4) 장면 2 채팅 타자 (chat_screen 과 같은 타이밍) — 글자 하나마다 딸깍
@@ -71,7 +73,7 @@ for item in cs.CHAT[cs.TYPE_FROM:]:
     clicks.append(len(frames) - 4)  # 엔터
     shown = shown + [item]
     hold(chat(shown), 14)
-hold(chat(shown, caret=False), 10)
+hold(chat(shown, caret=False), 36)  # 마지막 메시지 1.5초 멈춤 (읽을 시간)
 
 # 소리: 째깍 · 타닥 (합성)
 dur = len(frames) / FPS; audio = np.zeros(int(dur * SR) + SR, np.float32); rng = np.random.default_rng(7)
