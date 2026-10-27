@@ -31,6 +31,24 @@ def flames(t, seed):
     return lay, cv2.GaussianBlur(a, (0, 0), 1.5)[..., None]
 
 
+def vein(fr, cx, cy, r, k):
+    """빨간 핏대(빡침 마크): 네 개의 꺾인 획이 가운데를 보고 모인 모양 + 진한 테두리. k 프레임마다 맥박."""
+    from PIL import Image, ImageDraw
+    sc = 4; R = r * (1.0 + 0.18 * ((k // 3) % 2)); im = Image.new('RGBA', (int(R * 2.6 * sc), int(R * 2.6 * sc)), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    c = R * 1.3 * sc; rr = R * 0.78 * sc
+    for qx, qy in ((1, 1), (-1, 1), (-1, -1), (1, -1)):
+        ox, oy = c + qx * R * 0.92 * sc, c + qy * R * 0.92 * sc        # 바깥 모서리에 원 중심 → 가운데 쪽으로 볼록한 호
+        mid = np.degrees(np.arctan2(-qy, -qx)); box = (ox - rr, oy - rr, ox + rr, oy + rr)
+        d.arc(box, mid - 42, mid + 42, fill=(30, 15, 25, 255), width=int(R * 0.40 * sc))
+        d.arc(box, mid - 38, mid + 38, fill=(235, 55, 60, 255), width=int(R * 0.24 * sc))
+    im = im.resize((im.width // sc, im.height // sc), Image.LANCZOS); a = np.asarray(im).astype(np.float32)
+    x0, y0 = int(cx - a.shape[1] / 2), int(cy - a.shape[0] / 2)
+    roi = fr[y0:y0 + a.shape[0], x0:x0 + a.shape[1]].astype(np.float32); al = a[..., 3:4] / 255
+    fr[y0:y0 + a.shape[0], x0:x0 + a.shape[1]] = (roi * (1 - al) + a[..., 2::-1][..., :3] * al).astype(np.uint8)
+    return fr
+
+
+VEIN = (int(W * 0.66), int(H * 0.17), 74)   # 이마 오른쪽 위 (그림마다 다르면 고치기)
 tmp = tempfile.mkdtemp(); n = int(secs * FPS)
 for f in range(n):
     k = f - f % 3; t = k / FPS
@@ -46,6 +64,7 @@ for f in range(n):
     fr = cv2.remap(fr.astype(np.uint8), xx + dx, yy, cv2.INTER_LINEAR)
     sx, sy = np.random.default_rng(k + 5).normal(0, 5, 2)                # 흔들림
     fr = cv2.warpAffine(fr, np.float32([[1.03, 0, sx - W * 0.015], [0, 1.03, sy - H * 0.015]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
+    if f >= 4: fr = vein(fr, VEIN[0] + int(sx), VEIN[1] + int(sy), VEIN[2], k)  # 0.17초 뒤 툭
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 92])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out], check=True)
 print(out)
