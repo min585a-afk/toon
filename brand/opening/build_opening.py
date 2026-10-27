@@ -24,12 +24,11 @@ for k in range(34):                                                     # 컷 �
 TITLE_AT = len(frames) / FPS
 for k in range(48): frames.append(TALL[0:OH])                           # 꼭대기 2.0초 = 제목 자리
 
-# 소리: 출근 발소리(작게) · 틸트 끝 '딩~'
+# 소리: 틸트 끝 '딩~' 만 (배경음은 이어붙일 때 brand/bgm/ 에서 깔음)
 dur = len(frames) / FPS; au = np.zeros(int(dur * SR) + SR, np.float32); rng = np.random.default_rng(3)
 def add(at, s): i = int(at * SR); au[i:i + len(s)] += s[:len(au) - i]
 def tap(l):
     n = int(0.04 * SR); t = np.arange(n) / SR; return (rng.normal(0, 1, n) * np.exp(-t * 160) * l).astype(np.float32)
-for k in range(0, 60, 4): add(k / FPS + rng.uniform(0, 0.05), tap(rng.uniform(0.05, 0.1)))
 n = int(1.6 * SR); t = np.arange(n) / SR
 add(TITLE_AT, ((np.sin(2 * np.pi * 1318 * t) + 0.5 * np.sin(2 * np.pi * 1976 * t)) * np.exp(-t * 2.5) * 0.18).astype(np.float32))
 au = np.clip(au, -1, 1)

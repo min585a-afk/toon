@@ -1,0 +1,4 @@
+{"title": ["두 얼굴", "TWO FACES", 3.92, 2.0], "bgm": "brand/bgm/opening-B.mp3", "bgm_vol": 0.55, "bgm_duck": 0.15, "duck_from": 8.9,
+ "cuts": [{"file": "brand/opening/opening.mp4"},
+          {"file": "ep01b/c0-boss-walk.mp4"},
+          {"file": "ep01b/c1-boss-talk.mp4", "ko": "이것 오늘까지 좀 부탁해요.", "en": "Could you get this done by today?"}]}
