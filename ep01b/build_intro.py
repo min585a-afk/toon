@@ -30,7 +30,7 @@ def mob_frame(f, cam=TOFF):
 def title(fr, a):
     """제목 C: 나눔명조 흰 글씨 + 영어 부제. 얇은 테두리만 (그림자 없음, 혁 10/27). a=0~1 페이드."""
     im = Image.fromarray(fr[..., ::-1]).convert('RGBA')
-    f1 = ImageFont.truetype('tools/fonts/title-NanumMyeongjo.ttf', 140); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 30)
+    f1 = ImageFont.truetype('tools/fonts/title-NanumMyeongjo-800.ttf', 140); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 30)
     cx, cy = OW / 2, OH * 0.43
     def spaced(d, y, text, font, gap, **kw):
         ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
