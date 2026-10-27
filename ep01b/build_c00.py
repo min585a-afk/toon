@@ -53,7 +53,7 @@ def put_typing(a, b, vol):
     f = int(0.06 * SR); src[-f:] *= np.linspace(1, 0, f); type_track[int(a * SR):int(a * SR) + n] += src * vol
 put_typing(0, TYPE_SEC, 0.9)
 put_typing(TYPE_SEC + WALK_SEC, TYPE_SEC + WALK_SEC + LOOK_LAG, 0.9)
-mix = np.tanh((heels * 2.2 + type_track) * 1.1)  # 또각또각 또렷하게 (혁 10/27: 잘 들려야 함)
+mix = np.tanh((heels * 0.9 + type_track) * 1.1)  # 또각또각 살짝 · 너무 강하지 않게 (혁 10/27)
 cut = lambda a, b: mix[int(a * SR):int(b * SR)]
 
 gv, gf = video('ep01b/video/c00-gyul-type-look-h3.mp4')
