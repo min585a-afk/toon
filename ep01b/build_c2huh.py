@@ -14,7 +14,7 @@ x0, y0 = MOUTH[0] - 200, MOUTH[1] - 150
 g = lambda im: cv2.cvtColor(im[y0:y0 + 300, x0:x0 + 400], cv2.COLOR_BGR2GRAY).astype(np.float32)
 (dx, dy), _ = cv2.phaseCorrelate(g(look), g(oo))
 oo = cv2.warpAffine(oo, np.float32([[1, 0, -dx], [0, 1, -dy]]), (look.shape[1], look.shape[0]), borderMode=cv2.BORDER_REPLICATE)
-m = np.zeros(look.shape[:2], np.float32); cv2.ellipse(m, MOUTH, (90, 60), 0, 0, 360, 1, -1); cv2.ellipse(m, (1155, 610), (260, 70), 0, 0, 360, 1, -1)  # 입 + 눈썹; m = cv2.GaussianBlur(m, (0, 0), 10)[..., None]
+m = np.zeros(look.shape[:2], np.float32); cv2.ellipse(m, MOUTH, (90, 60), 0, 0, 360, 1, -1); cv2.ellipse(m, (1155, 610), (260, 70), 0, 0, 360, 1, -1); m = cv2.GaussianBlur(m, (0, 0), 10)[..., None]
 A = cv2.resize(look, (W, H), interpolation=cv2.INTER_AREA)
 B = cv2.resize((look * (1 - m) + oo * m).astype(np.uint8), (W, H), interpolation=cv2.INTER_AREA)
 tmp = tempfile.mkdtemp(); n = int(SEC * FPS); s = int(PRE * FPS); q = int(Q_AT * FPS)
