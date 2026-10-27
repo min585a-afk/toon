@@ -97,7 +97,7 @@ for f in range(n):
     sx, sy = np.random.default_rng(k + 5).normal(0, 5, 2)                # 흔들림
     fr = cv2.warpAffine(fr, np.float32([[1.03, 0, sx - W * 0.015], [0, 1.03, sy - H * 0.015]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
     if f >= 4: fr = vein(fr, VEIN[0] + int(sx), VEIN[1] + int(sy), VEIN[2], k)  # 0.17초 뒤 툭
-    fr = sprite(fr, 'brand/sfx/ppajik.png', int(W * 0.2) + int(sx), int(H * 0.36) + int(sy), int(H * 0.52), f, 3)
+    fr = sprite(fr, 'brand/sfx/ppajik.png', int(W * 0.2) + int(sx), int(H * 0.3) + int(sy), int(H * 0.4), f, 3)
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 92])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out], check=True)
 print(out)
