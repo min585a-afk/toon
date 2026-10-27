@@ -126,6 +126,8 @@
 - **도안용 정면 기본형 확정**: `presets/v3/gyul-base-front-02.png` (흰 반팔 · 남색 반바지 · 흰 운동화 · 흰 배경 · 4등신). 턴어라운드는 이걸 기준으로 한 장씩: 좌 3/4 → 옆 → 뒤 → 우 3/4.
 - 턴어라운드 v1 `presets/v3/gyul-turnaround-v1.jpg`: 좌 3/4 `gyul-turn-01-left34-b.png` · 정면 `gyul-base-front-02.png` · 우 3/4 `gyul-turn-04-right34-flip.png`(좌 3/4 좌우 반전, 0cr — 한쪽 장식 생기면 다시 그리기) · 옆 `gyul-turn-02-side.png` · 뒤 `gyul-turn-03-back.png`.
 - **진행 순서(혁 10/27)**: 캐릭터 에셋 전부 → 영상 1개 시험 → 판단(TTS 목소리 일관성 · 영상 품질 · 그림 유지). 나중에 **따뜻한 커플 이야기(드라마형)**도 추가 예정 → 상대역 캐릭터 따로.
+- 얼굴: 정면 `asset3/gyul-gpt-01.png` · 좌 3/4 `presets/v3/gyul-face-02-left34.png` · 옆 `gyul-face-03-side.png` (혁 "완전 그시절 애니메이션").
+- 표정 7: 앞 `gyul-exp-01-angel`(반짝) · `02-hehe`(^^) / 뒤 `03-dark`(그림자 무표정) · `04-angry`(핏대) · `05-curse`(욕) · `06-shock`(세로 줄) · `07-cry`(폭포 눈물). 모음 `gyul-faces-exp-batch1.jpg` · `gyul-exp-batch2.jpg`.
 - 다음: 2 얼굴 각도 → 3 앞 천사 표정 → 4 뒤 직장인 표정 → 5 입 모양 3 → 6 귤핀 · 오리.
 
 ## ✅ 캐릭터 확정 (10/26 혁) — 귤이 = 앞에선 천사, 뒤에선 찐 직장인
