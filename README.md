@@ -69,7 +69,7 @@
 - **인스타 계정 = 별툰 `@byeoltoon.kr`** (10/27 혁 가입). 계정 = 채널, 그 안에 시리즈(직장 개그 · 커플 드라마 · …). 영상 제목은 시리즈 이름을 앞에.
 - **기본 칠 = 25% 무드** (10/27 혁): `python3 tools/mood.py in out` — 그림자 살짝 깊게 · 비네트 · 채도 조금 낮춤 · 그레인. 완성 영상 마지막에 한 번(자막 전). 예시 `char/gyul/face/front-mood-25.png`. 극장판 칠(`front-drama-test.png`)은 너무 무거워서 안 씀.
 - 릴스 틀 도구 `python3 tools/reel_frame.py 그림 out.jpg "제목" "한글" "영어" [--guide]` · 샘플 `frame/reel-ep01-sample.jpg`. 그림·영상은 4:3(2336×1744 / 1080×810) → 최종 9:16.
-- **목소리 방식 바뀜 (10/27): 목소리 먼저 Seed Audio 로 한 줄씩 → 입은 코드로.** 귤이 기본 = `voice/ref/gyul-base.wav`(A 확정, 투니버스 더빙 느낌) 를 항상 `@Audio1` 로, 감정은 프롬프트(+ 자주 쓰면 감정 레퍼런스 `@Audio2`). 레퍼런스 한 줄에 최대 3개 · 한 줄 0.1cr. 팀장은 빠르고 날카롭게.
+- **목소리 방식 바뀜 (10/27): 목소리 먼저 Seed Audio 로 한 줄씩 → 입은 코드로.** 귤이 기본 = `voice/ref/gyul-base.wav`(A 목소리 · 평범한 대화톤 "아, 그거요? 어제 다 정리해서…", 투니버스 더빙 느낌. 밝은 버전은 `gyul-bright-A.wav`) 를 항상 `@Audio1` 로, 감정은 프롬프트(+ 자주 쓰면 감정 레퍼런스 `@Audio2`). 레퍼런스 한 줄에 최대 3개 · 한 줄 0.1cr. 팀장은 빠르고 날카롭게.
 - (예전) **목소리 확정 = MiniMax H3 영상 안에서 같이 생성** (10/27 혁 "괜찮았는데"). 기준 목소리: 귤이 `voice/ref/gyul-h3.wav`(9번 '팀장니이임') · 팀장 `voice/ref/boss-h3.wav`('잠깐 저 좀 볼까요?'). **다음 컷부터 `--image-references 그림 --audio-references voice/ref/<캐릭터>-h3.wav` + 프롬프트 'Use the exact same voice as the reference audio'** 로 일관성. 같은 후처리(highpass 200 · lowpass 6000).
 - (예전 시험) 귤이 = `seed_audio --audio-references voice/ref/girl-voice.wav` (목소리 복제 · 한 줄 0.1cr → 편마다 같은 목소리). 팀장 = `seed_audio --voice_id <preset>` 후보 Vera/Helena 또는 `text2speech_v2 --variant minimax`. 후처리 `rubberband=pitch=1.06:formant=preserved,highpass=f=200,lowpass=f=6000`. 시험 `voice/test/voice-test-01.mp4`.
 - 조연 팀장 `char/boss/` · 사무실 배경 `bg/office-desk.png`.
