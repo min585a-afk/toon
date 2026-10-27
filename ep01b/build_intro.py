@@ -27,27 +27,12 @@ def mob_frame(f, cam=TOFF):
     return cv2.addWeighted(lay, 0.7, base, 0.3, 0)[int(cam):int(cam) + OH]
 
 
-def title(fr, a):
-    """제목 C: 나눔명조 흰 글씨 + 영어 부제. 얇은 테두리만 (그림자 없음, 혁 10/27). a=0~1 페이드."""
-    im = Image.fromarray(fr[..., ::-1]).convert('RGBA')
-    f1 = ImageFont.truetype('tools/fonts/title-NanumMyeongjo-800.ttf', 140); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 30)
-    cx, cy = OW / 2, OH * 0.43
-    def spaced(d, y, text, font, gap, **kw):
-        ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
-        for c, w in zip(text, ws): d.text((x, y), c, font=font, anchor='lm', **kw); x += w + gap
-    d = ImageDraw.Draw(im)
-    spaced(d, cy, '두 얼굴', f1, 6, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
-    spaced(d, cy + 105, 'TWO  FACES', f2, 12, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
-    return np.asarray(im.convert('RGB'))[..., ::-1].copy()
-
-
 frames = []
 for f in range(31): frames.append(mob_frame(f))                         # 출근 인파 1.3초
 for k in range(34):                                                     # 틸트 업 1.4초
     t = (k - k % 2) / 33; e = t * t * (3 - 2 * t); frames.append(mob_frame(31 + k, TOFF * (1 - e)))
 top = mob_frame(65, 0)
-for k in range(44):                                                     # 제목 1.8초 (0.9초 부드럽게 페이드 인)
-    t = min(1, k / 22); frames.append(title(top, t * t * (3 - 2 * t)))
+for k in range(44): frames.append(top)                                  # 빌딩 꼭대기 1.8초 — 제목은 위에 얹음 (tools/title_card.py --start 2.7 --dur 1.8)
 # 컷 → 팀장 걸어옴: H3 영상(ep01b/video/c0-boss-walk-h3.mp4)이 있으면 그걸 초당 8장으로 끊어서 3초, 없으면 정지 그림 1.6초
 VID = 'ep01b/video/c0-boss-walk-h3.mp4'
 if os.path.exists(VID):
