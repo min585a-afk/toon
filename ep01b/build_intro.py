@@ -28,16 +28,22 @@ def mob_frame(f, cam=TOFF):
 
 
 def title(fr, a):
-    """해외 드라마식 제목: 가운데 큰 흰 글씨 + 은은한 그림자, a=0~1 페이드."""
-    im = Image.fromarray(fr[..., ::-1]).convert('RGBA'); lay = Image.new('RGBA', im.size, (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    f1 = ImageFont.truetype('tools/fonts/jua.ttf', 150); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 40)
-    cx, cy = OW / 2, OH * 0.44
-    sh = Image.new('RGBA', im.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).text((cx + 6, cy + 8), '천사와 악마', font=f1, fill=(40, 20, 60, int(170 * a)), anchor='mm')
-    sh = sh.filter(ImageFilter.GaussianBlur(10))
-    d.text((cx, cy), '천사와 악마', font=f1, fill=(255, 255, 255, int(255 * a)), anchor='mm', stroke_width=3, stroke_fill=(80, 50, 110, int(255 * a)))
-    d.text((cx, cy + 120), 'EP.01', font=f2, fill=(255, 240, 200, int(255 * a)), anchor='mm')
-    out = Image.alpha_composite(Image.alpha_composite(im, sh), lay).convert('RGB')
-    return np.asarray(out)[..., ::-1].copy()
+    """제목 C: 나눔명조 흰 글씨 + 영어 부제. 뒤 하늘을 살짝 어둡게 · 넓은 남보라 그림자 · 얇은 테두리로 잘 보이게. a=0~1 페이드."""
+    im = Image.fromarray(fr[..., ::-1]).convert('RGBA')
+    f1 = ImageFont.truetype('tools/fonts/title-NanumMyeongjo.ttf', 140); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 30)
+    cx, cy = OW / 2, OH * 0.43
+    band = Image.new('RGBA', im.size, (0, 0, 0, 0)); ImageDraw.Draw(band).ellipse((OW * 0.08, cy - 170, OW * 0.92, cy + 190), fill=(30, 20, 60, int(120 * a)))
+    im = Image.alpha_composite(im, band.filter(ImageFilter.GaussianBlur(60)))
+    def spaced(d, y, text, font, gap, **kw):
+        ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
+        for c, w in zip(text, ws): d.text((x, y), c, font=font, anchor='lm', **kw); x += w + gap
+    sh = Image.new('RGBA', im.size, (0, 0, 0, 0)); sd = ImageDraw.Draw(sh)
+    spaced(sd, cy + 6, '천사와 악마', f1, 14, fill=(35, 20, 70, int(230 * a)), stroke_width=10, stroke_fill=(35, 20, 70, int(230 * a)))
+    im = Image.alpha_composite(im, sh.filter(ImageFilter.GaussianBlur(12)))
+    d = ImageDraw.Draw(im)
+    spaced(d, cy, '천사와 악마', f1, 14, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
+    spaced(d, cy + 105, 'ANGEL  &  DEVIL', f2, 10, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
+    return np.asarray(im.convert('RGB'))[..., ::-1].copy()
 
 
 frames = []

@@ -51,15 +51,16 @@ def vein(fr, cx, cy, r, k):
 VEIN = (int(W * 0.66), int(H * 0.17), 74)
 
 
-def sfx(fr, text, x, y, size, ang, k, start):
+def sfx(fr, text, x, y, size, ang, k, start, stretch=1.0, font='tools/fonts/sfx-BlackHanSans.ttf'):
     """만화 효과 글자: 흰 글자 + 굵은 검정 테두리, 기울임, 툭 튀어나오며 커졌다 제자리."""
     from PIL import Image, ImageDraw, ImageFont
     t = k - start
     if t < 0: return fr
     sc = 1.35 if t < 2 else (1.1 if t < 4 else 1.0)
-    f = ImageFont.truetype('tools/fonts/sfx-BlackHanSans.ttf', int(size * sc))
+    f = ImageFont.truetype(font, int(size * sc))
     tw = int(f.getlength(text)) + 60; im = Image.new('RGBA', (tw, int(size * sc * 1.6)), (0, 0, 0, 0))
-    ImageDraw.Draw(im).text((30, 10), text, font=f, fill=(255, 255, 255, 255), stroke_width=max(6, int(size * sc * 0.09)), stroke_fill=(20, 15, 20, 255))
+    ImageDraw.Draw(im).text((30, 10), text, font=f, fill=(255, 255, 255, 255), stroke_width=max(4, int(size * sc * (0.05 if stretch > 1 else 0.09))), stroke_fill=(20, 15, 20, 255))
+    if stretch != 1.0: im = im.resize((int(im.width / stretch ** 0.4), int(im.height * stretch)), Image.LANCZOS)  # 세로로 길쭉하게
     im = im.rotate(ang, expand=True, resample=Image.BICUBIC); a = np.asarray(im).astype(np.float32)
     x0, y0 = int(x - a.shape[1] / 2), int(y - a.shape[0] / 2); h, w = a.shape[:2]
     x1, y1 = max(0, x0), max(0, y0); x2, y2 = min(W, x0 + w), min(H, y0 + h)
@@ -82,7 +83,7 @@ for f in range(n):
     sx, sy = np.random.default_rng(k + 5).normal(0, 5, 2)                # 흔들림
     fr = cv2.warpAffine(fr, np.float32([[1.03, 0, sx - W * 0.015], [0, 1.03, sy - H * 0.015]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
     if f >= 4: fr = vein(fr, VEIN[0] + int(sx), VEIN[1] + int(sy), VEIN[2], k)  # 0.17초 뒤 툭
-    fr = sfx(fr, '빠직', int(W * 0.17) + int(sx), int(H * 0.36) + int(sy), 150, 18, f, 3)
+    fr = sfx(fr, '빠직', int(W * 0.13) + int(sx), int(H * 0.40) + int(sy), 135, -16, f, 3, stretch=2.3, font='tools/fonts/sfx-DoHyeon.ttf')
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 92])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out], check=True)
 print(out)
