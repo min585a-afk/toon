@@ -72,7 +72,8 @@
 - **목소리 확정 = MiniMax H3 영상 안에서 같이 생성** (10/27 혁 "괜찮았는데"). 기준 목소리: 귤이 `voice/ref/gyul-h3.wav`(9번 '팀장니이임') · 팀장 `voice/ref/boss-h3.wav`('잠깐 저 좀 볼까요?'). **다음 컷부터 `--image-references 그림 --audio-references voice/ref/<캐릭터>-h3.wav` + 프롬프트 'Use the exact same voice as the reference audio'** 로 일관성. 같은 후처리(highpass 200 · lowpass 6000).
 - (예전 시험) 귤이 = `seed_audio --audio-references voice/ref/girl-voice.wav` (목소리 복제 · 한 줄 0.1cr → 편마다 같은 목소리). 팀장 = `seed_audio --voice_id <preset>` 후보 Vera/Helena 또는 `text2speech_v2 --variant minimax`. 후처리 `rubberband=pitch=1.06:formant=preserved,highpass=f=200,lowpass=f=6000`. 시험 `voice/test/voice-test-01.mp4`.
 - 조연 팀장 `char/boss/` · 사무실 배경 `bg/office-desk.png`.
-- **1화 = EP01 「팀장님의 아아」** (`EPISODES.md` 맨 위). 다음: 팀장 캐릭터 → 배경 2 → 컷 그림 → 영상.
+- **1화 = EP01 「천사와 악마」** (`ep01b/`, `EPISODES.md` 맨 위). 「팀장님의 아아」(ep01/)는 보관.
+- (보관) 「팀장님의 아아」 (`EPISODES.md` 맨 위). 다음: 팀장 캐릭터 → 배경 2 → 컷 그림 → 영상.
 - 영상 모델: Kling 안 씀. 다음 = **영상 1개 시험**(MiniMax H3 10cr/5초 · Seedance 2.0 Mini 5cr/5초) + **TTS 목소리 시험**(`tools/talk.py --audio` 로 입 자동).
 - 정석 체크리스트 `STYLE_GUIDE.md` · 대본 `EPISODES.md`. 예전 시도 폴더(asset·asset2·asset3·presets·ep01·ep02·v2·video)는 10/27 삭제 — 필요하면 git 기록에서 되살리기. 릴스 틀 기준 `frame/`, 목소리 샘플 `voice/ref/`.
 - 힉스필드 로그인: `higgsfield auth login` → 링크 승인 → 오류 페이지 주소 그대로 curl → `higgsfield workspace set <id>`.
