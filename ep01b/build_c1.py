@@ -7,11 +7,11 @@ import numpy as np
 import cv2
 
 FPS, W, H = 24, 1080, 810
-VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.4, 1.3, 0   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
+VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.2, 1.0, 0   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
 FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
 WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
-run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '1.5'], check=True)  # 대사 끝나고 1.5초 머묾
+run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '0.6'], check=True)  # 대사 끝나고 0.6초 (템포)
 run('ep01b/c1-boss-papers3-m.png', 'ep01b/talk/c1-papers3-open-m.png', VOICE, f'{tmp}/wide.mp4', '--mouth', '1118,552', '--r', '60,36', '--size', '2336x1744')  # 원본 크기 → 줌해도 안 흐림
 run('char/boss/talk/mouth-1-closed.png', 'char/boss/talk/mouth-2-open.png', VOICE, f'{tmp}/face.mp4', '--mouth', '1166,918', '--r', '85,62')
 

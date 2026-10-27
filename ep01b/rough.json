@@ -1,17 +1,7 @@
 {
- "title": [
-  "두 얼굴",
-  "TWO FACES",
-  1.92,
-  2.0
- ],
- "bgm": "brand/bgm/opening-A.mp3",
  "bgm_vol": 0.55,
  "bgm_until": 3.9,
  "cuts": [
-  {
-   "file": "brand/opening/opening.mp4"
-  },
   {
    "file": "ep01b/c00-gyul-work.mp4",
    "ko": "타닥타닥타닥",
@@ -45,9 +35,29 @@
  ],
  "sfx": [
   [
+   "sfx/ep01/paper.wav",
+   "c1-boss-talk",
+   0.05,
+   0.35
+  ],
+  [
+   "sfx/ep01/q-drop.wav",
+   "c2-gyul-huh",
+   0.25,
+   0.55
+  ],
+  [
+   "sfx/ep01/sulk.wav",
+   "c2-gyul-huh",
+   0.25,
+   0.35
+  ],
+  [
    "sfx/ep01/glint.wav",
-   18.33,
+   "c3-boss-why",
+   0.47,
    0.7
   ]
- ]
+ ],
+ "reel_title": "두 얼굴"
 }

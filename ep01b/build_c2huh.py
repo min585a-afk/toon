@@ -8,7 +8,7 @@ import cv2
 sys.path.insert(0, 'tools'); from qmark import qmark_drop
 
 FPS, W, H = 24, 1080, 810
-VOICE, VOICE_AT, SEC = 'voice/ep01/c2-gyul-ne.wav', 0.4, 2.2
+VOICE, VOICE_AT, SEC = 'voice/ep01/c2-gyul-ne.wav', 0.25, 1.7
 MOUTH = (1150, 835)
 look, sulk = cv2.imread('ep01b/c00-gyul-look.png'), cv2.imread('ep01b/c00-gyul-sulk.png')
 op = cv2.resize(cv2.imread('ep01b/talk/c00-sulk-open-raw.png'), (sulk.shape[1], sulk.shape[0]))

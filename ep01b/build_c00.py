@@ -8,10 +8,10 @@ import numpy as np
 import cv2
 
 FPS, W, H, SR = 24, 1080, 810, 44100
-TYPE_SEC = 2.8                         # 타닥타닥 컷
-HEELS_AT, STEP = 0.5, 0.42             # 또각또각 시작(타닥타닥 컷 안) · 걸음 간격
-WALK_FROM, SPEED, WALK_SEC = 0.5, 1.3, 2.4
-LOOK_LAG, LOOK_HOLD = 0.8, 0.7         # 다시 귤이: 조금 더 치다가(0.8초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.7초)
+TYPE_SEC = 1.5                         # 타닥타닥 컷 (템포 빠르게, 혁 10/27)
+HEELS_AT, STEP = 0.2, 0.36             # 또각또각 시작(타닥타닥 컷 안) · 걸음 간격
+WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.6
+LOOK_LAG, LOOK_HOLD = 0.25, 0.2         # 다시 귤이: 조금 더 치다가(0.8초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.7초)
 LOOK_SEC = LOOK_LAG + 0.9 + LOOK_HOLD
 
 

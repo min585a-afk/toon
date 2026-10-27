@@ -1,6 +1,6 @@
 """컷 이어붙이기 → 무드 25% → 화 제목 얹기 → 배경음 깔기(대사 땐 작게) → 9:16 릴스 틀 + 컷마다 자막. 크레딧 0.
 usage: python3 tools/assemble.py spec.json out.mp4
-spec = {"title": ["두 얼굴", "TWO FACES", 시작초, 길이초],
+spec = {"title": ["두 얼굴", "TWO FACES", 시작초, 길이초] (없으면 위 제목만), "sfx": [["효과음.wav", "컷 이름 일부", 컷 안 초, 볼륨], ...],
         "bgm": "brand/bgm/opening-A.mp3", "bgm_vol": 0.5, "bgm_duck": 0.18, "duck_from": 5.9, "bgm_until": 3.9,
         "cuts": [{"file": "...mp4", "ko": "", "en": "", "sec": null}, ...]}
 """
@@ -58,7 +58,10 @@ def main():
         fc += f"[v{i}][{i + 1}:v]overlay=0:0:enable='between(t,{a:.3f},{b - 0.001:.3f})'[v{i + 1}];"
     vlast = f'[v{len(pngs)}]'
     # 효과음: spec["sfx"] = [["파일", 초, 볼륨], ...] (영상 전체 시간 기준)
-    sfx = spec.get('sfx', []); si0 = len(pngs) + 1
+    sfx = []
+    for e in spec.get('sfx', []):                     # [파일, 컷 이름 일부, 컷 안에서 초, 볼륨] → 전체 시간으로
+        f, cut, off, vol = e; st = next(a for (a, b, *_), c in zip(times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol))
+    si0 = len(pngs) + 1
     for f, at, vol in sfx: cmd += ['-i', f]
     vmain = '0:a'
     if sfx:
