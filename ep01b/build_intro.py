@@ -1,7 +1,7 @@
 """EP01 두 얼굴 인트로 — 회사 앞 출근 인파 → 빌딩 위로 틸트 업 → 제목 '두 얼굴' (TWO FACES) (해외 드라마 오프닝처럼) → 팀장 걸어옴. 크레딧 0.
 usage: python3 ep01b/build_intro.py ep01b/intro.mp4
 """
-import math, subprocess, sys, tempfile, wave
+import os, math, subprocess, sys, tempfile, wave
 import numpy as np, cv2
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 FPS, OW, OH, SR = 24, 1080, 810, 44100
@@ -48,12 +48,20 @@ for k in range(34):                                                     # 틸트
 top = mob_frame(65, 0)
 for k in range(44):                                                     # 제목 1.8초 (0.9초 부드럽게 페이드 인)
     t = min(1, k / 22); frames.append(title(top, t * t * (3 - 2 * t)))
-# 컷 → 팀장 걸어옴 1.6초: 살짝 다가오는 느낌(아주 작게 커짐, 12fps)
-W0 = cv2.imread('ep01b/c0-boss-walk.png'); H0, Wd = W0.shape[:2]
-for k in range(38):
-    s = 1 + 0.06 * ((k - k % 2) / 37); cw, ch = Wd / s, H0 / s; x0, y0 = (Wd - cw) / 2, (H0 - ch) * 0.35
-    M = np.float32([[OW / cw, 0, -x0 * OW / cw], [0, OH / ch, -y0 * OH / ch]])
-    frames.append(cv2.warpAffine(W0, M, (OW, OH), flags=cv2.INTER_AREA))
+# 컷 → 팀장 걸어옴: H3 영상(ep01b/video/c0-boss-walk-h3.mp4)이 있으면 그걸 초당 8장으로 끊어서 2초, 없으면 정지 그림 1.6초
+VID = 'ep01b/video/c0-boss-walk-h3.mp4'
+if os.path.exists(VID):
+    cap = cv2.VideoCapture(VID); vf = []
+    while True:
+        ok, fr = cap.read()
+        if not ok: break
+        vf.append(cv2.resize(fr, (OW, OH), interpolation=cv2.INTER_AREA))
+    step = len(vf) / (cap.get(cv2.CAP_PROP_FPS) or 24) * FPS / len(vf)  # 원본 fps → 24
+    for k in range(48):
+        frames.append(vf[min(len(vf) - 1, int((k - k % 3) / step))])
+else:
+    W0 = cv2.imread('ep01b/c0-boss-walk.png')
+    for k in range(38): frames.append(cv2.resize(W0, (OW, OH), interpolation=cv2.INTER_AREA))
 # 소리: 출근 발소리 · 제목 '딩~' · 구두 또각또각
 dur = len(frames) / FPS; au = np.zeros(int(dur * SR) + SR, np.float32); rng = np.random.default_rng(3)
 def add(fr, s): i = int(fr / FPS * SR); au[i:i + len(s)] += s[:len(au) - i]
