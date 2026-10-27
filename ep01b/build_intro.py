@@ -1,4 +1,4 @@
-"""EP01 천사와 악마 인트로 — 회사 앞 출근 인파 → 빌딩 위로 틸트 업 → 제목 '천사와 악마' (해외 드라마 오프닝처럼) → 팀장 걸어옴. 크레딧 0.
+"""EP01 두 얼굴 인트로 — 회사 앞 출근 인파 → 빌딩 위로 틸트 업 → 제목 '두 얼굴' (TWO FACES) (해외 드라마 오프닝처럼) → 팀장 걸어옴. 크레딧 0.
 usage: python3 ep01b/build_intro.py ep01b/intro.mp4
 """
 import math, subprocess, sys, tempfile, wave
@@ -36,8 +36,8 @@ def title(fr, a):
         ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
         for c, w in zip(text, ws): d.text((x, y), c, font=font, anchor='lm', **kw); x += w + gap
     d = ImageDraw.Draw(im)
-    spaced(d, cy, '천사와 악마', f1, 14, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
-    spaced(d, cy + 105, 'ANGEL  &  DEVIL', f2, 10, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
+    spaced(d, cy, '두 얼굴', f1, 28, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
+    spaced(d, cy + 105, 'TWO  FACES', f2, 12, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
     return np.asarray(im.convert('RGB'))[..., ::-1].copy()
 
 

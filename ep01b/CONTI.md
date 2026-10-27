@@ -1,4 +1,4 @@
-# EP01 「천사와 악마」 전체 콘티 (10/27 혁 피드백 반영판)
+# EP01 「두 얼굴」 전체 콘티 (10/27 혁 피드백 반영판)
 
 한 줄: 팀장이 일 던짐 → 앞에선 천사 "넵!" → 뒤돌자 정색 빠직 → 팀장 확 돌아봄 → 0.1초 만에 천사 미소 → 신나게 타자 → 메모장 凸凸凸.
 길이 약 20초 (인트로 6초 + 본편 약 14초) · 4:3 그림을 9:16 릴스 틀 안에 · 마지막에 무드 25%.
@@ -35,7 +35,7 @@ black bob, thin rectangular glasses with white glint, cold expressionless face, 
 | 효과 글자 | **손글씨 `brand/sfx/ppajik.png`(빠직)만** 화면에 씀. 휙·반짝 같은 글자는 넣지 않음 (혁 10/27) |
 | 반짝이 | 글자가 아니라 **효과**: 세로로 긴 4갈래 별 + 금빛 번짐 + 흰 중심, 커졌다 작아지며 깜빡 (`build_c6.py` `star()`) |
 | 효과음 | 장면에 딱 맞게 · `tools/sfx_sound.py` (sparkle · bloom · rage · whoosh · ting) |
-| 마무리 | 전체 이어붙인 뒤 `tools/mood.py` 25% → `tools/reel_frame.py` (제목 **천사와 악마** · 자막 한글+영어) |
+| 마무리 | 전체 이어붙인 뒤 `tools/mood.py` 25% → `tools/reel_frame.py` (제목 **두 얼굴** · 자막 한글+영어) |
 
 ### 대사 영상 공통 (MiniMax H3 · 5초 10cr)
 ```
@@ -54,7 +54,7 @@ Camera completely still. No music, no text, no subtitles.
 ## 컷별 콘티
 
 ### 컷 0 · 인트로 (6.0초) ✅
-- **화면**: 회사 앞, 반투명 동글 실루엣 출근 인파 오감 → 빌딩 위로 틸트 업(12fps 끊김) → 제목 「천사와 악마」 + ANGEL & DEVIL (나눔명조, 얇은 테두리만 · 그림자 없음, EP 표기 없음) → 컷 → 팀장이 서류 들고 통로 따라 걸어옴.
+- **화면**: 회사 앞, 반투명 동글 실루엣 출근 인파 오감 → 빌딩 위로 틸트 업(12fps 끊김) → 제목 「두 얼굴」 + TWO FACES (나눔명조, 얇은 테두리만 · 그림자 없음, EP 표기 없음) → 컷 → 팀장이 서류 들고 통로 따라 걸어옴.
 - **그림**: `bg/office-building-tall.png` · `ep01b/c0-boss-walk.png`
   - c0 프롬프트: `long shot down the office aisle of the SECOND image: B walks straight TOWARD the viewer down the aisle between desks, carrying a thick stack of documents in her arms, firm determined stride` + STY (ref: outfit, c3-boss-leave, front-full)
 - **소리**: 발소리 · 제목 "딩~" · 또각또각
@@ -68,13 +68,13 @@ Camera completely still. No music, no text, no subtitles.
 - **효과/소리**: 서류 내밀 때 "툭" (종이 소리) · 효과 글자 없음
 - **자막**: 이것 오늘까지 좀 부탁해요. / Could you get this done by today?
 
-### 컷 2 · 귤이 천사 "아 넵! 바로 할게요!" (약 2.0초) ⬜ H3 10cr
+### 컷 2 · 귤이 천사 "네 알겠습니다!" (약 2.0초) ⬜ H3 10cr
 - **화면**: 흰 번쩍 → 활짝 천사 웃음, 꽃이 하나씩 빙글 피어나고 금빛 별 반짝반짝.
 - **그림**: `char/gyul/exp/01-angel-clean.png` ✅ (꽃·반짝이 뺀 판 — 효과는 영상 위에 직접 얹음)
-- **대사 프롬프트(H3)**: `The girl smiles brightly with sparkling eyes and says in Korean in a bright, cheerful, high and lively voice, eager and overly sweet: "아 넵! 바로 할게요!" Voiced like a cheerful young heroine in a 1990s Korean TV anime dub.` + VSTY · ref `voice/ref/gyul-h3.wav`
+- **대사 프롬프트(H3)**: `The girl smiles brightly with sparkling eyes and says in Korean in a bright, cheerful, high and lively voice, eager and overly sweet: "네 알겠습니다!" Voiced like a cheerful young heroine in a 1990s Korean TV anime dub.` + VSTY · ref `voice/ref/gyul-h3.wav`
 - **효과**: H3 영상 위에 `build_c6.py` 의 꽃 피기 + 금빛 별 그대로 얹기 (꽃 8송이 2프레임 간격, 0 → 0.35 → 0.7 → 1.15 → 1.0 크기로 빙글 돌며 피고 멈춤, 필 때 옆에서 별 반짝)
 - **소리**: 꽃 필 때마다 종소리 한 음씩 올라감 + 반짝 쉬머 (`ss.bloom`) — 대사 밑에 작게
-- **자막**: 아 넵! 바로 할게요! / Oh, yes! Right away!
+- **자막**: 네 알겠습니다! / Yes, understood!
 
 ### 컷 3 · 팀장 뒤돌아 감 (약 1.2초) ✅그림 · ⬜편집 0cr
 - **화면**: 통로 따라 멀어지는 팀장 뒷모습. 몸은 멈춘 그림, 컷 길이로만.
@@ -114,9 +114,13 @@ Camera completely still. No music, no text, no subtitles.
 ### 컷 7 · 메모장 凸凸凸 (약 3초) ✅ — 끝
 - **화면**: 모니터 메모장 화면, 凸凸凸 3줄이 타닥타닥 쳐짐. 마지막 줄에서 0.8초 멈추고 끝.
 - **만들기**: `tools/notepad_screen.py` → `ep01b/c7-notepad.mp4`
-- **소리**: 타닥타닥 (한 글자마다 딸깍) · 마지막 엔터 "탁"
+- **소리**: 타닥타닥 (한 글자마다 딸깍) · 마지막 엔터 "탁" · 귤이 음흉한 웃음 "흐흐흐흐…" `voice/ep01/c7-gyul-laugh.wav`
 
 ---
+## 목소리 파일 (확정 · 0cr 로 재사용)
+- 컷 1 팀장 `voice/ep01/c1-boss.wav` "이것 오늘까지 좀 부탁해요." · 컷 2 귤이 `voice/ep01/c2-gyul.wav` "네 알겠습니다!" · 컷 7 귤이 웃음 `voice/ep01/c7-gyul-laugh.wav`
+- 대사 컷은 H3 대신 목소리 먼저 + 입은 코드 (`tools/talk.py`). 고정 설정은 `CONTINUITY.md`.
+
 ## 남은 일 (순서대로)
 1. 컷 1 · 컷 2 H3 대사 영상 (약 20cr, 돌리기 전 `higgsfield generate cost minimax_h3 …` 로 확인하고 말하기) → 컷 2 위에 꽃·별 효과 얹기
 2. 컷 3 · 6b 편집 (0cr: 정지 그림 + 소리 + 반짝)
