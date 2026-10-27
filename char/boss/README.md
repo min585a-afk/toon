@@ -3,3 +3,4 @@
 - `face/front.png` 얼굴 클로즈업 기준 · `face/front-full.png` 정수리까지 상반신 · `base/outfit.png` 전신(아아 든 모습).
 - 표정 · 뒷모습 등은 에피소드에서 필요할 때 1cr씩 추가 (만드는 법: 귤이와 같음, `--image char/boss/face/front.png` 첫 번째).
 - 대사용 입 2단계: `talk/mouth-1-closed.png`(원래 얼굴) · `talk/mouth-2-open.png`(살짝 벌린 입, 입만 합성). 무뚝뚝해서 2단계면 충분.
+- **표정은 항상 냉정한 무표정**(혁 10/27). 감정은 행동(아아 건네기 등)으로만.
