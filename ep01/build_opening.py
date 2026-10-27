@@ -10,7 +10,7 @@ import chat_screen as cs
 FPS, OW, OH, SR = 24, 1080, 810, 44100
 CLOCK = (517, 135, 118)  # 장면 1(2336x1744)에서 시계 가운데 · 반지름
 img = cv2.imread('ep01/cut01-work-v9.png')            # 시계 클로즈업용 (바늘 다시 그림)
-CUT1 = cv2.imread('ep01/cut01-work-v10.png')          # 장면 1 (하품)
+CUT1 = cv2.imread('ep01/cut01-work-v11.png')          # 장면 1 (나른한 하품)
 H, W = img.shape[:2]
 
 
