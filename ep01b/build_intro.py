@@ -36,7 +36,7 @@ def title(fr, a):
         ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
         for c, w in zip(text, ws): d.text((x, y), c, font=font, anchor='lm', **kw); x += w + gap
     d = ImageDraw.Draw(im)
-    spaced(d, cy, '두 얼굴', f1, 28, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
+    spaced(d, cy, '두 얼굴', f1, 6, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
     spaced(d, cy + 105, 'TWO  FACES', f2, 12, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
     return np.asarray(im.convert('RGB'))[..., ::-1].copy()
 
