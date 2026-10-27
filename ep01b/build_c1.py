@@ -11,7 +11,7 @@ VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.4, 1.3, 0   # 대사 
 FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
 WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
-run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '1.0'], check=True)  # 대사 끝나고 1초 머묾
+run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '1.5'], check=True)  # 대사 끝나고 1.5초 머묾
 run('ep01b/c1-boss-papers.png', 'ep01b/talk/c1-open-raw.png', VOICE, f'{tmp}/wide.mp4', '--mouth', '1150,392', '--r', '55,34', '--size', '2336x1744')  # 원본 크기 → 줌해도 안 흐림
 run('char/boss/talk/mouth-1-closed.png', 'char/boss/talk/mouth-2-open.png', VOICE, f'{tmp}/face.mp4', '--mouth', '1166,918', '--r', '85,62')
 
