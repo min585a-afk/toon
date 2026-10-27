@@ -48,7 +48,7 @@ for k in range(34):                                                     # 틸트
 top = mob_frame(65, 0)
 for k in range(44):                                                     # 제목 1.8초 (0.9초 부드럽게 페이드 인)
     t = min(1, k / 22); frames.append(title(top, t * t * (3 - 2 * t)))
-# 컷 → 팀장 걸어옴: H3 영상(ep01b/video/c0-boss-walk-h3.mp4)이 있으면 그걸 초당 8장으로 끊어서 2초, 없으면 정지 그림 1.6초
+# 컷 → 팀장 걸어옴: H3 영상(ep01b/video/c0-boss-walk-h3.mp4)이 있으면 그걸 초당 8장으로 끊어서 3초, 없으면 정지 그림 1.6초
 VID = 'ep01b/video/c0-boss-walk-h3.mp4'
 if os.path.exists(VID):
     cap = cv2.VideoCapture(VID); vf = []
@@ -57,7 +57,7 @@ if os.path.exists(VID):
         if not ok: break
         vf.append(cv2.resize(fr, (OW, OH), interpolation=cv2.INTER_AREA))
     step = len(vf) / (cap.get(cv2.CAP_PROP_FPS) or 24) * FPS / len(vf)  # 원본 fps → 24
-    for k in range(48):
+    for k in range(72):  # 3초: 멀리서 가까이까지
         frames.append(vf[min(len(vf) - 1, int((k - k % 3) / step))])
 else:
     W0 = cv2.imread('ep01b/c0-boss-walk.png')
