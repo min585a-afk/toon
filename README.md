@@ -63,7 +63,14 @@
   - 영상 만들 때: `--image-references <장면그림> --audio-references voice/ref/girl-voice.wav` + 프롬프트에 "use the exact voice from the reference audio".
   - 후처리도 늘 같게: `rubberband=pitch=1.1:formant=preserved,highpass=f=220,lowpass=f=5500` → 톤이 편마다 같아짐.
 
-## ▶ 이어서 하기 (10/26 최신 · 새 채팅/다른 계정은 여기부터)
+## ▶ 이어서 하기 (10/27 최신 · 새 채팅/다른 계정은 여기부터)
+- **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
+- 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
+- 영상 모델: Kling 안 씀. 다음 = **영상 1개 시험**(MiniMax H3 10cr/5초 · Seedance 2.0 Mini 5cr/5초) + **TTS 목소리 시험**(`tools/talk.py --audio` 로 입 자동).
+- 정석 체크리스트 `STYLE_GUIDE.md` · 대본 `EPISODES.md`. 예전 시도(asset·asset2·asset3·presets v1/v2·ep01·ep02 옛 그림체)는 참고용 기록.
+- 힉스필드 로그인: `higgsfield auth login` → 링크 승인 → 오류 페이지 주소 그대로 curl → `higgsfield workspace set <id>`.
+
+## ▷ 예전 이어서 하기 (10/26)
 - **주인공 기준 그림: `asset3/front-v11-brown.png`** (10/26 확정 · front-v7[Seedream] 에서 눈 1.15배 + 반짝이 1.4, 갈색 눈 · 0cr 도구로). 편집은 이 그림에서 1번만, 겹치지 않기. 이전 기준 front-v6.
 - **색: 넣는 그림은 원본, 완성본만 보정** — 모델에 넣는 기준·컷 그림은 원본 색 그대로, 영상 완성 후(자막 전) `python3 tools/anime_grade.py … 0.7` 한 번.
 - 정면 얼굴 클로즈업(오리 없음): `asset3/face-front-01.png` (Seedream 2k · 2.5cr), 보정본 `face-front-01-grade0.7.jpg`.
@@ -102,11 +109,11 @@
 - 정면 시안 `asset3/gyul-front-01.png` (Seedream 2k · 2.5cr). 꼬마 시트(presets/v2)는 개그용 SD 로 남김.
 
 ## ✅✅ 그림체 확정 (10/26 혁 "오 옛날 느낌 나는데?")
-- **기준 그림: `asset3/gyul-gpt-01.png`** — GPT Image 2.5 (`gpt_image_2_5`, quality medium, 2k, 4:3 · **1cr**).
+- **기준 그림: `char/gyul/face/front.png`** — GPT Image 2.5 (`gpt_image_2_5`, quality medium, 2k, 4:3 · **1cr**).
 - 만드는 법(고정): `--image 기준그림 --image 진짜 90년대 애니 캡처 2~3장` + 프롬프트 "authentic early-1990s Japanese TV anime frame… bold black cel outlines, flat cel paint, one hard shadow, angular hair highlights, 90s eyes, hand-painted pastel background, film grain". 캡처(혁이 보낸 kkum.byeol · 파란 머리 · 햄스터 애)는 남의 작품이라 저장소에 없음 → 새 세션에서 다시 받기.
 - 왜: Seedream 은 넣은 인물 그림을 그대로 베껴서 그림체가 안 바뀜. 요즘 핀터 AI 그림을 레퍼런스로 쓰면 요즘 그림이 나옴 → **진짜 90년대 캡처만** 레퍼런스로.
 - 필터는 거의 필요 없음(원본이 이미 TV 캡처 느낌). 쓰면 아주 약하게.
-- **캐릭터 에셋 v3** `presets/v3/sheet-gyul-model-01.png` (GPT Image 2.5 high 2k 16:9 · 2.75cr): 전신 4방향 + 키 가이드 · 얼굴 6방향 · 표정 8(앞: 반짝 천사 웃음 · ^^ · 어색한 땀 웃음 / 뒤: 그림자 진 무표정 · 핏대 분노 · 이 악문 욕 · 세로 줄 충격 · 폭포 눈물). 복장: 빨간 가디건 · 흰 티 · 남색 사원증 · 크림 주름 롱스커트 · 흰 양말 · 갈색 로퍼.
+- **캐릭터 에셋 v3** `char/gyul/(옛 presets/v3) sheet-gyul-model-01.png` (GPT Image 2.5 high 2k 16:9 · 2.75cr): 전신 4방향 + 키 가이드 · 얼굴 6방향 · 표정 8(앞: 반짝 천사 웃음 · ^^ · 어색한 땀 웃음 / 뒤: 그림자 진 무표정 · 핏대 분노 · 이 악문 욕 · 세로 줄 충격 · 폭포 눈물). 복장: 빨간 가디건 · 흰 티 · 남색 사원증 · 크림 주름 롱스커트 · 흰 양말 · 갈색 로퍼.
 
 ## 콘셉트 확장 (10/27 혁)
 - 주제: 직장인만이 아니라 **누구나 공감하는 일상 + 엉뚱한 에피소드**. 캐릭터 갭은 그대로 "앞 천사 / 뒤 현실".
@@ -117,29 +124,29 @@
 
 ## 귤이 단계별 디벨롭 (10/26 혁 "한 번에 뽑지 말고 조금씩")
 - 시트 한 장(v3 model-01)은 몸이 5등신으로 길어지고 얼굴 느낌이 빠짐 → **gyul-gpt-01 느낌 유지가 1순위**, 한 장에 그림 1개씩, OK 받은 그림을 다음 단계 레퍼런스로.
-- 매번: GPT Image 2.5 medium 2k(1cr) · `--image asset3/gyul-gpt-01.png` + 90년대 캡처 2장.
-- 1단계 전신: `presets/v3/gyul-step1-fullbody-01.png` (약 4등신 — 혁 "비율 괜찮아", 더 작으면 로리 오해 위험 → 3등신 이하는 개그 SD 만).
-- **시대 = 2026 현재**(그림체만 옛날). 복장: 오버핏 빨간 니트 가디건 · 흰 티 · 와이드 베이지 슬랙스 · 흰 스니커즈 · 남색 사원증 · 아아(빨대 컵). `presets/v3/gyul-step1-fullbody-02-2026.png` (1cr). 교복처럼 보이는 주름치마 + 흰 양말 + 로퍼는 안 씀.
-- **머리 = 긴 생머리 그대로**(반묶음 `gyul-step1-fullbody-03-halfup.png` 은 혁 "너무 흔해" → 안 씀). **1단계 확정 = `presets/v3/gyul-step1-fullbody-02-2026.png`**.
-- **캐릭터 도안(콜아웃)** `presets/v3/gyul-callout-v1.png` — `python3 tools/callout_sheet.py out.png` (0cr). 확정 전신에서 부위를 잘라 둘레 칸에 배치 + 빨간 지시선 + 색 팔레트(원본에서 뽑은 값). 칸은 나중에 생성한 디테일 컷으로 바꿔 끼움.
+- 매번: GPT Image 2.5 medium 2k(1cr) · `--image char/gyul/face/front.png` + 90년대 캡처 2장.
+- 1단계 전신: `char/gyul/(옛 presets/v3) gyul-step1-fullbody-01.png` (약 4등신 — 혁 "비율 괜찮아", 더 작으면 로리 오해 위험 → 3등신 이하는 개그 SD 만).
+- **시대 = 2026 현재**(그림체만 옛날). 복장: 오버핏 빨간 니트 가디건 · 흰 티 · 와이드 베이지 슬랙스 · 흰 스니커즈 · 남색 사원증 · 아아(빨대 컵). `char/gyul/(옛 presets/v3) gyul-step1-fullbody-02-2026.png` (1cr). 교복처럼 보이는 주름치마 + 흰 양말 + 로퍼는 안 씀.
+- **머리 = 긴 생머리 그대로**(반묶음 `gyul-step1-fullbody-03-halfup.png` 은 혁 "너무 흔해" → 안 씀). **1단계 확정 = `char/gyul/(옛 presets/v3) gyul-step1-fullbody-02-2026.png`**.
+- **캐릭터 도안(콜아웃)** `char/gyul/(옛 presets/v3) gyul-callout-v1.png` — `python3 tools/callout_sheet.py out.png` (0cr). 확정 전신에서 부위를 잘라 둘레 칸에 배치 + 빨간 지시선 + 색 팔레트(원본에서 뽑은 값). 칸은 나중에 생성한 디테일 컷으로 바꿔 끼움.
   - 색: 머리 #15151A · 머리 광택 #4C4A6F · 피부 #F7C7B6 · 볼 #F69997 · 가디건 #B23E3F · 티 #F6EEEC · 슬랙스 #E2C8B8 · 사원증 줄 #2B3661
-- **도안용 정면 기본형 확정**: `presets/v3/gyul-base-front-02.png` (흰 반팔 · 남색 반바지 · 흰 운동화 · 흰 배경 · 4등신). 턴어라운드는 이걸 기준으로 한 장씩: 좌 3/4 → 옆 → 뒤 → 우 3/4.
-- 턴어라운드 v1 `presets/v3/gyul-turnaround-v1.jpg`: 좌 3/4 `gyul-turn-01-left34-b.png` · 정면 `gyul-base-front-02.png` · 우 3/4 `gyul-turn-04-right34-flip.png`(좌 3/4 좌우 반전, 0cr — 한쪽 장식 생기면 다시 그리기) · 옆 `gyul-turn-02-side.png` · 뒤 `gyul-turn-03-back.png`.
+- **도안용 정면 기본형 확정**: `char/gyul/(옛 presets/v3) gyul-base-front-02.png` (흰 반팔 · 남색 반바지 · 흰 운동화 · 흰 배경 · 4등신). 턴어라운드는 이걸 기준으로 한 장씩: 좌 3/4 → 옆 → 뒤 → 우 3/4.
+- 턴어라운드 v1 `char/gyul/(옛 presets/v3) gyul-turnaround-v1.jpg`: 좌 3/4 `gyul-turn-01-left34-b.png` · 정면 `gyul-base-front-02.png` · 우 3/4 `gyul-turn-04-right34-flip.png`(좌 3/4 좌우 반전, 0cr — 한쪽 장식 생기면 다시 그리기) · 옆 `gyul-turn-02-side.png` · 뒤 `gyul-turn-03-back.png`.
 - **진행 순서(혁 10/27)**: 캐릭터 에셋 전부 → 영상 1개 시험 → 판단(TTS 목소리 일관성 · 영상 품질 · 그림 유지). 나중에 **따뜻한 커플 이야기(드라마형)**도 추가 예정 → 상대역 캐릭터 따로.
-- 얼굴: 정면 `asset3/gyul-gpt-01.png` · 좌 3/4 `presets/v3/gyul-face-02-left34.png` · 옆 `gyul-face-03-side.png` (혁 "완전 그시절 애니메이션").
+- 얼굴: 정면 `char/gyul/face/front.png` · 좌 3/4 `char/gyul/(옛 presets/v3) gyul-face-02-left34.png` · 옆 `gyul-face-03-side.png` (혁 "완전 그시절 애니메이션").
 - 표정 7: 앞 `gyul-exp-01-angel`(반짝) · `02-hehe`(^^) / 뒤 `03-dark`(그림자 무표정) · `04-angry`(핏대) · `05-curse`(욕) · `06-shock`(세로 줄) · `07-cry`(폭포 눈물). 모음 `gyul-faces-exp-batch1.jpg` · `gyul-exp-batch2.jpg`.
 - 감정 6: `08-sad` · `09-surprised` · `10-shadow`(눈 안 보이는 그림자, 번짐 → 셀 그림자로 다시 고려) · `11-shy` · `12-flutter` · `13-teary`. 모음 `gyul-exp-batch3.jpg`.
-- **입 모양 3** `presets/v3/mouth/gyul-mouth-1-closed.png` · `2-half` · `3-open` — 다문/반은 GPT 2장(2cr) 뽑아 **입 부분만 잘라 기준 그림에 붙임**(입 말고 픽셀 동일 → 바꿔도 안 떨림). 뻐끔 시험 `mouth/mouth-flap-test.mp4`.
+- **입 모양 3** `char/gyul/(옛 presets/v3) mouth/gyul-mouth-1-closed.png` · `2-half` · `3-open` — 다문/반은 GPT 2장(2cr) 뽑아 **입 부분만 잘라 기준 그림에 붙임**(입 말고 픽셀 동일 → 바꿔도 안 떨림). 뻐끔 시험 `mouth/mouth-flap-test.mp4`.
   - **쓰는 것 = 키운 버전 `gyul-mouth-1-closed-big.png` · `2-half-big` · `3-open-big`** (입만 1.45배, 혁 "키운 게 나은 듯" · 폰에서 잘 보임). 시험 `mouth-flap-test-big.mp4`.
-- **눈 깜빡 3** `presets/v3/eyes/gyul-eyes-1-open.png` · `2-half` · `3-closed` — 입처럼 눈 부분만 합성(2cr). 눈·입 자리가 안 겹쳐서 눈 3 × 입 3 자유 조합. 말하기+깜빡 시험 `eyes/talk-blink-test.mp4`.
-- SD 개그 3: `presets/v3/sd/gyul-sd-01-stomp.png`(발 구르기 · 핏대) · `02-flail`(> < 폭포 눈물 버둥) · `03-run`(도망 · 먼지) — 평소 복장, 단색 배경 (3cr).
-- **캐릭터 도안 v1 `presets/v3/gyul-model-sheet-v1.png`** (`python3 tools/model_sheet.py out.png`, 0cr) — 평소 복장 · 턴어라운드 5 · 얼굴 3 · 입 3 · 표정 13 · SD 3.
+- **눈 깜빡 3** `char/gyul/(옛 presets/v3) eyes/gyul-eyes-1-open.png` · `2-half` · `3-closed` — 입처럼 눈 부분만 합성(2cr). 눈·입 자리가 안 겹쳐서 눈 3 × 입 3 자유 조합. 말하기+깜빡 시험 `eyes/talk-blink-test.mp4`.
+- SD 개그 3: `char/gyul/(옛 presets/v3) sd/gyul-sd-01-stomp.png`(발 구르기 · 핏대) · `02-flail`(> < 폭포 눈물 버둥) · `03-run`(도망 · 먼지) — 평소 복장, 단색 배경 (3cr).
+- **캐릭터 도안 v1 `char/gyul/(옛 presets/v3) gyul-model-sheet-v1.png`** (`python3 tools/model_sheet.py out.png`, 0cr) — 평소 복장 · 턴어라운드 5 · 얼굴 3 · 입 3 · 표정 13 · SD 3.
 - 영상 모델: **Kling 안 씀**(혁 "별로"). MiniMax H3 / Seedance 쪽으로 시험.
 - **정석 체크리스트 `STYLE_GUIDE.md`** — 그림 · 만화 기호 · 화면 · 움직임 · 편집 · 소리.
 - 다음: 2 얼굴 각도 → 3 앞 천사 표정 → 4 뒤 직장인 표정 → 5 입 모양 3 → 6 귤핀 · 오리.
 
 ## ✅ 캐릭터 확정 (10/26 혁) — 귤이 = 앞에선 천사, 뒤에선 찐 직장인
-- **얼굴 고정**: `asset3/gyul-gpt-01.png` (그림체 확정 섹션) · 원래 얼굴 `asset3/gyul-front-03.png` (D · 동글 아기 얼굴 · 회갈색 큰 눈 · 긴 검정 머리 · 일자 앞머리 · 빨간 가디건 · 흰 티). 이제 그림체·얼굴 안 바꿈.
+- **얼굴 고정**: `char/gyul/face/front.png` (그림체 확정 섹션) · 원래 얼굴 `asset3/gyul-front-03.png` (D · 동글 아기 얼굴 · 회갈색 큰 눈 · 긴 검정 머리 · 일자 앞머리 · 빨간 가디건 · 흰 티). 이제 그림체·얼굴 안 바꿈.
 - **성격 = 갭**: 앞(사람들 앞)에선 순수하게 웃는 순정만화 주인공 → 뒤(혼자 · 돌아서면)에선 화내고 욕하고 혀 차는 찐 직장인. 이 낙차가 매 편 웃음 포인트.
   - 연출: 앞 = 반짝이 · 파스텔 · 맑은 웃음 / 뒤 = 얼굴에 그림자 · 반쯤 뜬 눈 · 핏대 · 배경 어둡게. 욕은 "삐-" 처리 또는 기호(#$%!) 자막.
 - 오리 = 그 속마음을 대신 말해버리는 팩폭 담당(콤비).
