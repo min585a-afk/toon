@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 
 FPS, W, H = 24, 1080, 810
-VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.3, 0.95, 0   # 대사 0.3초에 시작 · 상반신 0.95초 → 바로 얼굴 클로즈업 컷 (줌 과정 안 보임, 혁 10/27)
+VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.4, 1.3, 0   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
 FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
 WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
