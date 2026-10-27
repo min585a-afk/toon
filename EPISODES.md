@@ -8,10 +8,10 @@
 | 2 | 귤이 반짝 천사 웃음 ✨ | 귤이: "아 넵! 바로 할게요!" | `char/gyul/exp/01-angel.png` |
 | 3 | 팀장 뒤돌아 감 | (또각또각) | `ep01b/c3-boss-leave.png` |
 | 4 | 화면 확 어두워짐 · 그림자 얼굴 · 핏대 · 부들부들 | (으르릉…) | `ep01b/c4-devil.png` (`exp/05-curse` · `exp/03-dark`) |
-| 5 | 팀장 휙 돌아봄 · 안경 번쩍 | (휙!) | `ep01b/c5-boss-turn.png` |
+| 5 | 귤이 자리 시점 · 통로 멀리서 팀장 멈칫, 어깨 너머로 휙 · 안경 번쩍 | (휙!) | `ep01b/c5-boss-turn.png` |
 | 6 | 0.1초 만에 천사 미소 ✨✨ | (반짝) | `exp/01-angel` 재사용 |
-| 7 | 메모장 凸凸凸 3줄 타닥타닥 → 천사 미소로 타자 | (타닥타닥) | `ep01b/c7-notepad.mp4` (`tools/notepad_screen.py`, 0cr) · `ep01b/c7-type-angel.png` |
-- 제목(위): **천사와 악마**
+| 7 | 메모장 凸凸凸 3줄 타닥타닥으로 끝 | (타닥타닥) | `ep01b/c7-notepad.mp4` (`tools/notepad_screen.py`, 0cr) |
+- 제목(위): **천사와 악마** · 완성 영상에 `tools/mood.py`(25%) 마지막에 적용.
 - 전 1화 「팀장님의 아아」(ep01/)는 2화 이후 후보로 보관.
 
 ---
