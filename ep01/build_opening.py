@@ -1,4 +1,4 @@
-"""EP01 오프닝: 벽시계 9:59:57 클로즈업(째깍 → 10:00) → 컷 → 장면 1 타닥타닥 → 모니터로 → 장면 2 채팅 타자. 크레딧 0.
+"""EP01 오프닝: 벽시계 9:59:57 클로즈업(째깍 → 10:00) → 컷 → 장면 1 타닥타닥 → 컷 → 장면 2 채팅 타자 (줌 없음). 크레딧 0.
 usage: python3 ep01/build_opening.py ep01/opening.mp4
 """
 import math, os, subprocess, sys, tempfile, wave
@@ -51,15 +51,8 @@ for k, (hh, mm, ss, n) in enumerate([(9, 59, 57, 10), (9, 59, 58, 10), (9, 59, 5
     frames.extend([fr] * n)
 # 2) 컷 → 장면 1 (그림 속 시계 그대로 10:00)
 img2 = img
-# 3) 장면 1 전체 1.2초 (타자 소리) → 모니터 쪽으로 빠르게 들어가며 채팅 화면으로
+# 3) 장면 1 전체 (타자 소리) → 컷 → 채팅 화면 (줌 효과 없음, 혁 10/27)
 for f in range(40): frames.append(view(1.0))
-MON = (390, 730)
-for f in range(10):
-    t = ((f - f % 2) / 9) ** 2; cw = W - (W - 900) * t; ch = cw * 3 / 4
-    cx = W / 2 + (MON[0] - W / 2) * t; cy = H / 2 + (MON[1] - H / 2) * t
-    x0 = min(max(cx - cw / 2, 0), W - cw); y0 = min(max(cy - ch / 2, 0), H - ch)
-    M = np.float32([[OW / cw, 0, -x0 * OW / cw], [0, OH / ch, -y0 * OH / ch]])
-    frames.append(cv2.warpAffine(img2, M, (OW, OH), flags=cv2.INTER_AREA))
 type_start = 42 + 2
 for f in range(type_start, len(frames), 3):
     if np.random.default_rng(f).random() < 0.8: clicks.append(f)
