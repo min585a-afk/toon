@@ -67,6 +67,20 @@ def sfx(fr, text, x, y, size, ang, k, start, stretch=1.0, font='tools/fonts/sfx-
     a = a[y1 - y0:y2 - y0, x1 - x0:x2 - x0]; al = a[..., 3:4] / 255
     fr[y1:y2, x1:x2] = (fr[y1:y2, x1:x2] * (1 - al) + a[..., 2::-1][..., :3] * al).astype(np.uint8)
     return fr   # 이마 오른쪽 위 (그림마다 다르면 고치기)
+def sprite(fr, path, x, y, hgt, k, start):
+    """손글씨 효과 글자 그림(RGBA, brand/sfx/) 을 툭 튀어나오게 얹기."""
+    t = k - start
+    if t < 0: return fr
+    sc = 1.3 if t < 2 else (1.08 if t < 4 else 1.0)
+    im = cv2.imread(path, cv2.IMREAD_UNCHANGED); r = hgt * sc / im.shape[0]
+    im = cv2.resize(im, (int(im.shape[1] * r), int(im.shape[0] * r)), interpolation=cv2.INTER_AREA).astype(np.float32)
+    h, w = im.shape[:2]; x0, y0 = int(x - w / 2), int(y - h / 2)
+    x1, y1 = max(0, x0), max(0, y0); x2, y2 = min(W, x0 + w), min(H, y0 + h)
+    a = im[y1 - y0:y2 - y0, x1 - x0:x2 - x0]; al = a[..., 3:4] / 255
+    fr[y1:y2, x1:x2] = (fr[y1:y2, x1:x2] * (1 - al) + a[..., :3] * al).astype(np.uint8)
+    return fr
+
+
 tmp = tempfile.mkdtemp(); n = int(secs * FPS)
 for f in range(n):
     k = f - f % 3; t = k / FPS
@@ -83,7 +97,7 @@ for f in range(n):
     sx, sy = np.random.default_rng(k + 5).normal(0, 5, 2)                # 흔들림
     fr = cv2.warpAffine(fr, np.float32([[1.03, 0, sx - W * 0.015], [0, 1.03, sy - H * 0.015]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
     if f >= 4: fr = vein(fr, VEIN[0] + int(sx), VEIN[1] + int(sy), VEIN[2], k)  # 0.17초 뒤 툭
-    fr = sfx(fr, '빠직', int(W * 0.13) + int(sx), int(H * 0.40) + int(sy), 135, -16, f, 3, stretch=2.3, font='tools/fonts/sfx-DoHyeon.ttf')
+    fr = sprite(fr, 'brand/sfx/ppajik.png', int(W * 0.17) + int(sx), int(H * 0.36) + int(sy), int(H * 0.52), f, 3)
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 92])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out], check=True)
 print(out)
