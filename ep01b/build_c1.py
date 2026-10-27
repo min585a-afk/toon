@@ -7,11 +7,12 @@ import numpy as np
 import cv2
 
 FPS, W, H = 24, 1080, 810
-VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.3, 0.95, 6   # 대사 0.3초에 시작 · 상반신 0.95초(끝 6프레임 줌) 뒤 얼굴로
-FACE_IN_WIDE = (1150 / 2336 * W, 300 / 1744 * H)                           # 상반신 그림에서 얼굴 가운데 (1080x810)
+VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.3, 0.95, 0   # 대사 0.3초에 시작 · 상반신 0.95초 → 바로 얼굴 클로즈업 컷 (줌 과정 안 보임, 혁 10/27)
+FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
+WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
-run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '0.5'], check=True)
-run('ep01b/c1-boss-papers.png', 'ep01b/talk/c1-open-raw.png', VOICE, f'{tmp}/wide.mp4', '--mouth', '1150,392', '--r', '55,34')
+run = lambda *a: subprocess.run(['python3', 'tools/talk_mouth.py', *a, '--pre', str(PRE), '--post', '1.0'], check=True)  # 대사 끝나고 1초 머묾
+run('ep01b/c1-boss-papers.png', 'ep01b/talk/c1-open-raw.png', VOICE, f'{tmp}/wide.mp4', '--mouth', '1150,392', '--r', '55,34', '--size', '2336x1744')  # 원본 크기 → 줌해도 안 흐림
 run('char/boss/talk/mouth-1-closed.png', 'char/boss/talk/mouth-2-open.png', VOICE, f'{tmp}/face.mp4', '--mouth', '1166,918', '--r', '85,62')
 
 
@@ -27,12 +28,14 @@ wide, face = read(f'{tmp}/wide.mp4'), read(f'{tmp}/face.mp4'); n = min(len(wide)
 frames = []
 for i in range(n):
     if i < cut:
-        fr = wide[i]; k = i - (cut - ZOOM_F)
-        if k >= 0:  # 얼굴 쪽으로 빠르게 줌 (1 → 2.2배)
-            s = 1 + 1.2 * ((k + 1) / ZOOM_F) ** 2; cx, cy = FACE_IN_WIDE
-            M = np.float32([[s, 0, cx - s * cx + (W / 2 - cx) * (s - 1) / s], [0, s, cy - s * cy + (H / 2 - cy) * (s - 1) / s]])
-            fr = cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-        frames.append(fr)
+        fr = wide[i]; k = i - (cut - ZOOM_F); s = 1.0
+        if k >= 0: s = 1 + 1.2 * ((k + 1) / ZOOM_F) ** 2   # 얼굴 쪽으로 빠르게 줌 (1 → 2.2배)
+        cx, cy = FACE_IN_WIDE; cw, ch = WW / s, WH / s
+        x0 = min(max(cx - cw / 2 * (s - 1) / s - (cx - WW / 2) / s, 0), WW - cw) if s > 1 else 0
+        y0 = min(max(cy - ch / 2, 0), WH - ch) if s > 1 else 0
+        x0 = min(max(cx - cw / 2, 0), WW - cw) if s > 1 else 0
+        # 원본 크기에서 잘라서 줄임 → 화질 유지
+        frames.append(cv2.resize(fr[int(y0):int(y0 + ch), int(x0):int(x0 + cw)], (W, H), interpolation=cv2.INTER_AREA))
     else:
         frames.append(face[i])
 for i, fr in enumerate(frames): cv2.imwrite(f'{tmp}/{i:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
