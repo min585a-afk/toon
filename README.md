@@ -66,6 +66,7 @@
 ## ▶ 이어서 하기 (10/27 최신 · 새 채팅/다른 계정은 여기부터)
 - **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
 - 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
+- 조연 팀장 `char/boss/` · 사무실 배경 `bg/office-desk.png`.
 - **1화 = EP01 「팀장님의 아아」** (`EPISODES.md` 맨 위). 다음: 팀장 캐릭터 → 배경 2 → 컷 그림 → 영상.
 - 영상 모델: Kling 안 씀. 다음 = **영상 1개 시험**(MiniMax H3 10cr/5초 · Seedance 2.0 Mini 5cr/5초) + **TTS 목소리 시험**(`tools/talk.py --audio` 로 입 자동).
 - 정석 체크리스트 `STYLE_GUIDE.md` · 대본 `EPISODES.md`. 예전 시도 폴더(asset·asset2·asset3·presets·ep01·ep02·v2·video)는 10/27 삭제 — 필요하면 git 기록에서 되살리기. 릴스 틀 기준 `frame/`, 목소리 샘플 `voice/ref/`.
