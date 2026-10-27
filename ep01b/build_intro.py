@@ -28,17 +28,13 @@ def mob_frame(f, cam=TOFF):
 
 
 def title(fr, a):
-    """제목 C: 나눔명조 흰 글씨 + 영어 부제. 뒤 하늘을 작고 진한 그림자 · 얇은 테두리로 잘 보이게. a=0~1 페이드."""
+    """제목 C: 나눔명조 흰 글씨 + 영어 부제. 얇은 테두리만 (그림자 없음, 혁 10/27). a=0~1 페이드."""
     im = Image.fromarray(fr[..., ::-1]).convert('RGBA')
     f1 = ImageFont.truetype('tools/fonts/title-NanumMyeongjo.ttf', 140); f2 = ImageFont.truetype('tools/fonts/ga1-800.ttf', 30)
     cx, cy = OW / 2, OH * 0.43
     def spaced(d, y, text, font, gap, **kw):
         ws = [d.textlength(c, font=font) for c in text]; x = cx - (sum(ws) + gap * (len(text) - 1)) / 2
         for c, w in zip(text, ws): d.text((x, y), c, font=font, anchor='lm', **kw); x += w + gap
-    sh = Image.new('RGBA', im.size, (0, 0, 0, 0)); sd = ImageDraw.Draw(sh)
-    spaced(sd, cy + 5, '천사와 악마', f1, 14, fill=(20, 10, 45, int(255 * a)), stroke_width=5, stroke_fill=(20, 10, 45, int(255 * a)))
-    spaced(sd, cy + 105 + 3, 'ANGEL  &  DEVIL', f2, 10, fill=(20, 10, 45, int(255 * a)), stroke_width=4, stroke_fill=(20, 10, 45, int(255 * a)))
-    im = Image.alpha_composite(im, sh.filter(ImageFilter.GaussianBlur(3)))  # 작고 진한 그림자
     d = ImageDraw.Draw(im)
     spaced(d, cy, '천사와 악마', f1, 14, fill=(255, 255, 255, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))
     spaced(d, cy + 105, 'ANGEL  &  DEVIL', f2, 10, fill=(255, 238, 205, int(255 * a)), stroke_width=3, stroke_fill=(50, 30, 90, int(255 * a)))

@@ -54,7 +54,7 @@ Camera completely still. No music, no text, no subtitles.
 ## 컷별 콘티
 
 ### 컷 0 · 인트로 (6.0초) ✅
-- **화면**: 회사 앞, 반투명 동글 실루엣 출근 인파 오감 → 빌딩 위로 틸트 업(12fps 끊김) → 제목 「천사와 악마」 + ANGEL & DEVIL (나눔명조, 작고 진한 그림자, EP 표기 없음) → 컷 → 팀장이 서류 들고 통로 따라 걸어옴.
+- **화면**: 회사 앞, 반투명 동글 실루엣 출근 인파 오감 → 빌딩 위로 틸트 업(12fps 끊김) → 제목 「천사와 악마」 + ANGEL & DEVIL (나눔명조, 얇은 테두리만 · 그림자 없음, EP 표기 없음) → 컷 → 팀장이 서류 들고 통로 따라 걸어옴.
 - **그림**: `bg/office-building-tall.png` · `ep01b/c0-boss-walk.png`
   - c0 프롬프트: `long shot down the office aisle of the SECOND image: B walks straight TOWARD the viewer down the aisle between desks, carrying a thick stack of documents in her arms, firm determined stride` + STY (ref: outfit, c3-boss-leave, front-full)
 - **소리**: 발소리 · 제목 "딩~" · 또각또각
