@@ -37,10 +37,16 @@ angry = cv2.resize(cv2.imread('ep01b/e7-type-shadow.png'), (W, H), interpolation
 _hsv = cv2.cvtColor(angry.astype(np.uint8), cv2.COLOR_BGR2HSV); _box = (560, 200, 680, 310)
 _red = np.zeros((H, W), np.uint8); bx0, by0, bx1, by1 = _box
 _r = _hsv[by0:by1, bx0:bx1]; _red[by0:by1, bx0:bx1] = (((_r[..., 0] < 10) | (_r[..., 0] > 170)) & (_r[..., 1] > 120) & (_r[..., 2] > 120)).astype(np.uint8)
+_n, _l, _st, _ = cv2.connectedComponentsWithStats(_red[by0:by1, bx0:bx1])          # 귀(분홍)는 빼고 핏대 덩어리만 (혁 10/28: 귀가 같이 움직임)
+_red[by0:by1, bx0:bx1] = np.isin(_l, [i for i in range(1, _n) if _st[i, 4] >= 50 and _st[i, 0] < 90]).astype(np.uint8)
 _red = cv2.dilate(_red, np.ones((7, 7), np.uint8)); ys, xs = np.nonzero(_red); VC = (int(xs.mean()), int(ys.mean()))
 vx0, vy0, vx1, vy1 = xs.min() - 6, ys.min() - 6, xs.max() + 7, ys.max() + 7
 VEIN = angry[vy0:vy1, vx0:vx1].copy(); VEIN_A = cv2.GaussianBlur(_red[vy0:vy1, vx0:vx1].astype(np.float32), (0, 0), 1)[..., None]
 angry = cv2.inpaint(angry.astype(np.uint8), _red, 5, cv2.INPAINT_TELEA).astype(np.float32)   # 핏대 없는 얼굴
+# 눈 반짝(흰 점)도 지움 → 검정 그림자만 (혁 10/28)
+_w = np.zeros((H, W), np.uint8); _w[260:380, 440:640] = (angry[260:380, 440:640].mean(-1) > 110).astype(np.uint8)
+_sh = np.zeros((H, W), np.uint8); _sh[260:380, 440:640] = 1; _w &= cv2.erode((cv2.GaussianBlur(angry, (0, 0), 6).mean(-1) < 90).astype(np.uint8), np.ones((3, 3), np.uint8)) & _sh
+angry = cv2.inpaint(angry.astype(np.uint8), cv2.dilate(_w, np.ones((5, 5), np.uint8)), 5, cv2.INPAINT_TELEA).astype(np.float32)
 def vein(fr, k):
     s = 1.5 * (1.0 + 0.4 * (0.5 + 0.5 * np.sin(k / FPS * 2 * np.pi * 2.5)) ** 2)           # 더 크게 · 확 부풀었다 줄어듦 (초당 2.5번)
     ang = 8 * np.sin(k / FPS * 2 * np.pi * 5)                                              # 살짝 들썩
@@ -48,7 +54,11 @@ def vein(fr, k):
     R = cv2.getRotationMatrix2D((sp.shape[1] / 2, sp.shape[0] / 2), ang, 1); sp = cv2.warpAffine(sp, R, (sp.shape[1], sp.shape[0])); sa = cv2.warpAffine(sa, R, (sa.shape[1], sa.shape[0]))[..., None]
     h, w = sp.shape[:2]; x0, y0 = VC[0] - w // 2, VC[1] - h // 2
     fr[y0:y0 + h, x0:x0 + w] = fr[y0:y0 + h, x0:x0 + w] * (1 - sa) + sp * sa; return fr
-FX, FY = 540, 300; fm = np.zeros((H, W), np.float32); cv2.ellipse(fm, (FX, FY - 15), (150, 140), 0, 0, 360, 1, -1); fm = cv2.GaussianBlur(fm, (0, 0), 10)[..., None]
+# 덮는 곳 = 그림자로 바뀐 곳 + 입만 (귀 · 머리 끝은 H3 그대로 → 귀 흔들림 X, 혁 10/28)
+_d = (np.abs(angry - base).mean(-1) > 30).astype(np.uint8); _d = cv2.morphologyEx(_d, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+fm = np.zeros((H, W), np.uint8); fm[150:440, 440:640] = _d[150:440, 440:640]; cv2.ellipse(fm, (535, 400), (45, 25), 0, 0, 360, 1, -1)
+fm = cv2.GaussianBlur(cv2.dilate(fm, np.ones((15, 15), np.uint8)).astype(np.float32), (0, 0), 5)[..., None]
+FX, FY = 540, 300
 g = lambda im: cv2.cvtColor(im[FY - 160:FY + 160, FX - 200:FX + 200].astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)
 out = []
 for fr in frames:
