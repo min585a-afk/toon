@@ -99,7 +99,14 @@ def tension():                                       # 긴장: 정적 밑에 깔
     return verb(y, 0.5, 0.2)
 
 
-ALL = dict(whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+def heartbeat():                                     # 두-근 두-근만 (혁 10/28: 웅~ 빼고)
+    d = 2.0; t = t_(d); y = np.zeros_like(t)
+    for s in (0.15, 0.4, 1.05, 1.3):
+        k = t_(0.2); b = np.sin(2 * np.pi * (62 - 28 * k / 0.2) * k) * np.exp(-k * 20); i = int(s * SR); y[i:i + len(b)] += b * (1 if s in (0.15, 1.05) else 0.7)
+    return verb(y, 0.3, 0.12)
+
+
+ALL = dict(heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85

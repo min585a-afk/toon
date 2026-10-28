@@ -8,7 +8,7 @@ import cv2
 sys.path.insert(0, 'ep01b')
 
 FPS, W, H = 24, 1080, 810
-VOICE, V_AT = 'voice/ep01/c4-gyul-angel.wav', 0.15   # '그럴 리가요~!' (임시 목소리 · 바꾸면 입도 자동으로 맞음)
+VOICE, V_AT = 'voice/ep01b/angel-use.wav', 0.15   # '그럴 리가요~!' (10/28 Seed Audio · 바꾸면 입도 자동으로 맞음)
 import subprocess as _sp
 V_LEN = float(_sp.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', VOICE], capture_output=True, text=True).stdout)
 HOLD0, BLOOM, HOLD1 = V_AT + 0.05, 1.25, 1.1          # 대사 시작과 동시에 꽃 (혁 10/28)                  # 사무실 멈춤 · 꽃 퍼지는 시간 · 꽃밭 멈춤
