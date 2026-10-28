@@ -11,7 +11,7 @@ FPS, W, H = 24, 1080, 810
 VOICE, V_AT = 'voice/ep01/c4-gyul-angel.wav', 0.15   # '그럴 리가요~!' (임시 목소리 · 바꾸면 입도 자동으로 맞음)
 import subprocess as _sp
 V_LEN = float(_sp.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', VOICE], capture_output=True, text=True).stdout)
-HOLD0, BLOOM, HOLD1 = V_AT + V_LEN + 0.15, 1.25, 1.1   # 사무실에서 대사 → 꽃                  # 사무실 멈춤 · 꽃 퍼지는 시간 · 꽃밭 멈춤
+HOLD0, BLOOM, HOLD1 = V_AT + 0.05, 1.25, 1.1          # 대사 시작과 동시에 꽃 (혁 10/28)                  # 사무실 멈춤 · 꽃 퍼지는 시간 · 꽃밭 멈춤
 sz = lambda im: cv2.resize(im, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
 office, plate = sz(cv2.imread('ep01b/e1-gyul-angel-papers.png')), sz(cv2.imread('ep01b/e1-flowers-plate.png'))
 cut = cv2.resize(cv2.imread('ep01b/e1-gyul-cut2.png', cv2.IMREAD_UNCHANGED), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
@@ -51,12 +51,14 @@ office_s, office_h = squash(0.35), squash(0.65)
 MOUTHS = [office_closed, office_s, office_h, office]
 _raw = _sp.run(['ffmpeg', '-v', 'error', '-i', VOICE, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
 _x = np.frombuffer(_raw, np.float32); _rms = np.array([np.sqrt(np.mean(_x[i:i + 2000] ** 2)) for i in range(0, len(_x), 2000)]); _top = _rms.max() + 1e-9
+MOUTH_M = np.zeros((H, W), np.float32); cv2.ellipse(MOUTH_M, (int(MX * W / 2336), int((MY + 25) * H / 1744)), (52, 42), 0, 0, 360, 1, -1); MOUTH_M = cv2.GaussianBlur(MOUTH_M, (0, 0), 4)[..., None]
 _lv = [0 if r / _top < 0.12 else 1 if r / _top < 0.35 else 2 if r / _top < 0.65 else 3 for r in _rms]
 for i in range(1, len(_lv)):                                   # 한 번에 두 단계 이상 안 뜀
     if abs(_lv[i] - _lv[i - 1]) > 1: _lv[i] = _lv[i - 1] + (1 if _lv[i] > _lv[i - 1] else -1)
 def office_at(t):
     j = int((t - V_AT) * 8)
-    if j < 0 or j >= len(_lv): return office_closed
+    if j < 0: return office_closed
+    if j >= len(_lv): return office                     # 대사 끝나면 활짝 웃는 입 그대로
     return MOUTHS[_lv[j]]
 ga1 = cv2.resize(cv2.imread('ep01b/e1-gyul-cut.png', cv2.IMREAD_UNCHANGED), (W, H), interpolation=cv2.INTER_AREA)[..., 3:4].astype(np.float32) / 255  # 사무실 장면에서 보이는 은서(모니터에 가린 채)
 
@@ -109,6 +111,7 @@ for k in range(n):
             if 0 <= dt < 0.17: o = flash(o, x, y, 60 + dt * 300)
         a = np.maximum(ga1, ga * m)                       # 모니터 뒤 가려진 부분은 꽃이 닿을 때 드러남
         o = o * (1 - a) + girl * a                       # 은서는 그대로 멈춰 있음
+        o = o * (1 - MOUTH_M) + office_at(kk / FPS) * MOUTH_M   # 꽃 피는 동안에도 대사 입은 계속
     if t > BLOOM * 0.6:                                  # 꽃밭 되면 금빛 별 깜빡
         for x, y, L, ph in STARS:
             s = [1.0, 0.55, 0.2][((kk // 2) + ph) % 3]; o = star(o, x, y, int(L * s))

@@ -46,7 +46,7 @@ def ppajik(fr, x, y, hgt, t):
 
 
 # H3 영상 (혁 10/28: 영상으로 자연스럽게): 웃음 → 그림자 → 불꽃 → 이 악물기. 불꽃 꺼지기 전까지만 · 1.25배 · 12fps + 빠직
-V, V0, V1, SPD = 'ep01b/video/e3-rage-h3.mp4', 0.3, 3.7, 1.25
+V, V0, V1, SPD = 'ep01b/video/e3-rage-h3.mp4', 0.3, 3.7, 1.7   # 불타오르는 템포 빠르게 (혁 10/28)
 cap = cv2.VideoCapture(V); vf = cap.get(cv2.CAP_PROP_FPS) or 24; vv = []
 while True:
     ok, fr = cap.read()

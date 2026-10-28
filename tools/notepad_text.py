@@ -9,9 +9,10 @@ sys.path.insert(0, 'tools')
 import chat_screen as cs
 W, H, INK, f = cs.W, cs.H, cs.INK, cs.f
 FPS = 24
+TOTAL_LINES = 2
 
 
-def draw(lines, caret=True):
+def draw(lines, caret=True, total=None):
     o = Image.new('RGB', (W, H), (214, 205, 228)); d = ImageDraw.Draw(o)
     d.rounded_rectangle((60, 40, W - 60, H - 40), 60, fill=(196, 198, 214), outline=INK, width=12)
     d.rectangle((170, 140, W - 170, H - 150), fill=(236, 240, 250), outline=INK, width=8)
@@ -23,17 +24,19 @@ def draw(lines, caret=True):
     d.text((x0 + 50, y0 + 56), '메모장 - 제목 없음', font=f(50), fill=INK, anchor='lm')
     for i, c in enumerate([(255, 120, 120), (255, 210, 110), (130, 210, 140)]):
         d.ellipse((x1 - 70 - i * 60, y0 + 34, x1 - 30 - i * 60, y0 + 74), fill=c, outline=INK, width=4)
-    fb = f(150); lx, ly = x0 + 110, y0 + 300
-    for i, t in enumerate(lines): d.text((lx, ly + i * 230), t, font=fb, fill=INK, anchor='lm')
+    n = max(2, TOTAL_LINES); size = 150 if n <= 2 else max(80, int(150 * 2.6 / n)); gap = int(size * 1.5)   # 줄 많으면 작게
+    fb = f(size); lx, ly = x0 + 110, y0 + 150 + int(size * 0.9)
+    for i, t in enumerate(lines): d.text((lx, ly + i * gap), t, font=fb, fill=INK, anchor='lm')
     if caret:
-        cx = lx + d.textlength(lines[-1], font=fb) + 14; cy = ly + (len(lines) - 1) * 230
-        d.rectangle((cx, cy - 75, cx + 14, cy + 75), fill=INK)
+        cx = lx + d.textlength(lines[-1], font=fb) + 14; cy = ly + (len(lines) - 1) * gap
+        d.rectangle((cx, cy - size // 2, cx + 14, cy + size // 2), fill=INK)
     return cs.grain(o.filter(ImageFilter.GaussianBlur(0.8)), 3)
 
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('lines', nargs='+'); ap.add_argument('--hold', type=float, default=0.5)
     a = ap.parse_args(); tmp = tempfile.mkdtemp(); frames = []
+    global TOTAL_LINES; TOTAL_LINES = len(a.lines)
     shown = ['']
     def hold(img, n): frames.extend([img] * n)
     hold(draw(shown), 4)
