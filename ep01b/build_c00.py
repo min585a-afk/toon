@@ -8,7 +8,10 @@ import numpy as np
 import cv2
 
 FPS, W, H, SR = 24, 1080, 810, 44100
-TYPE_SEC = 1.5                         # 타닥타닥 컷 (템포 빠르게, 혁 10/27)
+T1, T2 = 0.8, 0.7                      # 첫 장면 훅(혁 10/27): 귤이 타닥타닥 T1 → 모니터 메모장 '출근 앤 퇴근 / 9 to 6' → 다시 귤이 T2
+SCREEN = 'ep01b/c00s-screen.mp4'       # python3 tools/notepad_text.py ep01b/c00s-screen.mp4 "출근 앤 퇴근" "9 to 6" --hold 0.6
+_cap = cv2.VideoCapture(SCREEN); SCREEN_N = int(_cap.get(cv2.CAP_PROP_FRAME_COUNT))
+TYPE_SEC = T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 초반부터 점점 가까이
 HEELS_AT, STEP = 0.2, 0.36             # 또각또각 시작(타닥타닥 컷 안) · 걸음 간격
 WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.6
 LOOK_LAG, LOOK_HOLD = 0.25, 0.2         # 다시 귤이: 조금 더 치다가(0.8초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.7초)
@@ -58,7 +61,9 @@ cut = lambda a, b: mix[int(a * SR):int(b * SR)]
 
 gv, gf = video('ep01b/video/c00-gyul-type-look-h3.mp4')
 at = lambda sec: gv[min(len(gv) - 1, int(sec * gf))]
-write([at((k - k % 2) / FPS) for k in range(int(TYPE_SEC * FPS))], cut(0, TYPE_SEC), 'ep01b/c00-gyul-work.mp4')
+sv, _ = video(SCREEN)
+frames = [at((k - k % 2) / FPS) for k in range(int(T1 * FPS))] + sv + [at(T1 + (k - k % 2) / FPS) for k in range(int(T2 * FPS))]
+write(frames, cut(0, len(frames) / FPS), 'ep01b/c00-gyul-work.mp4')
 
 bv, bf = video('ep01b/video/c0-boss-walk-h3.mp4')
 write([bv[min(len(bv) - 1, int((WALK_FROM + (k - k % 2) / FPS * SPEED) * bf))] for k in range(int(WALK_SEC * FPS))],
