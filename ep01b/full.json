@@ -151,7 +151,7 @@
   [
    "voice/ep01b/rage-use.wav",
    "e3-gyul-rage",
-   0.0,
+   0.05,
    1.0
   ],
   [
@@ -187,7 +187,7 @@
   [
    "sfx/anime/pikit-syn.wav",
    "e3-gyul-rage",
-   1.26,
+   0.67,
    0.4
   ],
   [

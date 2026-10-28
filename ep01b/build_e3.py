@@ -52,10 +52,13 @@ while True:
     ok, fr = cap.read()
     if not ok: break
     vv.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32))
-n = int((V1 - V0) / SPD * FPS); PPAJIK_AT = int((2.45 - V0) / SPD * FPS)
+# 혁 10/28: 불타오르기 전 그림자 멈춤이 길어서 가운데(1.1~2.1초)를 건너뜀 → 1.4초
+CUT_A, CUT_B = 1.1, 2.1
+src_t = lambda t: V0 + t * SPD if V0 + t * SPD < CUT_A else CUT_B + (V0 + t * SPD - CUT_A)
+n = int(((CUT_A - V0) + (V1 - CUT_B)) / SPD * FPS); PPAJIK_AT = int(((CUT_A - V0) + (2.45 - CUT_B)) / SPD * FPS)
 tmp = tempfile.mkdtemp()
 for f in range(n):
-    k = f - f % 2; fr = vv[min(len(vv) - 1, int((V0 + k / FPS * SPD) * vf))].copy()
+    k = f - f % 2; fr = vv[min(len(vv) - 1, int(src_t(k / FPS) * vf))].copy()
     if f >= PPAJIK_AT:
         sx, sy = np.random.default_rng(k).normal(0, 3, 2)
         fr = cv2.warpAffine(fr, np.float32([[1, 0, sx], [0, 1, sy]]), (W, H), borderMode=cv2.BORDER_REPLICATE)   # 부들부들
