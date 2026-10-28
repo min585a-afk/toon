@@ -30,11 +30,16 @@ def flames(t, seed, rise):
 
 
 sys.path.insert(0, 'tools')
-spr = cv2.imread('brand/sfx/ppajik.png', cv2.IMREAD_UNCHANGED)
+spr = cv2.imread('brand/sfx/ppajik.png', cv2.IMREAD_UNCHANGED).astype(np.float32)
+# 우리 만화 필터에 맞춤 (혁 10/28): 순백 → 그림 속 흰색(살짝 따뜻하고 바랜) · 검정 → 그림 선색 · 선 살짝 뭉개짐
+_rgb = spr[..., :3]; _lum = _rgb.mean(2, keepdims=True) / 255
+_rgb = _lum * np.array([228, 234, 240], np.float32) + (1 - _lum) * np.array([38, 24, 34], np.float32)   # BGR: 바랜 흰색 · 그림 선색(진한 남보라)
+spr = np.dstack([cv2.GaussianBlur(_rgb, (0, 0), 1.6), cv2.GaussianBlur(spr[..., 3], (0, 0), 1.6)])
 def ppajik(fr, x, y, hgt, t):
     if t < 0: return fr
     sc = 1.3 if t < 2 else (1.08 if t < 4 else 1.0); r = hgt * sc / spr.shape[0]
     im = cv2.resize(spr, (int(spr.shape[1] * r), int(spr.shape[0] * r)), interpolation=cv2.INTER_AREA).astype(np.float32)
+    im[..., :3] += np.random.default_rng(t).normal(0, 6, im.shape[:2])[..., None]   # 그레인
     h, w = im.shape[:2]; x0, y0 = int(x - w / 2), int(y - h / 2); x1, y1, x2, y2 = max(0, x0), max(0, y0), min(W, x0 + w), min(H, y0 + h)
     a = im[y1 - y0:y2 - y0, x1 - x0:x2 - x0]; al = a[..., 3:4] / 255
     fr[y1:y2, x1:x2] = fr[y1:y2, x1:x2] * (1 - al) + a[..., :3] * al; return fr

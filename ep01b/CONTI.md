@@ -125,6 +125,8 @@ Camera completely still. No music, no text, no subtitles.
 은서 타닥타닥(이름 페이드) → 메모장 '출근 앤 퇴근 / 9 to 6' → 타닥타닥 → 강서늘 걸어옴 → 또각또각 가까워지다 멈춤 → 눈 위로 → 강서늘 소개(싸늘하다…) → '이거 오늘까지좀 부탁해요.' → '네?..' + 물음표 → 안경 빛 → '왜요? 어려운가요?'
 다시 만들기: `python3 tools/assemble.py ep01b/part1.json frame/ep01-part1.mp4`
 
+## ▶ 1화 전체 초안 `frame/ep01-full.mp4` (37.8초) · `python3 tools/assemble.py ep01b/full.json frame/ep01-full.mp4` (part1 + part2) · 목소리 일부 임시
+
 ## 뒷부분 (한 장면씩 · 목소리는 나중에) — 토막 목록 `ep01b/part2.json` · 마지막에 part1 + part2 한 번에 이어붙임 (혁 10/28 순서)
 1. ✅ 은서 '그럴 리가요~!' 사무실에서 말함 → 뒤에서 꽃 피며 꽃밭 + 반짝 — `ep01b/e1-angel-bloom.mp4` (`build_e1.py`)
 2. ✅ 강서늘 '잘 부탁해요~' 하고 뒤돌아 통로로 걸어 나감 — `ep01b/e2-boss-leave.mp4` (H3, `build_e2.py`)
