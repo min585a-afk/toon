@@ -1,6 +1,7 @@
 """은서 흥얼거림을 계이름대로 (크레딧 0): 한 음 '음~' 목소리를 음마다 높이 바꿔 이어 붙임 (ffmpeg rubberband · 목소리 결 유지).
 usage: python3 tools/hum_melody.py 한음.wav 시작초 끝초 out.wav BPM "C4:8 C4:8 ... E4:4"   (8 = 8분음표, 4 = 4분음표, R = 쉼표)
-       python3 tools/hum_melody.py --conform 흥얼.wav out.wav BPM "C4:8 ..."   ← 자연 흥얼 목소리를 계이름 · 박자에 맞춤 (혁 10/28 이쪽)
+       python3 tools/hum_melody.py --conform 흥얼.wav out.wav BPM "C4:8 ..."   ← 자연 흥얼을 계이름 · 박자에 맞춤
+       python3 tools/hum_melody.py --syllables 흠음절들.wav out.wav BPM "C4:8 ..."   ← 은서 '흠' 음절을 악보 그대로 (혁 10/28 이쪽)
 """
 import sys, subprocess, tempfile, wave
 import numpy as np
@@ -12,8 +13,8 @@ def load(p):
     return np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32).copy()
 
 
-def f0(x):                                           # 자기상관으로 기본 음높이
-    x = x - x.mean(); c = np.correlate(x, x, 'full')[len(x) - 1:]; lo, hi = SR // 600, SR // 120
+def f0(x, fmin=120, fmax=600):                       # 자기상관으로 기본 음높이
+    x = x - x.mean(); c = np.correlate(x, x, 'full')[len(x) - 1:]; lo, hi = SR // fmax, SR // fmin
     return SR / (lo + np.argmax(c[lo:hi]))
 
 
@@ -29,7 +30,7 @@ def shift(x, ratio):
     return load(f'{tmp}/o.wav')
 
 
-if __name__ == '__main__' and sys.argv[1] != '--conform':
+if __name__ == '__main__' and not sys.argv[1].startswith('--'):
     src, a0, b0, out, bpm, seq = sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), sys.argv[4], float(sys.argv[5]), sys.argv[6].split()
     x = load(src)[int(a0 * SR):int(b0 * SR)]; base = f0(x[len(x) // 4: len(x) // 4 + 4096])
     beat = 60 / bpm; y = []; cache = {}
@@ -80,3 +81,37 @@ def conform(src, out, bpm, seq):
 
 if __name__ == '__main__' and sys.argv[1] == '--conform':
     conform(sys.argv[2], sys.argv[3], float(sys.argv[4]), sys.argv[5].split())
+
+
+def syllables(src, out, bpm, seq):
+    """은서 '흠' 한 음절씩(목소리 그대로)을 악보 박자 자리에 놓고 음마다 정확한 계이름으로 맞춤 (혁 10/28: 악보 그대로 · 흠흠흠)."""
+    x = load(src)[:-int(0.08 * SR)]; h = 441
+    db = np.array([20 * np.log10(np.sqrt((x[i:i + h] ** 2).mean()) + 1e-6) for i in range(0, len(x) - h, h)])
+    on = db > -60; syl = []; i = 0
+    while i < len(on):
+        if on[i]:
+            j = i
+            while j < len(on) and on[j]: j += 1
+            if j - i >= 8: syl.append(x[i * h:j * h].copy())
+            i = j
+        else: i += 1
+    short = sorted(syl, key=len)[:max(1, len(syl) - 2)]; long_ = sorted(syl, key=len)[-2:]   # 긴 '흐음~' 은 4분음표용
+    beat = 60 / bpm; y = []; k = 0; tmp = tempfile.mkdtemp()
+    for tok in seq:
+        n, d = tok.split(':'); dur = beat * 4 / int(d); seg = np.zeros(int(dur * SR), np.float32)
+        if n != 'R':
+            s = (long_[k % len(long_)] if int(d) <= 4 else short[k % len(short)]); k += 1
+            mid = s[len(s) // 3: len(s) // 3 + 2048] if len(s) > 2400 else s; r = float(np.clip(hz(n) / f0(mid, 190, 450), 0.6, 1.6))   # 은서 목소리 음역(190~450Hz)에서만 찾음 → 옥타브 착각 X
+            want = dur * (0.9 if int(d) <= 4 else 0.8)                        # 음표 길이에 맞춰 늘이고 줄임
+            with wave.open(f'{tmp}/i.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(s, -1, 1) * 32767).astype(np.int16).tobytes())
+            subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/i.wav', '-af', f'rubberband=pitch={r}:tempo={len(s) / SR / want}:formant=preserved', f'{tmp}/o.wav'], check=True)
+            s = load(f'{tmp}/o.wav')[:len(seg)]; f = int(0.012 * SR); s[:f] *= np.linspace(0, 1, f); f = int(0.04 * SR); s[-f:] *= np.linspace(1, 0, f)
+            seg[:len(s)] = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7)
+        y.append(seg)
+    y = np.concatenate(y); y = y / (np.abs(y).max() + 1e-9) * 0.8
+    with wave.open(out, 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((y * 32767).astype(np.int16).tobytes())
+    print(out, round(len(y) / SR, 2), 's · 음절', len(syl), '개')
+
+
+if __name__ == '__main__' and sys.argv[1] == '--syllables':
+    syllables(sys.argv[2], sys.argv[3], float(sys.argv[4]), sys.argv[5].split())
