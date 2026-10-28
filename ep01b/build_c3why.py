@@ -7,10 +7,11 @@ import cv2
 
 FPS, W, H = 24, 1080, 810
 GLARE_SEC = 0.5
+# 대사 뒤 2.0초 정적으로 노려봄 = 긴장감 (혁 10/28: 1~2초 더)
 H3 = 'ep01b/video/c3-boss-glasses-h3.mp4'          # 안경 번쩍 → 고쳐 씀 (있으면 씀)
 tmp = tempfile.mkdtemp()
 subprocess.run(['python3', 'tools/talk_mouth.py', 'char/boss/talk/mouth-1-closed.png', 'char/boss/talk/mouth-2-open.png', 'voice/ep01/c3-boss-why.wav',
-                f'{tmp}/talk.mp4', '--mouth', '1166,918', '--r', '85,62', '--pre', '0.1', '--post', '0.6'], check=True)
+                f'{tmp}/talk.mp4', '--mouth', '1166,918', '--r', '85,62', '--pre', '0.1', '--post', '2.0'], check=True)
 face0 = cv2.imread('char/boss/talk/mouth-1-closed.png'); gl = cv2.resize(cv2.imread('ep01b/c3-boss-glare.png'), (face0.shape[1], face0.shape[0]))
 gg = lambda im: cv2.cvtColor(im[500:900, 700:1700], cv2.COLOR_BGR2GRAY).astype(np.float32)
 (ddx, ddy), _ = cv2.phaseCorrelate(gg(face0), gg(gl)); gl = cv2.warpAffine(gl, np.float32([[1, 0, -ddx], [0, 1, -ddy]]), (face0.shape[1], face0.shape[0]), borderMode=cv2.BORDER_REPLICATE)
