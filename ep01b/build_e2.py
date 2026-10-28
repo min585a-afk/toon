@@ -5,7 +5,7 @@ import subprocess, tempfile, wave
 import numpy as np
 import cv2
 
-FPS, W, H, SR, SEC = 24, 1080, 810, 44100, 2.4
+FPS, W, H, SR, SEC = 24, 1080, 810, 44100, 2.0   # 돌아보는 자리(H3 2.0초)까지 · 그 뒤 은서 분노 컷
 cap = cv2.VideoCapture('ep01b/video/e2-boss-leave-h3.mp4'); f = cap.get(cv2.CAP_PROP_FPS) or 24; v = []
 while True:
     ok, fr = cap.read()
