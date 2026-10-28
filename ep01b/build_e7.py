@@ -30,6 +30,18 @@ def write(frames, a, out):
 # 은서 타닥타닥 1.4초 + 또각또각 멀어짐 (점점 작게 → 사라짐)
 SEC = 1.4; gv, gf = video('ep01b/video/c00-gyul-type-look-h3.mp4')
 frames = [gv[min(len(gv) - 1, int((0.3 + (k - k % 2) / FPS) * gf))] for k in range(int(SEC * FPS))]
+# 화난 얼굴(혁 10/28: 너무 평온) — 얼굴만 프레임마다 위치 맞춰 덮음 · 손은 H3 그대로
+base = cv2.resize(cv2.imread('ep01b/e7-type-base.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
+angry = cv2.resize(cv2.imread('ep01b/e7-type-angry.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
+FX, FY = 540, 300; fm = np.zeros((H, W), np.float32); cv2.ellipse(fm, (FX, FY - 15), (150, 140), 0, 0, 360, 1, -1); fm = cv2.GaussianBlur(fm, (0, 0), 10)[..., None]
+g = lambda im: cv2.cvtColor(im[FY - 160:FY + 160, FX - 200:FX + 200].astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)
+out = []
+for fr in frames:
+    (dx, dy), _ = cv2.phaseCorrelate(g(base), g(fr.astype(np.float32)))
+    M = np.float32([[1, 0, dx], [0, 1, dy]])
+    a2 = cv2.warpAffine(angry, M, (W, H), borderMode=cv2.BORDER_REPLICATE); m2 = cv2.warpAffine(fm, M, (W, H))[..., None]
+    out.append(np.clip(fr * (1 - m2) + a2 * m2, 0, 255).astype(np.uint8))
+frames = out
 a = np.tile(typing, 2)[:int(SEC * SR)] * 0.5
 for i, t in enumerate([0.05, 0.45, 0.85]): j = int(t * SR); a[j:j + len(step)] += step[:len(a) - j] * (0.22 - i * 0.07)
 write(frames, a, 'ep01b/e7-gyul-type.mp4')
