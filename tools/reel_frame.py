@@ -9,11 +9,12 @@ W, H, TOP, VH = 1080, 1920, 420, 810
 FJ, FG = 'tools/fonts/jua.ttf', 'tools/fonts/ga1-800.ttf'
 
 
-def slanted(o, text, font, fill, y, x_right_pad=30):
+def slanted(o, text, font, fill, y, x_right_pad=30, track=-2):
     d = ImageDraw.Draw(o)
-    tw = int(d.textlength(text, font=font)) + 60
-    layer = Image.new('RGBA', (tw, font.size + 40), (0, 0, 0, 0))
-    ImageDraw.Draw(layer).text((30, 8), text, font=font, fill=fill, stroke_width=2, stroke_fill=(0, 0, 0))
+    ws = [d.textlength(ch, font=font) for ch in text]
+    tw = int(sum(ws) + track * (len(text) - 1)) + 60                    # track = 자간 (음수면 좁게, 혁 10/28)
+    layer = Image.new('RGBA', (tw, font.size + 40), (0, 0, 0, 0)); ld = ImageDraw.Draw(layer); x = 30
+    for ch, w in zip(text, ws): ld.text((x, 8), ch, font=font, fill=fill, stroke_width=2, stroke_fill=(0, 0, 0)); x += w + track
     layer = layer.transform(layer.size, Image.AFFINE, (1, 0.18, -0.18 * layer.height / 2, 0, 1, 0), Image.BICUBIC)
     o.paste(layer, ((W - tw) // 2 - x_right_pad, y), layer)
 

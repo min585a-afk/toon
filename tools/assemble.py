@@ -22,8 +22,8 @@ def frame_png(path, title, ko, en):
     o = Image.new('RGBA', (W, H), (0, 0, 0, 255)); d = ImageDraw.Draw(o)
     d.rectangle((0, TOP, W, TOP + VH), fill=(0, 0, 0, 0))
     ft = ImageFont.truetype(FJ, 120); tw = d.textlength(title, font=ft); d.text(((W - tw) / 2, TOP - 180), title, font=ft, fill=(255, 228, 92))
-    if ko: slanted(o, ko, ImageFont.truetype(FG, 66), (255, 255, 255), TOP + VH + 30)
-    if en: slanted(o, en, ImageFont.truetype(FG, 40), (57, 255, 20), TOP + VH + 120)
+    if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 30)
+    if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 118)
     o.save(path)
 
 
