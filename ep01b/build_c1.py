@@ -6,7 +6,7 @@ import subprocess, tempfile
 import numpy as np
 import cv2, sys
 sys.path.insert(0, 'tools'); from name_card import card
-BOSS_CARD = ('강서늘', '(팀장)', 700, 730)   # 이름 · 괄호 · 위치(은서와 같은 자리)
+BOSS_CARD = ('강서늘', '(팀장)', 540, 730)   # 이름 · 괄호 · 위치(은서와 같은 자리)
 INTRO_SEC = 2.8
 
 FPS, W, H = 24, 1080, 810

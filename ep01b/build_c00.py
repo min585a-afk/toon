@@ -13,7 +13,7 @@ T1, T2 = 0.8, 0.7                      # 첫 장면 훅(혁 10/27): 귤이 타�
 SCREEN = 'ep01b/c00s-screen.mp4'       # notepad_text.py → c00s-screen-raw.mp4 → tools/cel_look.py --ref ep01b/c00-gyul-work.png --amount 0.6
 _cap = cv2.VideoCapture(SCREEN); SCREEN_N = int(_cap.get(cv2.CAP_PROP_FRAME_COUNT))
 INTRO = 3.0                            # 1화 인물 소개: 첫 장면 멈춤 + '은서 (사원)' (혁 10/27)
-GYUL_CARD = ('은서', '(사원)', 700, 730)   # 이름 · 괄호 · 위치(혁 표시: 아래 가운데)
+GYUL_CARD = ('은서', '(사원)', 540, 730)   # 이름 · 괄호 · 위치(아래 가운데)
 TYPE_SEC = INTRO + T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 소개 끝나고 점점 가까이
 HEELS_AT, STEP = 3.2, 0.36             # 또각또각 시작(소개 끝난 뒤) · 걸음 간격
 WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.6
