@@ -1,4 +1,5 @@
-"""옛날 TV 애니 효과음 합성 (크레딧 0): 키랑(안경 번쩍) · 하테나(물음표 슬라이드 휘슬) · 고고고(분노 오라) · 키라키라(반짝 종소리) · 뽀용(헷) · 삐킷(빠직) · 띠링(끝).
+"""옛날 TV 애니 효과음 합성 (크레딧 0): 키랑(안경 번쩍) · 하테나(물음표 슬라이드 휘슬) · 고고고(분노 오라) · 키라키라(반짝 종소리) · 뽀용(헷) · 삐킷(빠직) · 띠링(끝) · 휙(돌아봄) · 띠용(멘붕) · 쭈뼛(싸늘) · 긴장(정적 밑).
+잘 나온 건 sfx/lib/ 에 확정 이름으로 복사해서 화마다 재활용 (목록 sfx/lib/README.md).
 usage: python3 tools/anime_sfx.py [이름 ...]  → sfx/anime/<이름>-syn.wav (없으면 전부)
 """
 import sys, wave
@@ -68,7 +69,37 @@ def tiring():                                        # 끝 띠링
     return verb(y, 1.0, 0.35)
 
 
-ALL = dict(kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+def whoosh():                                        # 휙: 짧은 바람 가르는 소리 (밴드패스 노이즈 스윕)
+    d = 0.35; t = t_(d); n = rng.normal(0, 1, len(t)); y = np.zeros_like(n); fc = 600 + 3400 * np.sin(np.pi * t / d) ** 2
+    lp = 0.0; bp = 0.0
+    for i in range(len(n)):                          # 상태변수 필터 (주파수 움직임)
+        f = 2 * np.sin(np.pi * fc[i] / SR); lp += f * bp; hp = n[i] - lp - 0.6 * bp; bp += f * hp; y[i] = bp
+    return verb(y * np.sin(np.pi * t / d) ** 1.5, 0.3, 0.15)
+
+
+def tiyong():                                        # 띠요옹: 고무줄 튕기듯 비브라토 내려감
+    t = t_(0.8); f = 520 * (1 - 0.35 * t / 0.8) * (1 + 0.06 * np.sin(2 * np.pi * 11 * t)); x = np.sin(2 * np.pi * np.cumsum(f) / SR)
+    x = (x + 0.3 * np.sin(2 * 2 * np.pi * np.cumsum(f) / SR)) * np.exp(-t * 2.5) * np.minimum(1, t / 0.01)
+    return verb(x, 0.3, 0.2)
+
+
+def zawa():                                          # 쭈뼛(싸늘): 높은 떨리는 현 + 낮은 바람
+    t = t_(1.6); env = np.minimum(1, t / 0.25) * np.exp(-np.maximum(0, t - 0.6) * 2)
+    x = sum(np.sin(2 * np.pi * f * t * (1 + 0.004 * np.sin(2 * np.pi * 6 * t))) for f in (1244, 1318, 1975)) / 3
+    n = np.convolve(rng.normal(0, 1, len(t)), np.ones(40) / 40, 'same') * 4
+    return verb((x * 0.5 + n * 0.5) * env, 0.8, 0.35)
+
+
+def tension():                                       # 긴장: 정적 밑에 깔리는 낮은 웅~ + 심장 두근
+    d = 2.2; t = t_(d); env = np.minimum(1, t / 0.4) * np.minimum(1, (d - t) / 0.4)
+    drone = (np.sin(2 * np.pi * 55 * t) + 0.5 * np.sin(2 * np.pi * 82.4 * t) + 0.3 * np.sin(2 * np.pi * 110.6 * t)) * env * 0.4
+    y = drone.copy()
+    for s in (0.3, 0.55, 1.2, 1.45):                 # 두-근 두-근
+        k = t_(0.18); b = np.sin(2 * np.pi * (60 - 25 * k / 0.18) * k) * np.exp(-k * 22); i = int(s * SR); y[i:i + len(b)] += b
+    return verb(y, 0.5, 0.2)
+
+
+ALL = dict(whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85
