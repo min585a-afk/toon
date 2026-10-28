@@ -68,6 +68,7 @@
 - **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
 - 캐릭터 = 앞 천사 / 뒤 현실 갭 · 주제 = 누구나 공감 + 엉뚱한 에피소드 · 10~20초 · 인스타 메인 (아래 '콘셉트 확장').
 - **인스타 계정 = 별툰 `@byeoltoon.kr`** (10/27 혁 가입). 계정 = 채널, 그 안에 시리즈(직장 개그 · 커플 드라마 · …). 영상 제목은 시리즈 이름을 앞에.
+- **유튜브 (10/28 혁 개설 예정)**: 채널명 `별툰` · 핸들 `@byeoltoon` · 프사 `brand/youtube/profile-800.png` (인스타 프사 `brand/profile-01.png` + 무드 25%, 동그랗게 잘려도 얼굴 안 잘림). 쇼츠 = 릴스 같은 영상 그대로.
 - **기본 칠 = 25% 무드** (10/27 혁): `python3 tools/mood.py in out` — 그림자 살짝 깊게 · 비네트 · 채도 조금 낮춤 · 그레인. 완성 영상 마지막에 한 번(자막 전). 예시 `char/gyul/face/front-mood-25.png`. 극장판 칠(`front-drama-test.png`)은 너무 무거워서 안 씀.
 - 릴스 틀 도구 `python3 tools/reel_frame.py 그림 out.jpg "제목" "한글" "영어" [--guide]` · 샘플 `frame/reel-ep01-sample.jpg`. 그림·영상은 4:3(2336×1744 / 1080×810) → 최종 9:16.
 - **효과음 (10/27 혁): AI 효과음(Mirelo)·합성 둘 다 별로 → 영상 만들 때 그 영상에 맞춰 따로 요청.** 지금 컷 영상의 합성 효과음(`tools/sfx_sound.py`)은 임시. 시험한 것 `sfx/try*` (안 씀).

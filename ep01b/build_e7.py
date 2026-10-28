@@ -32,7 +32,7 @@ SEC = 1.4; gv, gf = video('ep01b/video/c00-gyul-type-look-h3.mp4')
 frames = [gv[min(len(gv) - 1, int((0.3 + (k - k % 2) / FPS) * gf))] for k in range(int(SEC * FPS))]
 # 화난 얼굴(혁 10/28: 너무 평온) — 얼굴만 프레임마다 위치 맞춰 덮음 · 손은 H3 그대로
 base = cv2.resize(cv2.imread('ep01b/e7-type-base.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
-angry = cv2.resize(cv2.imread('ep01b/e7-type-gag.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)   # 개그 눈 (혁 10/28: 웃긴 요소)
+angry = cv2.resize(cv2.imread('ep01b/e7-type-shadow.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)   # 그림자로 눈 가림 (혁 10/28)
 # 핏대: 그림에서 떼어내서(지우고) 프레임마다 부드럽게 커졌다 작아졌다 다시 그림
 _hsv = cv2.cvtColor(angry.astype(np.uint8), cv2.COLOR_BGR2HSV); _box = (560, 200, 680, 310)
 _red = np.zeros((H, W), np.uint8); bx0, by0, bx1, by1 = _box
@@ -42,8 +42,10 @@ vx0, vy0, vx1, vy1 = xs.min() - 6, ys.min() - 6, xs.max() + 7, ys.max() + 7
 VEIN = angry[vy0:vy1, vx0:vx1].copy(); VEIN_A = cv2.GaussianBlur(_red[vy0:vy1, vx0:vx1].astype(np.float32), (0, 0), 1)[..., None]
 angry = cv2.inpaint(angry.astype(np.uint8), _red, 5, cv2.INPAINT_TELEA).astype(np.float32)   # 핏대 없는 얼굴
 def vein(fr, k):
-    s = 1.0 + 0.28 * (0.5 + 0.5 * np.sin(k / FPS * 2 * np.pi * 2.2))                      # 초당 2.2번 두근두근
+    s = 1.5 * (1.0 + 0.4 * (0.5 + 0.5 * np.sin(k / FPS * 2 * np.pi * 2.5)) ** 2)           # 더 크게 · 확 부풀었다 줄어듦 (초당 2.5번)
+    ang = 8 * np.sin(k / FPS * 2 * np.pi * 5)                                              # 살짝 들썩
     sp = cv2.resize(VEIN, None, fx=s, fy=s, interpolation=cv2.INTER_LINEAR); sa = cv2.resize(VEIN_A, None, fx=s, fy=s)[..., None]
+    R = cv2.getRotationMatrix2D((sp.shape[1] / 2, sp.shape[0] / 2), ang, 1); sp = cv2.warpAffine(sp, R, (sp.shape[1], sp.shape[0])); sa = cv2.warpAffine(sa, R, (sa.shape[1], sa.shape[0]))[..., None]
     h, w = sp.shape[:2]; x0, y0 = VC[0] - w // 2, VC[1] - h // 2
     fr[y0:y0 + h, x0:x0 + w] = fr[y0:y0 + h, x0:x0 + w] * (1 - sa) + sp * sa; return fr
 FX, FY = 540, 300; fm = np.zeros((H, W), np.float32); cv2.ellipse(fm, (FX, FY - 15), (150, 140), 0, 0, 360, 1, -1); fm = cv2.GaussianBlur(fm, (0, 0), 10)[..., None]
