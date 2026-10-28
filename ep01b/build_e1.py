@@ -36,11 +36,15 @@ def squash(k):
     rm = np.zeros(c0.shape[:2], np.uint8); cv2.ellipse(rm, (MX, MY), (70, 40), 0, 0, 360, 255, -1)
     rm = ((rm > 0) & (cv2.cvtColor(c0, cv2.COLOR_BGR2GRAY) < 110)).astype(np.uint8) * 255; rm = cv2.dilate(rm, np.ones((9, 9), np.uint8))   # 웃는 입 선만
     c = cv2.inpaint(c0, rm, 7, cv2.INPAINT_TELEA).astype(np.float32)       # 다문 입 선 지우고 피부로
-    x0, x1, y0, y1 = MX - 78, MX + 78, 726, 824                              # 벌린 입만 딱 (위 피부 X)
+    x0, x1, y0, y1 = MX - 100, MX + 100, 726, 824                             # 벌린 입 칸 (양 끝 여유)
     patch = o[y0:y1, x0:x1]; hh = int((y1 - y0) * k)
-    sq = cv2.resize(patch, (x1 - x0, max(2, hh)), interpolation=cv2.INTER_AREA)
-    top = int(748 - k * (748 - y0))                                           # 윗입술: 다문 입 선(748)에서 아주 조금만 올라감 · 아래로 벌어짐
-    mm = np.zeros(o.shape[:2], np.float32); cv2.ellipse(mm, (MX, top + hh // 2), (74, max(6, hh // 2 + 4)), 0, 0, 360, 1, -1); mm = cv2.GaussianBlur(mm, (0, 0), 2)[..., None]
+    skin = np.median(patch.reshape(-1, 3), 0)
+    pm = (np.abs(patch - skin).sum(2) > 55).astype(np.uint8)                   # 입 모양만 (선 + 안쪽) — 피부·볼터치 X
+    n_, lab_, st_, _ = cv2.connectedComponentsWithStats(pm); pm = (lab_ == 1 + np.argmax(st_[1:, 4])).astype(np.float32)
+    pm = cv2.GaussianBlur(cv2.dilate(pm, np.ones((3, 3), np.uint8)), (0, 0), 1.2)
+    sq = cv2.resize(patch, (x1 - x0, max(2, hh)), interpolation=cv2.INTER_AREA); sqm = cv2.resize(pm, (x1 - x0, max(2, hh)), interpolation=cv2.INTER_AREA)
+    top = int(748 - k * (748 - y0))                                           # 윗입술: 다문 입 선에서 조금만 올라감 · 아래로 벌어짐
+    mm = np.zeros(o.shape[:2], np.float32); mm[top:top + hh, x0:x1] = sqm; mm = mm[..., None]
     lay = c.copy(); lay[top:top + hh, x0:x1] = sq
     return sz((c * (1 - mm) + lay * mm).astype(np.uint8))
 office_s, office_h = squash(0.35), squash(0.65)
