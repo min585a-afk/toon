@@ -30,7 +30,7 @@ def frame_png(path, title, ko, en):
 def main():
     spec = json.load(open(sys.argv[1])); out = sys.argv[2]; tmp = tempfile.mkdtemp()
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
-    parts, times, t = [], [], 0.0
+    parts, times, cut_times, t = [], [], [], 0.0
     for i, c in enumerate(spec['cuts']):
         p = f'{tmp}/p{i}.mp4'; d = c.get('sec') or dur(c['file'])
         cmd = ['ffmpeg', '-y', '-v', 'error', '-i', c['file']]
@@ -38,7 +38,11 @@ def main():
         cmd += ['-t', str(d), '-vf', f'scale=1080:810,fps={FPS},setsar=1', '-map', '0:v', '-map', '0:a' if has_audio(c['file']) else '1:a',
                 '-ar', '44100', '-ac', '2', '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', p]
         subprocess.run(cmd, check=True)
-        parts.append(p); times.append((t, t + d, c.get('ko', ''), c.get('en', ''))); t += d
+        parts.append(p); cut_times.append((t, t + d))
+        if c.get('subs'):                               # 한 컷 안에서 자막 나누기: [[시작, 끝, 한글, 영어], ...] (컷 안 초)
+            for a0, b0, ko, en in c['subs']: times.append((t + a0, t + min(b0, d), ko, en))
+        else: times.append((t, t + d, c.get('ko', ''), c.get('en', '')))
+        t += d
     open(f'{tmp}/l.txt', 'w').write(''.join(f"file '{p}'\n" for p in parts))
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/l.txt', '-c', 'copy', f'{tmp}/cat.mp4'], check=True)
     # 2) 무드 25% → 3) 화 제목
@@ -60,7 +64,7 @@ def main():
     # 효과음: spec["sfx"] = [["파일", 초, 볼륨], ...] (영상 전체 시간 기준)
     sfx = []
     for e in spec.get('sfx', []):                     # [파일, 컷 이름 일부, 컷 안에서 초, 볼륨] → 전체 시간으로
-        f, cut, off, vol = e; st = next(a for (a, b, *_), c in zip(times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol))
+        f, cut, off, vol = e; st = next(a for (a, b), c in zip(cut_times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol))
     si0 = len(pngs) + 1
     for f, at, vol in sfx: cmd += ['-i', f]
     vmain = '0:a'

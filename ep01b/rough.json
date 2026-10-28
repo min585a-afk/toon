@@ -4,8 +4,26 @@
  "cuts": [
   {
    "file": "ep01b/c00-gyul-work.mp4",
-   "ko": "타닥타닥타닥",
-   "en": "tap tap tap tap"
+   "subs": [
+    [
+     0,
+     0.8,
+     "타닥타닥타닥",
+     "tap tap tap tap"
+    ],
+    [
+     0.8,
+     3.34,
+     "(직장인들의 마음)",
+     "(every office worker's heart)"
+    ],
+    [
+     3.34,
+     9,
+     "타닥타닥타닥",
+     "tap tap tap tap"
+    ]
+   ]
   },
   {
    "file": "ep01b/c0-boss-walk.mp4",
