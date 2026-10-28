@@ -30,7 +30,7 @@ def frame_png(path, title, ko, en):
 def main():
     spec = json.load(open(sys.argv[1])); out = sys.argv[2]; tmp = tempfile.mkdtemp()
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
-    parts, times, cut_times, t = [], [], [], 0.0
+    parts, times, cut_times, no_title, t = [], [], [], [], 0.0
     for i, c in enumerate(spec['cuts']):
         p = f'{tmp}/p{i}.mp4'; d = c.get('sec') or dur(c['file'])
         cmd = ['ffmpeg', '-y', '-v', 'error', '-i', c['file']]
@@ -42,6 +42,7 @@ def main():
         if c.get('subs'):                               # 한 컷 안에서 자막 나누기: [[시작, 끝, 한글, 영어], ...] (컷 안 초)
             for a0, b0, ko, en in c['subs']: times.append((t + a0, t + min(b0, d), ko, en))
         else: times.append((t, t + d, c.get('ko', ''), c.get('en', '')))
+        if c.get('no_title'): no_title.append((t, t + d))  # 끝 화면 등: 위 제목 없이
         t += d
     open(f'{tmp}/l.txt', 'w').write(''.join(f"file '{p}'\n" for p in parts))
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/l.txt', '-c', 'copy', f'{tmp}/cat.mp4'], check=True)
@@ -61,7 +62,8 @@ def main():
     times = filled
     pngs = []
     for i, (a, b, ko, en) in enumerate(times):
-        frame_png(f'{tmp}/f{i}.png', title, ko, en); pngs.append((a, b))
+        hide = any(x - 1e-3 <= a and b <= y + 1e-3 for x, y in no_title)
+        frame_png(f'{tmp}/f{i}.png', '' if hide else title, ko, en); pngs.append((a, b))
     cmd = ['ffmpeg', '-y', '-v', 'error', '-i', src] + sum([['-i', f'{tmp}/f{i}.png'] for i in range(len(pngs))], [])
     fc = f'[0:v]pad={W}:{H}:0:{TOP}:black[v0];'
     for i, (a, b) in enumerate(pngs):

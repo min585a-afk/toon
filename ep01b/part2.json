@@ -4,7 +4,7 @@
   {
    "file": "ep01b/e1-angel-bloom.mp4",
    "ko": "그럴 리가요~!",
-   "en": "Of course not~!"
+   "en": "Nooo way~!"
   },
   {
    "file": "ep01b/e2-boss-leave.mp4",
@@ -13,8 +13,8 @@
   },
   {
    "file": "ep01b/e3-gyul-rage.mp4",
-   "ko": "(진짜 얼굴)",
-   "en": "(the real face)"
+   "ko": "(불타는 중)",
+   "en": "(burning inside)"
   },
   {
    "file": "ep01b/e4-boss-turn.mp4",
@@ -33,8 +33,8 @@
   },
   {
    "file": "ep01b/e7-gyul-type.mp4",
-   "ko": "타닥타닥타닥",
-   "en": "tap tap tap tap"
+   "ko": "타닥타닥타닥 (분노의 타자)",
+   "en": "tap tap tap (rage typing)"
   },
   {
    "file": "ep01b/e8-notepad.mp4",
@@ -44,7 +44,8 @@
   {
    "file": "ep01b/e9-end.mp4",
    "ko": "",
-   "en": ""
+   "en": "",
+   "no_title": true
   }
  ]
 }
