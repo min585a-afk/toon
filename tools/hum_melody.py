@@ -96,19 +96,23 @@ def syllables(src, out, bpm, seq):
             i = j
         else: i += 1
     short = sorted(syl, key=len)[:max(1, len(syl) - 2)]; long_ = sorted(syl, key=len)[-2:]   # 긴 '흐음~' 은 4분음표용
-    beat = 60 / bpm; y = []; k = 0; tmp = tempfile.mkdtemp()
+    beat = 60 / bpm; y = []; k = 0; tmp = tempfile.mkdtemp(); HR = np.random.default_rng(3)
     for tok in seq:
-        n, d = tok.split(':'); dur = beat * 4 / int(d); seg = np.zeros(int(dur * SR), np.float32)
+        n, d = tok.split(':'); dur = beat * 4 / int(d); seg = np.zeros(int(dur * SR * 0.5), np.float32)
         if n != 'R':
             s = (long_[k % len(long_)] if int(d) <= 4 else short[k % len(short)]); k += 1
             mid = s[len(s) // 3: len(s) // 3 + 2048] if len(s) > 2400 else s; r = float(np.clip(hz(n) / f0(mid, 190, 450), 0.6, 1.6))   # 은서 목소리 음역(190~450Hz)에서만 찾음 → 옥타브 착각 X
-            want = dur * (0.9 if int(d) <= 4 else 0.8)                        # 음표 길이에 맞춰 늘이고 줄임
+            want = dur * (1.0 if int(d) <= 4 else 0.95)                       # 음표 길이에 맞춰 늘이고 줄임 (끊지 않고 이어지게)
+            r *= 2 ** (HR.normal(0, 8) / 1200)                               # 사람처럼: 음 아주 살짝(±8cent) 흔들림
             with wave.open(f'{tmp}/i.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(s, -1, 1) * 32767).astype(np.int16).tobytes())
             subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/i.wav', '-af', f'rubberband=pitch={r}:tempo={len(s) / SR / want}:formant=preserved', f'{tmp}/o.wav'], check=True)
-            s = load(f'{tmp}/o.wav')[:len(seg)]; f = int(0.012 * SR); s[:f] *= np.linspace(0, 1, f); f = int(0.04 * SR); s[-f:] *= np.linspace(1, 0, f)
-            seg[:len(s)] = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7)
-        y.append(seg)
-    y = np.concatenate(y); y = y / (np.abs(y).max() + 1e-9) * 0.8
+            s = load(f'{tmp}/o.wav'); f = int(0.02 * SR); s[:f] *= np.linspace(0, 1, f); f = int(0.07 * SR); s[-f:] *= np.linspace(1, 0, f)
+            seg = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7) * HR.uniform(0.75, 1.0)   # 사람처럼: 세기 들쭉날쭉
+        y.append((dur, seg))
+    L = sum(d for d, _ in y); out_a = np.zeros(int(L * SR) + SR, np.float32); t = 0.0
+    for d, seg in y:                                                       # 사람처럼: 박자 ±12ms 흔들림 · 다음 음과 살짝 겹쳐 이어짐(레가토)
+        i = max(0, int((t + HR.normal(0, 0.012)) * SR)); out_a[i:i + len(seg)] += seg[:len(out_a) - i]; t += d
+    y = out_a[:int(L * SR) + int(0.15 * SR)]; y = y / (np.abs(y).max() + 1e-9) * 0.8
     with wave.open(out, 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((y * 32767).astype(np.int16).tobytes())
     print(out, round(len(y) / SR, 2), 's · 음절', len(syl), '개')
 
