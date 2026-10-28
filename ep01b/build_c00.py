@@ -16,8 +16,8 @@ INTRO = 2.0                            # 1화 인물 소개: 첫 장면 멈춤 +
 GYUL_CARD = ('은서', '(사원)', 540, 730)   # 이름 · 괄호 · 위치(아래 가운데)
 TYPE_SEC = INTRO + T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 소개 끝나고 점점 가까이
 HEELS_AT, STEP = 2.2, 0.36             # 또각또각 시작(소개 끝난 뒤) · 걸음 간격
-WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.6
-LOOK_LAG, LOOK_HOLD = 0.25, 0.2         # 다시 귤이: 조금 더 치다가(0.8초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.7초)
+WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.8
+LOOK_LAG, LOOK_HOLD = 1.3, 0.35         # 다시 은서: 계속 치는 동안 또각또각 확 가까워지다 멈춤(1.3초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.35초)
 LOOK_SEC = LOOK_LAG + 0.9 + LOOK_HOLD
 
 
@@ -48,10 +48,10 @@ def write(frames, audio, out):
 typing, step = load('sfx/ep01/typing-norm.wav'), load('sfx/ep01/heel-step.wav')
 total = TYPE_SEC + WALK_SEC + LOOK_SEC
 heels = np.zeros(int(total * SR) + SR, np.float32)
-arrive = TYPE_SEC + WALK_SEC + 0.3                                   # 마지막 걸음 (귤이 컷 들어가고 0.3초)
+arrive = TYPE_SEC + WALK_SEC + LOOK_LAG - 0.35                     # 마지막 걸음: 은서가 계속 치는 동안 가까워지다 멈춤 → 0.35초 정적 → 눈 위로 (혁 10/27)
 t = HEELS_AT; rng = np.random.default_rng(4)
 while t <= arrive:
-    v = 0.25 + 0.75 * min(1, (t - HEELS_AT) / (arrive - HEELS_AT))  # 멀리서 → 가까이
+    p = min(1, (t - HEELS_AT) / (arrive - HEELS_AT)); v = 0.2 + 0.5 * p + 0.8 * max(0, (t - (TYPE_SEC + WALK_SEC)) / (arrive - TYPE_SEC - WALK_SEC + 1e-6))  # 멀리서 → 마지막에 확 가까이
     i = int(t * SR); heels[i:i + len(step)] += step[:len(heels) - i] * v; t += STEP + rng.uniform(-0.02, 0.02)
 type_track = np.zeros_like(heels)
 def put_typing(a, b, vol):
