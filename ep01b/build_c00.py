@@ -9,7 +9,7 @@ import cv2
 
 FPS, W, H, SR = 24, 1080, 810, 44100
 T1, T2 = 0.8, 0.7                      # 첫 장면 훅(혁 10/27): 귤이 타닥타닥 T1 → 모니터 메모장 '출근 앤 퇴근 / 9 to 6' → 다시 귤이 T2
-SCREEN = 'ep01b/c00s-screen.mp4'       # python3 tools/notepad_text.py ep01b/c00s-screen.mp4 "출근 앤 퇴근" "9 to 6" --hold 0.6
+SCREEN = 'ep01b/c00s-screen.mp4'       # notepad_text.py → c00s-screen-raw.mp4 → tools/cel_look.py --ref ep01b/c00-gyul-work.png --amount 0.6
 _cap = cv2.VideoCapture(SCREEN); SCREEN_N = int(_cap.get(cv2.CAP_PROP_FRAME_COUNT))
 TYPE_SEC = T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 초반부터 점점 가까이
 HEELS_AT, STEP = 0.2, 0.36             # 또각또각 시작(타닥타닥 컷 안) · 걸음 간격
