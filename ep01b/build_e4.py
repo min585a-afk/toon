@@ -13,7 +13,7 @@ while True:
     if not ok: break
     v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA))
 walk = [v[min(len(v) - 1, int((1.5 + (k - k % 2) / FPS) * f))] for k in range(12)]          # 0.5초 걷다가
-back, half, side, look = [sz(f'ep01b/e5-boss-far-{n}.png') for n in ['back', 'half', 'side', 'look']]
+back, half, side, look = [sz(f'ep01b/e5-boss-far-{n}.png' if n == 'back' else f'ep01b/e5-boss-far-{n}-fix.png') for n in ['back', 'half', 'side', 'look']]
 walk = []                                                                                   # 걷기는 장면 2 에 (사이에 은서 분노 컷)
 frames = [back] * 8 + [half] * 1 + [side] * 1 + [look] * 26                                 # 멈춘 뒷모습 0.33초 → 휙 (2프레임) → 돌아봄 1.1초
 TURN = len(walk) + 5

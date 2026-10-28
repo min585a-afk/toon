@@ -33,9 +33,9 @@ write(loop[:int(1.6 * FPS)], None, 'ep01b/e5-angel-loop.mp4')
 
 # 다시 걸어나감: 돌아본 고개 → 옆얼굴 → 반쯤 → 뒷모습 (휙 돌아섬) → H3 2.0초부터 남은 걸음
 sz = lambda p: cv2.resize(cv2.imread(p), (W, H), interpolation=cv2.INTER_AREA)
-look, side, half, back = [sz(f'ep01b/e5-boss-far-{n}.png') for n in ['look', 'side', 'half', 'back']]
-cap = cv2.VideoCapture('ep01b/video/e2-boss-leave-h3.mp4'); f = cap.get(cv2.CAP_PROP_FPS) or 24; v = video('ep01b/video/e2-boss-leave-h3.mp4')
-walk = [v[min(len(v) - 1, int((2.0 + (k - k % 2) / FPS) * f))] for k in range(int(0.45 * FPS))]
+look, side, half, back = [sz(f'ep01b/e5-boss-far-{n}.png' if n == 'back' else f'ep01b/e5-boss-far-{n}-fix.png') for n in ['look', 'side', 'half', 'back']]
+cap = cv2.VideoCapture('ep01b/video/e6-boss-away-h3.mp4'); f = cap.get(cv2.CAP_PROP_FPS) or 24; v = video('ep01b/video/e6-boss-away-h3.mp4')   # 멈춘 자리에서 이어 걷는 H3
+walk = [v[min(len(v) - 1, int((k - k % 2) / FPS * 1.2 * f))] for k in range(int(2.0 * FPS))]                       # 2초 더 걸어감 (혁 10/28)
 frames = [look] * 4 + [side] + [half] + [back] * 3 + walk
 step = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/heel-step.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 a = np.zeros(int(len(frames) / FPS * SR) + SR, np.float32)
