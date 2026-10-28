@@ -53,6 +53,12 @@ def main():
         subprocess.run(['python3', 'tools/title_card.py', src, f'{tmp}/title.mp4', ko, en, '--start', str(st), '--dur', str(du)], check=True, capture_output=True); src = f'{tmp}/title.mp4'
     # 4) 배경음 (대사 구간부터 작게) + 5) 릴스 틀 · 컷별 자막
     total = t; title = spec.get('reel_title') or (spec['title'][0] if spec.get('title') else '')
+    times.sort(); filled, cur = [], 0.0                 # 자막 빈 구간도 채움 → 위 제목은 처음부터 끝까지 그대로
+    for a0, b0, ko, en in times:
+        if a0 > cur + 1e-3: filled.append((cur, a0, '', ''))
+        filled.append((a0, b0, ko, en)); cur = max(cur, b0)
+    if cur < total - 1e-3: filled.append((cur, total, '', ''))
+    times = filled
     pngs = []
     for i, (a, b, ko, en) in enumerate(times):
         frame_png(f'{tmp}/f{i}.png', title, ko, en); pngs.append((a, b))
