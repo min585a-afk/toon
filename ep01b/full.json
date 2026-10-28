@@ -21,7 +21,8 @@
      "타닥타닥타닥",
      "tap tap tap tap"
     ]
-   ]
+   ],
+   "vol": 0.5
   },
   {
    "file": "ep01b/c0-boss-walk.mp4",
@@ -43,7 +44,8 @@
      "(…설마 나?)",
      "(…don't tell me it's me?)"
     ]
-   ]
+   ],
+   "vol": 0.5
   },
   {
    "file": "ep01b/c1-boss-talk.mp4",
@@ -105,12 +107,14 @@
   {
    "file": "ep01b/e7-gyul-type.mp4",
    "ko": "타닥타닥타닥 (분노의 타자)",
-   "en": "tap tap tap (rage typing)"
+   "en": "tap tap tap (rage typing)",
+   "vol": 0.5
   },
   {
    "file": "ep01b/e8-notepad.mp4",
    "ko": "(직장인들의 진짜 마음)",
-   "en": "(what every office worker really means)"
+   "en": "(what every office worker really means)",
+   "vol": 0.5
   },
   {
    "file": "ep01b/e9-end.mp4",
@@ -121,46 +125,16 @@
  ],
  "sfx": [
   [
-   "brand/bgm/daily-comedy.m4a",
-   "c00-gyul-work",
-   0,
-   0.24,
-   10.55,
-   0.3,
-   0.05,
-   0
-  ],
-  [
-   "brand/bgm/angel-sparkle.m4a",
-   "e1-angel-bloom",
-   0,
-   0.32,
-   4.54,
-   0.05,
-   0.05,
-   0
-  ],
-  [
-   "brand/bgm/daily-comedy.m4a",
-   "e6-boss-away",
-   0,
-   0.2,
-   9.5,
-   1.0,
-   1.5,
-   10.6
-  ],
-  [
    "voice/ep01b/hum-use.wav",
    "c00-gyul-work",
    2.95,
-   0.85
+   1.0
   ],
   [
    "voice/ep01b/boss-bye-use.wav",
    "e2-boss-leave",
    0.15,
-   1.0
+   1.4
   ],
   [
    "voice/ep01b/hehe-use.wav",
@@ -172,7 +146,7 @@
    "voice/ep01b/sigh-use.wav",
    "e7-gyul-type",
    0.05,
-   0.9
+   1.0
   ],
   [
    "sfx/ep01/paper.wav",

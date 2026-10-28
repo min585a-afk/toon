@@ -38,7 +38,7 @@ def main():
         cmd = ['ffmpeg', '-y', '-v', 'error', '-i', c['file']]
         if not has_audio(c['file']): cmd += ['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo']
         cmd += ['-t', str(d), '-vf', f'scale=1080:810,fps={FPS},setsar=1', '-map', '0:v', '-map', '0:a' if has_audio(c['file']) else '1:a',
-                '-ar', '44100', '-ac', '2', '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', p]
+                '-ar', '44100', '-ac', '2', '-af', f"volume={c.get('vol', 1)}", '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', p]   # "vol": 컷 소리 크기 (타닥타닥 줄이기 등)
         subprocess.run(cmd, check=True)
         parts.append(p); cut_times.append((t, t + d))
         if c.get('subs'):                               # 한 컷 안에서 자막 나누기: [[시작, 끝, 한글, 영어], ...] (컷 안 초)
