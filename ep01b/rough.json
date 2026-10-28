@@ -6,20 +6,20 @@
    "file": "ep01b/c00-gyul-work.mp4",
    "subs": [
     [
-     1.5,
-     2.3,
+     3.0,
+     3.8,
      "타닥타닥타닥",
      "tap tap tap tap"
     ],
     [
-     2.3,
-     4.84,
+     3.8,
+     6.34,
      "(직장인들의 마음)",
      "(every office worker's heart)"
     ],
     [
-     4.84,
-     9,
+     6.34,
+     99,
      "타닥타닥타닥",
      "tap tap tap tap"
     ]
@@ -39,7 +39,7 @@
    "file": "ep01b/c1-boss-talk.mp4",
    "subs": [
     [
-     1.5,
+     2.9,
      99,
      "이거 오늘까지좀 부탁해요.",
      "Could you get this done by today?"
@@ -81,6 +81,18 @@
    "c3-boss-why",
    0.47,
    0.7
+  ],
+  [
+   "sfx/ep01/dung.wav",
+   "c00-gyul-work",
+   0.125,
+   0.9
+  ],
+  [
+   "sfx/ep01/dung.wav",
+   "c1-boss-talk",
+   0.125,
+   0.9
   ]
  ],
  "reel_title": "두 얼굴"

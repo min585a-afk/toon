@@ -44,3 +44,10 @@ n = int(0.22 * SR); t = np.arange(n) / SR; x = rng.normal(0, 1, n)
 x = x - np.convolve(x, np.ones(6) / 6, 'same'); x = np.convolve(x, np.ones(3) / 3, 'same')        # 높은 사각 소리만
 env = np.exp(-((t - 0.04) / 0.03) ** 2) + 0.6 * np.exp(-((t - 0.13) / 0.04) ** 2)
 save('sfx/ep01/paper.wav', x * env)
+
+# 4) 등장 '둥!': 낮게 떨어지는 북소리 + 짧은 타격음 + 살짝 울림
+n = int(0.9 * SR); t = np.arange(n) / SR
+f = 95 * np.exp(-t * 3) + 45; body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 4.5)
+hit = rng.normal(0, 1, n) * np.exp(-t * 60) * 0.5
+tail = np.convolve(body, np.exp(-np.arange(int(0.05 * SR)) / (0.02 * SR)), 'same') * 0.002
+save('sfx/ep01/dung.wav', body + hit + tail)

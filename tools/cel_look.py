@@ -22,7 +22,7 @@ while True:
     lab = lab * (1 - a.amount) + tgt * a.amount
     o = cv2.cvtColor(np.clip(lab, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR)
     if i % 3 == 0:                                                                                        # 손그림 떨림 (초당 8번 바뀜)
-        n = cv2.resize(rng.normal(0, 1, (H // 60, W // 60, 2)).astype(np.float32), (W, H), interpolation=cv2.INTER_CUBIC); wob = n * 0.55
+        n = cv2.resize(rng.normal(0, 1, (H // 60, W // 60, 2)).astype(np.float32), (W, H), interpolation=cv2.INTER_CUBIC); wob = n * 0.0   # 떨림 끔 (혁 10/27: 울렁거림)
     o = cv2.remap(o, xx + wob[..., 0], yy + wob[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
     o = cv2.GaussianBlur(o, (0, 0), 1.1).astype(np.float32)                                              # 옛날 TV 처럼 살짝 뭉개짐
     o = o + paper + rng.normal(0, 3.5, (H, W, 1))                                                         # 종이결 + 그레인

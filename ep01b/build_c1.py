@@ -6,11 +6,11 @@ import subprocess, tempfile
 import numpy as np
 import cv2, sys
 sys.path.insert(0, 'tools'); from name_card import card
-BOSS_CARD = ('강 팀장', '(팀장)', 540, 560)   # 이름 · 괄호 · 위치(가슴께) — 이름 확정 전 임시
-INTRO_SEC = 1.4
+BOSS_CARD = ('강서늘', '(팀장)', 700, 730)   # 이름 · 괄호 · 위치(은서와 같은 자리)
+INTRO_SEC = 2.8
 
 FPS, W, H = 24, 1080, 810
-VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 1.6, 2.4, 0   # 1화 소개: 대사 전 1.4초 멈춤 + 이름 자막   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
+VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 3.0, 3.8, 0   # 1화 소개: 대사 전 1.4초 멈춤 + 이름 자막   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
 FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
 WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
@@ -39,7 +39,10 @@ for i in range(n):
         x0 = min(max(cx - cw / 2, 0), WW - cw) if s > 1 else 0
         # 원본 크기에서 잘라서 줄임 → 화질 유지
         im = cv2.resize(fr[int(y0):int(y0 + ch), int(x0):int(x0 + cw)], (W, H), interpolation=cv2.INTER_AREA)
-        if i < int(INTRO_SEC * FPS): im = card(im, *BOSS_CARD[:2], *BOSS_CARD[2:], i - 3)
+        if i < int(INTRO_SEC * FPS):
+            im = card(im, *BOSS_CARD[:2], *BOSS_CARD[2:], i - 3)
+            d = {3: 10, 4: -6}.get(i)  # 이름 뜨는 순간 화면 툭 (둥!)
+            if d: im = cv2.warpAffine(im, np.float32([[1, 0, 0], [0, 1, d]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
         frames.append(im)
     else:
         frames.append(face[i])
