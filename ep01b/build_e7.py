@@ -54,9 +54,13 @@ def vein(fr, k):
     R = cv2.getRotationMatrix2D((sp.shape[1] / 2, sp.shape[0] / 2), ang, 1); sp = cv2.warpAffine(sp, R, (sp.shape[1], sp.shape[0])); sa = cv2.warpAffine(sa, R, (sa.shape[1], sa.shape[0]))[..., None]
     h, w = sp.shape[:2]; x0, y0 = VC[0] - w // 2, VC[1] - h // 2
     fr[y0:y0 + h, x0:x0 + w] = fr[y0:y0 + h, x0:x0 + w] * (1 - sa) + sp * sa; return fr
+# 앞머리 사이로 비치던 이마도 그림자로 꽉 채움 (혁 10/28)
+_sm = np.zeros((H, W), np.float32); cv2.ellipse(_sm, (535, 300), (100, 95), 0, 180, 360, 1, -1); _sm[300:330, 435:635] = 1
+_sm = cv2.GaussianBlur(_sm, (0, 0), 9)[..., None]; _dark = np.float32([22, 14, 18])
+angry = angry * (1 - _sm) + np.minimum(angry, _dark + 0.25 * angry) * _sm
 # 덮는 곳 = 그림자로 바뀐 곳 + 입만 (귀 · 머리 끝은 H3 그대로 → 귀 흔들림 X, 혁 10/28)
 _d = (np.abs(angry - base).mean(-1) > 30).astype(np.uint8); _d = cv2.morphologyEx(_d, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
-fm = np.zeros((H, W), np.uint8); fm[150:440, 440:640] = _d[150:440, 440:640]; cv2.ellipse(fm, (535, 400), (45, 25), 0, 0, 360, 1, -1)
+fm = np.zeros((H, W), np.uint8); fm[150:440, 440:640] = _d[150:440, 440:640]; cv2.ellipse(fm, (535, 400), (45, 25), 0, 0, 360, 1, -1); fm = np.maximum(fm, (_sm[..., 0] > 0.05).astype(np.uint8))
 fm = cv2.GaussianBlur(cv2.dilate(fm, np.ones((15, 15), np.uint8)).astype(np.float32), (0, 0), 5)[..., None]
 FX, FY = 540, 300
 g = lambda im: cv2.cvtColor(im[FY - 160:FY + 160, FX - 200:FX + 200].astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)
