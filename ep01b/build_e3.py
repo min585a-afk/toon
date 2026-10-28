@@ -40,19 +40,22 @@ def ppajik(fr, x, y, hgt, t):
     fr[y1:y2, x1:x2] = fr[y1:y2, x1:x2] * (1 - al) + a[..., :3] * al; return fr
 
 
-tmp = tempfile.mkdtemp(); n = int(SEC * FPS)
+# H3 영상 (혁 10/28: 영상으로 자연스럽게): 웃음 → 그림자 → 불꽃 → 이 악물기. 불꽃 꺼지기 전까지만 · 1.25배 · 12fps + 빠직
+V, V0, V1, SPD = 'ep01b/video/e3-rage-h3.mp4', 0.3, 3.7, 1.25
+cap = cv2.VideoCapture(V); vf = cap.get(cv2.CAP_PROP_FPS) or 24; vv = []
+while True:
+    ok, fr = cap.read()
+    if not ok: break
+    vv.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32))
+n = int((V1 - V0) / SPD * FPS); PPAJIK_AT = int((2.45 - V0) / SPD * FPS)
+tmp = tempfile.mkdtemp()
 for f in range(n):
-    k = f - f % 3; t = k / FPS                                                            # 초당 8장
-    rise = min(1, 0.25 + k / 8)                                                           # 처음 0.3초에 확 솟음
-    fl, fa = flames(t, k, rise)
-    pulse = 0.25 + 0.2 * (k // 3 % 2)                                                     # 빨간 깜빡
-    bg = img * (1 - pulse * 0.35) + np.array([20, 20, 150], np.float32) * pulse * 0.35
-    bg = bg * (1 - fa) + fl * fa                                                          # 불은 인물 뒤
-    fr = bg * (1 - fg) + img * fg
-    sx, sy = np.random.default_rng(k + 5).normal(0, 4, 2)                                 # 부들부들
-    fr = cv2.warpAffine(fr, np.float32([[1.02, 0, sx - W * 0.01], [0, 1.02, sy - H * 0.01]]), (W, H), borderMode=cv2.BORDER_REPLICATE)
-    fr = ppajik(fr, int(W * 0.85) + int(sx), int(H * 0.3) + int(sy), int(H * 0.4), f - 4)
+    k = f - f % 2; fr = vv[min(len(vv) - 1, int((V0 + k / FPS * SPD) * vf))].copy()
+    if f >= PPAJIK_AT:
+        sx, sy = np.random.default_rng(k).normal(0, 3, 2)
+        fr = cv2.warpAffine(fr, np.float32([[1, 0, sx], [0, 1, sy]]), (W, H), borderMode=cv2.BORDER_REPLICATE)   # 부들부들
+        fr = ppajik(fr, int(W * 0.85), int(H * 0.3), int(H * 0.4), f - PPAJIK_AT)
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=mono',
                 '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep01b/e3-gyul-rage.mp4'], check=True)
-print('ep01b/e3-gyul-rage.mp4', SEC, 's')
+print('ep01b/e3-gyul-rage.mp4', round(n / FPS, 2), 's')
