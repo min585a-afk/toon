@@ -1,0 +1,6 @@
+{"reel_title": "두 얼굴",
+ "sfx": [["sfx/ep01/glint.wav", "c3-boss-why", 0.47, 0.7]],
+ "cuts": [
+  {"file": "ep01b/c3-boss-why.mp4", "ko": "왜요? 어려운가요?", "en": "Why? Is it too hard?"},
+  {"file": "ep01b/e1-angel-bloom.mp4", "ko": "그럴 리가요~!", "en": "Of course not~!"}
+ ]}

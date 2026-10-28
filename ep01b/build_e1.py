@@ -8,7 +8,7 @@ import cv2
 sys.path.insert(0, 'ep01b')
 
 FPS, W, H = 24, 1080, 810
-HOLD0, BLOOM, HOLD1 = 0.4, 1.25, 1.1                   # 사무실 멈춤 · 꽃 퍼지는 시간 · 꽃밭 멈춤
+HOLD0, BLOOM, HOLD1 = 0.75, 1.25, 1.1                  # 사무실 멈춤 · 꽃 퍼지는 시간 · 꽃밭 멈춤
 sz = lambda im: cv2.resize(im, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
 office, plate = sz(cv2.imread('ep01b/e1-gyul-angel-papers.png')), sz(cv2.imread('ep01b/e1-flowers-plate.png'))
 cut = cv2.resize(cv2.imread('ep01b/e1-gyul-cut2.png', cv2.IMREAD_UNCHANGED), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
