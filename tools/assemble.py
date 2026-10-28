@@ -21,7 +21,9 @@ def has_audio(p):
 def frame_png(path, title, ko, en):
     o = Image.new('RGBA', (W, H), (0, 0, 0, 255)); d = ImageDraw.Draw(o)
     d.rectangle((0, TOP, W, TOP + VH), fill=(0, 0, 0, 0))
-    ft = ImageFont.truetype(FJ, 120); tw = d.textlength(title, font=ft); d.text(((W - tw) / 2, TOP - 180), title, font=ft, fill=(255, 228, 92))
+    tko, ten = title if isinstance(title, tuple) else (title, '')   # 위 제목 = 자막 글꼴 + 아래 영어 제목 (혁 10/28)
+    if tko: slanted(o, tko, ImageFont.truetype(FG, 108), (255, 228, 92), TOP - (215 if ten else 180))
+    if ten: slanted(o, ten, ImageFont.truetype(FG, 40), (255, 228, 92), TOP - 85)
     if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 30)
     if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 118)
     o.save(path)
@@ -53,7 +55,7 @@ def main():
         ko, en, st, du = spec['title']
         subprocess.run(['python3', 'tools/title_card.py', src, f'{tmp}/title.mp4', ko, en, '--start', str(st), '--dur', str(du)], check=True, capture_output=True); src = f'{tmp}/title.mp4'
     # 4) 배경음 (대사 구간부터 작게) + 5) 릴스 틀 · 컷별 자막
-    total = t; title = spec.get('reel_title') or (spec['title'][0] if spec.get('title') else '')
+    total = t; title = (spec.get('reel_title') or (spec['title'][0] if spec.get('title') else ''), spec.get('reel_title_en', ''))
     times.sort(); filled, cur = [], 0.0                 # 자막 빈 구간도 채움 → 위 제목은 처음부터 끝까지 그대로
     for a0, b0, ko, en in times:
         if a0 > cur + 1e-3: filled.append((cur, a0, '', ''))
@@ -63,7 +65,7 @@ def main():
     pngs = []
     for i, (a, b, ko, en) in enumerate(times):
         hide = any(x - 1e-3 <= a and b <= y + 1e-3 for x, y in no_title)
-        frame_png(f'{tmp}/f{i}.png', '' if hide else title, ko, en); pngs.append((a, b))
+        frame_png(f'{tmp}/f{i}.png', ('', '') if hide else title, ko, en); pngs.append((a, b))
     cmd = ['ffmpeg', '-y', '-v', 'error', '-i', src] + sum([['-i', f'{tmp}/f{i}.png'] for i in range(len(pngs))], [])
     fc = f'[0:v]pad={W}:{H}:0:{TOP}:black[v0];'
     for i, (a, b) in enumerate(pngs):
