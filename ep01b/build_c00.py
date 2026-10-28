@@ -5,14 +5,17 @@ usage: python3 ep01b/build_c00.py  → ep01b/c00-gyul-work.mp4 · ep01b/c0-boss-
 """
 import subprocess, tempfile, wave
 import numpy as np
-import cv2
+import cv2, sys
+sys.path.insert(0, 'tools'); from name_card import card
 
 FPS, W, H, SR = 24, 1080, 810, 44100
 T1, T2 = 0.8, 0.7                      # 첫 장면 훅(혁 10/27): 귤이 타닥타닥 T1 → 모니터 메모장 '출근 앤 퇴근 / 9 to 6' → 다시 귤이 T2
 SCREEN = 'ep01b/c00s-screen.mp4'       # notepad_text.py → c00s-screen-raw.mp4 → tools/cel_look.py --ref ep01b/c00-gyul-work.png --amount 0.6
 _cap = cv2.VideoCapture(SCREEN); SCREEN_N = int(_cap.get(cv2.CAP_PROP_FRAME_COUNT))
-TYPE_SEC = T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 초반부터 점점 가까이
-HEELS_AT, STEP = 0.2, 0.36             # 또각또각 시작(타닥타닥 컷 안) · 걸음 간격
+INTRO = 1.5                            # 1화 인물 소개: 첫 장면 멈춤 + '은서 (사원)' (혁 10/27)
+GYUL_CARD = ('은서', '(사원)', 540, 95)   # 이름 · 괄호 · 위치(머리 위)
+TYPE_SEC = INTRO + T1 + SCREEN_N / 24 + T2     # 이 구간 내내 타닥타닥 · 또각또각은 소개 끝나고 점점 가까이
+HEELS_AT, STEP = 1.7, 0.36             # 또각또각 시작(소개 끝난 뒤) · 걸음 간격
 WALK_FROM, SPEED, WALK_SEC = 0.5, 1.8, 1.6
 LOOK_LAG, LOOK_HOLD = 0.25, 0.2         # 다시 귤이: 조금 더 치다가(0.8초) → 눈 위로(H3 끝 0.9초) → 멈춤(0.7초)
 LOOK_SEC = LOOK_LAG + 0.9 + LOOK_HOLD
@@ -62,7 +65,8 @@ cut = lambda a, b: mix[int(a * SR):int(b * SR)]
 gv, gf = video('ep01b/video/c00-gyul-type-look-h3.mp4')
 at = lambda sec: gv[min(len(gv) - 1, int(sec * gf))]
 sv, _ = video(SCREEN)
-frames = [at((k - k % 2) / FPS) for k in range(int(T1 * FPS))] + sv + [at(T1 + (k - k % 2) / FPS) for k in range(int(T2 * FPS))]
+intro = [card(at(0).copy(), *GYUL_CARD[:2], *GYUL_CARD[2:], k - 3) for k in range(int(INTRO * FPS))]   # 첫 그림 멈춤 + 소개
+frames = intro + [at((k - k % 2) / FPS) for k in range(int(T1 * FPS))] + sv + [at(T1 + (k - k % 2) / FPS) for k in range(int(T2 * FPS))]
 write(frames, cut(0, len(frames) / FPS), 'ep01b/c00-gyul-work.mp4')
 
 bv, bf = video('ep01b/video/c0-boss-walk-h3.mp4')
