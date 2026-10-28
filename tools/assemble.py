@@ -71,15 +71,21 @@ def main():
     for i, (a, b) in enumerate(pngs):
         fc += f"[v{i}][{i + 1}:v]overlay=0:0:enable='between(t,{a:.3f},{b - 0.001:.3f})'[v{i + 1}];"
     vlast = f'[v{len(pngs)}]'
-    # 효과음: spec["sfx"] = [["파일", 초, 볼륨], ...] (영상 전체 시간 기준)
+    # 효과음 · 배경음 구간: spec["sfx"] = [["파일", "컷 이름 일부", 컷 안 초, 볼륨, (길이, 페이드인, 페이드아웃, 파일 시작초)], ...]
     sfx = []
     for e in spec.get('sfx', []):                     # [파일, 컷 이름 일부, 컷 안에서 초, 볼륨] → 전체 시간으로
-        f, cut, off, vol = e; st = next(a for (a, b), c in zip(cut_times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol))
+        f, cut, off, vol, *x = e; st = next(a for (a, b), c in zip(cut_times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol, x))
     si0 = len(pngs) + 1
-    for f, at, vol in sfx: cmd += ['-i', f]
+    for f, at, vol, x in sfx: cmd += ['-i', f]
     vmain = '0:a'
     if sfx:
-        for k, (f, at, vol) in enumerate(sfx): fc += f"[{si0 + k}:a]volume={vol},adelay={int(at * 1000)}:all=1,apad[s{k}];"
+        for k, (f, at, vol, x) in enumerate(sfx):
+            # 배경음 구간도 같은 식: [파일, 컷, 컷 안 초, 볼륨, 길이, 페이드인, 페이드아웃, 파일 시작초] — 애니처럼 뚝 끊기게 하려면 페이드아웃 0.05
+            pre = ''
+            if x:
+                ln, fi, fo, src = (list(x) + [0, 0, 0])[:4]
+                pre = f"atrim=start={src}:duration={ln},asetpts=PTS-STARTPTS,afade=t=in:d={max(fi, 0.01)},afade=t=out:st={max(0, ln - max(fo, 0.01))}:d={max(fo, 0.01)},"
+            fc += f"[{si0 + k}:a]aformat=sample_rates=44100:channel_layouts=stereo,{pre}volume={vol},adelay={int(at * 1000)}:all=1,apad[s{k}];"
         fc += '[0:a]' + ''.join(f'[s{k}]' for k in range(len(sfx))) + f'amix=inputs={len(sfx) + 1}:duration=first:normalize=0[am];'; vmain = '[am]'
     if spec.get('bgm'):
         cmd += ['-i', spec['bgm']]; bi = si0 + len(sfx)
@@ -92,6 +98,9 @@ def main():
         amap = vmain
     cmd += ['-filter_complex', fc.rstrip(';'), '-map', vlast, '-map', amap, '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', out]
     subprocess.run(cmd, check=True)
+    # 릴스 소리 크기 맞춤 (-14 LUFS · 폰에서 작게 안 들리게)
+    os.replace(out, f'{tmp}/pre.mp4')
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/pre.mp4', '-c:v', 'copy', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', '44100', '-c:a', 'aac', '-b:a', '192k', out], check=True)
     print(out, round(total, 1), 's'); [print(f'  {round(a, 2):6.2f}~{round(b, 2):6.2f}  {k}') for a, b, k, _ in times]
 
 

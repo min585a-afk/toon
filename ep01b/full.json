@@ -1,6 +1,4 @@
 {
- "bgm_vol": 0.55,
- "bgm_until": 3.9,
  "cuts": [
   {
    "file": "ep01b/c00-gyul-work.mp4",
@@ -123,28 +121,128 @@
  ],
  "sfx": [
   [
+   "brand/bgm/daily-comedy.m4a",
+   "c00-gyul-work",
+   0,
+   0.32,
+   10.55,
+   0.3,
+   0.05,
+   0
+  ],
+  [
+   "brand/bgm/angel-sparkle.m4a",
+   "e1-angel-bloom",
+   0,
+   0.45,
+   4.54,
+   0.05,
+   0.05,
+   0
+  ],
+  [
+   "brand/bgm/angel-sparkle.m4a",
+   "e5-angel-loop",
+   0,
+   0.45,
+   1.58,
+   0.05,
+   0.05,
+   1.0
+  ],
+  [
+   "brand/bgm/daily-comedy.m4a",
+   "e6-boss-away",
+   0,
+   0.28,
+   7.75,
+   0.4,
+   1.2,
+   10.6
+  ],
+  [
+   "sfx/anime/zawa-syn.wav",
+   "c1-boss-talk",
+   0.0,
+   0.55
+  ],
+  [
    "sfx/ep01/paper.wav",
    "c1-boss-talk",
    0.05,
    0.35
   ],
   [
-   "sfx/ep01/q-drop.wav",
+   "sfx/anime/hatena-syn.wav",
    "c2-gyul-huh",
    0.25,
    0.55
   ],
   [
-   "sfx/ep01/sulk.wav",
+   "sfx/anime/tiyong-syn.wav",
    "c2-gyul-huh",
-   0.25,
+   0.9,
+   0.4
+  ],
+  [
+   "sfx/anime/kiran-syn.wav",
+   "c3-boss-why",
+   0.42,
+   0.6
+  ],
+  [
+   "sfx/anime/tension-syn.wav",
+   "c3-boss-why",
+   1.85,
+   0.7
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "e1-angel-bloom",
+   0.2,
+   0.5
+  ],
+  [
+   "sfx/anime/gogogo-syn.wav",
+   "e3-gyul-rage",
+   0.0,
+   0.75
+  ],
+  [
+   "sfx/anime/pikit-syn.wav",
+   "e3-gyul-rage",
+   1.26,
+   0.6
+  ],
+  [
+   "sfx/anime/whoosh-syn.wav",
+   "e4-boss-turn",
+   0.4,
+   0.55
+  ],
+  [
+   "sfx/anime/poyon-syn.wav",
+   "e5-angel-loop",
+   0.15,
+   0.6
+  ],
+  [
+   "sfx/anime/pikit-syn.wav",
+   "e7-gyul-type",
+   0.1,
+   0.45
+  ],
+  [
+   "sfx/anime/pikit-syn.wav",
+   "e7-gyul-type",
+   0.75,
    0.35
   ],
   [
-   "sfx/ep01/glint.wav",
-   "c3-boss-why",
-   0.47,
-   0.7
+   "sfx/anime/tiring-syn.wav",
+   "e9-end",
+   0.35,
+   0.6
   ]
  ],
  "reel_title": "두 얼굴",
