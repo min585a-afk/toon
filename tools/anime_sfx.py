@@ -106,7 +106,17 @@ def heartbeat():                                     # 두-근 두-근만 (혁 1
     return verb(y, 0.3, 0.12)
 
 
-ALL = dict(heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+def fire():                                         # 화르륵: 불길 확 붙는 바람 + 타닥 불꽃 (불타는 중)
+    d = 1.0; t = t_(d); n = rng.normal(0, 1, len(t))
+    roar = np.convolve(n, np.ones(25) / 25, 'same') * 5 * np.minimum(1, t / 0.08) * np.exp(-np.maximum(0, t - 0.3) * 2.5)
+    hiss = (n - np.convolve(n, np.ones(6) / 6, 'same')) * 0.35 * np.minimum(1, t / 0.05) * np.exp(-t * 3)
+    y = roar + hiss
+    for s in rng.uniform(0.05, 0.9, 14):             # 타닥 불티
+        i = int(s * SR); k = int(0.008 * SR); y[i:i + k] += rng.normal(0, 1, k) * np.exp(-np.arange(k) / (k / 4)) * rng.uniform(0.4, 1.0)
+    return verb(y, 0.4, 0.2)
+
+
+ALL = dict(fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85

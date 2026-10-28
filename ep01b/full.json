@@ -127,7 +127,7 @@
   [
    "voice/ep01b/hum-use.wav",
    "c00-gyul-work",
-   2.95,
+   2.8,
    1.0
   ],
   [
@@ -197,7 +197,7 @@
    0.4
   ],
   [
-   "sfx/anime/poyon-syn.wav",
+   "sfx/anime/kirakira-syn.wav",
    "e5-angel-loop",
    0.05,
    0.3
@@ -213,6 +213,12 @@
    "e9-end",
    0.35,
    0.45
+  ],
+  [
+   "sfx/anime/fire-syn.wav",
+   "e3-gyul-rage",
+   0.5,
+   0.7
   ]
  ],
  "reel_title": "두 얼굴",
