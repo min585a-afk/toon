@@ -28,29 +28,32 @@ target = plate * (1 - ga) + girl * ga                  # 꽃밭 + 은서 (모니
 _o = cv2.imread('ep01b/e1-gyul-angel-papers.png'); _c = cv2.resize(cv2.imread('ep01b/talk/e1-smile-closed-raw.png'), (_o.shape[1], _o.shape[0]))
 MX, MY = 1123, 735; _g = lambda im: cv2.cvtColor(im[MY - 150:MY + 150, MX - 200:MX + 200], cv2.COLOR_BGR2GRAY).astype(np.float32)
 (_dx, _dy), _ = cv2.phaseCorrelate(_g(_o), _g(_c)); _c = cv2.warpAffine(_c, np.float32([[1, 0, -_dx], [0, 1, -_dy]]), (_o.shape[1], _o.shape[0]), borderMode=cv2.BORDER_REPLICATE)
-_m = np.zeros(_o.shape[:2], np.float32); cv2.ellipse(_m, (MX, MY), (95, 70), 0, 0, 360, 1, -1); _m = cv2.GaussianBlur(_m, (0, 0), 9)[..., None]
+_m = np.zeros(_o.shape[:2], np.float32); cv2.ellipse(_m, (MX, MY + 15), (115, 115), 0, 0, 360, 1, -1); _m = cv2.GaussianBlur(_m, (0, 0), 9)[..., None]   # 벌린 입 끝까지 덮음
 office_closed = sz((_o * (1 - _m) + _c * _m).astype(np.uint8))
 # 중간 입: 원본 벌린 입을 세로로 눌러서(같은 그림체) 35% · 65% → 다문 입 → 조금 → 반 → 활짝 4단계 (혁 10/28)
 def squash(k):
     o = _o.astype(np.float32); c0 = (_o * (1 - _m) + _c * _m).astype(np.uint8)
-    rm = np.zeros(c0.shape[:2], np.uint8); cv2.ellipse(rm, (MX, MY), (95, 60), 0, 0, 360, 255, -1)
-    rm = ((rm > 0) & (cv2.cvtColor(c0, cv2.COLOR_BGR2GRAY) < 150)).astype(np.uint8) * 255; rm = cv2.dilate(rm, np.ones((7, 7), np.uint8))
+    rm = np.zeros(c0.shape[:2], np.uint8); cv2.ellipse(rm, (MX, MY), (70, 40), 0, 0, 360, 255, -1)
+    rm = ((rm > 0) & (cv2.cvtColor(c0, cv2.COLOR_BGR2GRAY) < 110)).astype(np.uint8) * 255; rm = cv2.dilate(rm, np.ones((9, 9), np.uint8))   # 웃는 입 선만
     c = cv2.inpaint(c0, rm, 7, cv2.INPAINT_TELEA).astype(np.float32)       # 다문 입 선 지우고 피부로
-    x0, x1, y0, y1 = MX - 110, MX + 110, MY - 75, MY + 85                    # 벌린 입 칸
+    x0, x1, y0, y1 = MX - 78, MX + 78, MY - 75, MY + 85                      # 벌린 입 칸 (볼터치 안 건드림)
     patch = o[y0:y1, x0:x1]; hh = int((y1 - y0) * k)
     sq = cv2.resize(patch, (x1 - x0, max(2, hh)), interpolation=cv2.INTER_AREA)
     out = c.copy(); top = y0 + int((y1 - y0) * 0.18 * (1 - k))                # 윗입술 자리 거의 그대로
-    mm = np.zeros(o.shape[:2], np.float32); cv2.ellipse(mm, (MX, top + hh // 2), (100, max(6, hh // 2)), 0, 0, 360, 1, -1); mm = cv2.GaussianBlur(mm, (0, 0), 5)[..., None]
+    mm = np.zeros(o.shape[:2], np.float32); cv2.ellipse(mm, (MX, top + hh // 2), (74, max(6, hh // 2 + 4)), 0, 0, 360, 1, -1); mm = cv2.GaussianBlur(mm, (0, 0), 2)[..., None]
     lay = c.copy(); lay[top:top + hh, x0:x1] = sq
     return sz((c * (1 - mm) + lay * mm).astype(np.uint8))
 office_s, office_h = squash(0.35), squash(0.65)
 MOUTHS = [office_closed, office_s, office_h, office]
 _raw = _sp.run(['ffmpeg', '-v', 'error', '-i', VOICE, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
 _x = np.frombuffer(_raw, np.float32); _rms = np.array([np.sqrt(np.mean(_x[i:i + 2000] ** 2)) for i in range(0, len(_x), 2000)]); _top = _rms.max() + 1e-9
+_lv = [0 if r / _top < 0.12 else 1 if r / _top < 0.35 else 2 if r / _top < 0.65 else 3 for r in _rms]
+for i in range(1, len(_lv)):                                   # 한 번에 두 단계 이상 안 뜀
+    if abs(_lv[i] - _lv[i - 1]) > 1: _lv[i] = _lv[i - 1] + (1 if _lv[i] > _lv[i - 1] else -1)
 def office_at(t):
     j = int((t - V_AT) * 8)
-    if j < 0 or j >= len(_rms): return office_closed
-    r = _rms[j] / _top; return MOUTHS[0 if r < 0.12 else 1 if r < 0.35 else 2 if r < 0.65 else 3]
+    if j < 0 or j >= len(_lv): return office_closed
+    return MOUTHS[_lv[j]]
 ga1 = cv2.resize(cv2.imread('ep01b/e1-gyul-cut.png', cv2.IMREAD_UNCHANGED), (W, H), interpolation=cv2.INTER_AREA)[..., 3:4].astype(np.float32) / 255  # 사무실 장면에서 보이는 은서(모니터에 가린 채)
 
 # 꽃 피어나는 자리 (은서 뒤 · 둘레), 순서대로 터짐 (초)
