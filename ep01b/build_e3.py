@@ -54,7 +54,7 @@ for f in range(n):
     if f >= PPAJIK_AT:
         sx, sy = np.random.default_rng(k).normal(0, 3, 2)
         fr = cv2.warpAffine(fr, np.float32([[1, 0, sx], [0, 1, sy]]), (W, H), borderMode=cv2.BORDER_REPLICATE)   # 부들부들
-        fr = ppajik(fr, int(W * 0.85), int(H * 0.3), int(H * 0.4), f - PPAJIK_AT)
+        fr = ppajik(fr, int(W * 0.8), int(H * 0.3), int(H * 0.36), f - PPAJIK_AT)
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=mono',
                 '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep01b/e3-gyul-rage.mp4'], check=True)
