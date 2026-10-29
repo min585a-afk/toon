@@ -4,12 +4,25 @@ usage: python3 ep02/build_s2.py → ep02/s2-gyul-monitor.mp4
 import subprocess, tempfile, wave
 import numpy as np, cv2
 FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 1.6, 2.6      # 장면 1 에서 이어지는 초 (째깍 박자 맞춤)
-img = cv2.resize(cv2.imread('ep02/s2-gyul-monitor.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
-yy, xx = np.mgrid[0:H, 0:W]; glow = np.clip(1 - np.hypot((xx - W * 0.85) / (W * 0.9), (yy - H) / (H * 0.9)), 0, 1)[..., None]
-tmp = tempfile.mkdtemp()
+# 혁 10/29: 좌우 반전 · 눈 깜빡 · 모니터 빛 비추는 효과
+op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
+cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-blink.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
+BLINKS = (0.55, 1.25)                                          # 깜빡이는 시각
+def eye(t):                                                    # 0 = 뜸 · 1 = 감음 (0.17초)
+    for b in BLINKS:
+        d = t - b
+        if 0 <= d < 2 / 12: return 1.0                            # 반쯤 섞으면 눈이 겹쳐 보임 → 바로 감았다 뜸
+    return 0.0
+yy, xx = np.mgrid[0:H, 0:W]
+glow = np.clip(1 - np.hypot((xx - W * 0.12) / (W * 0.95), (yy - H * 1.02) / (H * 0.95)), 0, 1)[..., None] ** 1.3   # 왼쪽 아래 모니터 쪽
+tmp = tempfile.mkdtemp(); rng = np.random.default_rng(5)
 for k in range(int(SEC * FPS)):
-    f = 0.06 * glow * (0.5 + 0.5 * np.sin((k - k % 2) / FPS * 2 * np.pi * 1.3))          # 모니터 불빛 살짝 (12fps)
-    fr = img * (1 - f) + np.float32([255, 220, 190]) * f
+    t = (k - k % 2) / FPS; e = eye(t)
+    fr = op * (1 - e) + cl * e
+    flick = 0.55 + 0.3 * np.sin(t * 2 * np.pi * 2.1) + 0.15 * rng.random()                 # 화면 바뀌며 빛이 깜빡깜빡
+    band = np.exp(-(((yy - (t * 0.9 % 1.0) * H * 1.4 + H * 0.2) / (H * 0.12)) ** 2))[..., None]   # 화면 글자 스크롤 빛줄기 (아래→위 천천히)
+    f = glow * (0.16 * flick + 0.10 * band)
+    fr = fr * (1 - f) + np.float32([255, 225, 185]) * f            # 차가운 하늘빛 (BGR)
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 tk = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/anime/tick-syn.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 a = np.zeros(int(SEC * SR), np.float32)

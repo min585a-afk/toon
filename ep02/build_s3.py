@@ -1,0 +1,29 @@
+"""EP02 장면 3: 1화 컴퓨터 앞 장면(은서 타닥 → 눈만 위로, ep01b/video/c00-gyul-type-look-h3.mp4) + 왼쪽 앞 최버터 뒷모습(편집 1cr, 대리만 프레임마다 덮음). 크레딧 0.
+usage: python3 ep02/build_s3.py → ep02/s3-butter-back.mp4
+"""
+import subprocess, tempfile, wave
+import numpy as np, cv2
+FPS, W, H, SR = 24, 1080, 810, 44100
+TYPE, LOOK = 0.7, 0.9                                          # 타닥 0.7초 → 눈 위로(영상 끝 0.9초)
+cap = cv2.VideoCapture('ep01b/video/c00-gyul-type-look-h3.mp4'); vf = cap.get(cv2.CAP_PROP_FPS); v = []
+while True:
+    ok, fr = cap.read()
+    if not ok: break
+    v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32))
+base = cv2.resize(cv2.imread('ep02/s3-base.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
+edit = cv2.resize(cv2.imread('ep02/s3-butter-back.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
+d = (np.abs(edit - base).mean(2) > 22).astype(np.uint8); d[:, int(W * 0.62):] = 0             # 대리 = 왼쪽에서 바뀐 곳
+n_, lab, st, _ = cv2.connectedComponentsWithStats(d); keep = np.argmax(st[1:, 4]) + 1          # 제일 큰 덩어리
+m = (lab == keep).astype(np.uint8); m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
+cnts, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE); m = np.zeros_like(m); cv2.drawContours(m, cnts, -1, 1, -1)
+M = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 2)[..., None]
+n = int((TYPE + LOOK) * FPS); v0 = len(v) / vf - LOOK - TYPE
+tmp = tempfile.mkdtemp()
+for k in range(n):
+    fr = v[min(len(v) - 1, int((v0 + (k - k % 2) / FPS) * vf))]
+    cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr * (1 - M) + edit * M, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
+typing = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/typing-norm.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+a = np.zeros(int(n / FPS * SR), np.float32); L = int(TYPE * SR); a[:L] = np.tile(typing, 3)[:L] * 0.45; a[L - 800:L] *= np.linspace(1, 0, 800)
+with wave.open(f'{tmp}/a.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(a, -1, 1) * 32767).astype(np.int16).tobytes())
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', f'{tmp}/a.wav', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep02/s3-butter-back.mp4'], check=True)
+print('ep02/s3-butter-back.mp4', round(n / FPS, 2), 's')
