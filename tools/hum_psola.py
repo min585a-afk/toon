@@ -1,6 +1,7 @@
 """자연 흥얼(은서 목소리)을 계이름 · 박자 정확히 (TD-PSOLA: 성대 떨림 한 주기씩 다시 배치 → 음 딱 고정, 목소리 결 그대로, 겹침/화음 X). 크레딧 0.
 usage: python3 tools/hum_psola.py 흥얼.wav out.wav BPM "C4:8 C4:8 C4:8 C4:8 C4:4" [반복 2] [쉼 박]
 예) python3 tools/hum_psola.py voice/ep01b/hum-neon-phraseA.wav voice/ep01b/hum-neon4.wav 130 "C4:8 C4:8 C4:8 C4:8 C4:4" 2 1   (니온 앤 비온드 ×2, 혁 10/29)
+음만 맞춤(흥얼 그대로): python3 tools/hum_psola.py --retune in.wav out.wav C4 0.7
 """
 import sys, wave
 import numpy as np
@@ -53,7 +54,7 @@ def psola(s, f_target, dur, keep=0.6, vib=0.0, scoop=40):
     return out
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and sys.argv[1] != '--retune':
     src, dst, bpm, seq = sys.argv[1], sys.argv[2], float(sys.argv[3]), sys.argv[4].split()
     rep = int(sys.argv[5]) if len(sys.argv) > 5 else 1; rest = float(sys.argv[6]) if len(sys.argv) > 6 else 1.0
     KEEP = float(sys.argv[7]) if len(sys.argv) > 7 else 0.6; VIB = float(sys.argv[8]) if len(sys.argv) > 8 else 25   # 원래 흔들림 남김 · 비브라토(cent)
@@ -66,3 +67,28 @@ if __name__ == '__main__':
     y = y / np.abs(y).max() * 0.8
     with wave.open(dst, 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((y * 32767).astype(np.int16).tobytes())
     print(dst, round(len(y) / SR, 2), 's')
+
+
+def retune(src, dst, note='C4', keep=0.7):
+    """흥얼 그대로(박자 · 세기 · 길이 안 건드림) 음 높이만 note 로. 소리 덩어리마다 PSOLA, 사이 조용한 곳은 원본 그대로."""
+    x = load(src); y = x.copy(); h = 441
+    db = np.array([20 * np.log10(np.sqrt((x[i:i + h] ** 2).mean()) + 1e-6) for i in range(0, len(x) - h, h)])
+    on = db > db.max() - 30; i = 0; regs = []
+    while i < len(on):
+        if on[i]:
+            j = i
+            while j < len(on) and on[j]: j += 1
+            if j - i >= 4: regs.append((i * h, j * h))
+            i = j
+        else: i += 1
+    for a, b in regs:
+        seg = psola(x[a:b], hz(note), (b - a) / SR, keep=keep, vib=0, scoop=0)
+        f = int(0.006 * SR); w = np.ones(b - a, np.float32); w[:f] = np.linspace(0, 1, f); w[-f:] = np.linspace(1, 0, f)
+        g = np.sqrt((x[a:b] ** 2).mean() / ((seg ** 2).mean() + 1e-12))           # 세기 원래대로
+        y[a:b] = x[a:b] * (1 - w) + seg[:b - a] * g * w
+    with wave.open(dst, 'w') as wv: wv.setnchannels(1); wv.setsampwidth(2); wv.setframerate(SR); wv.writeframes((np.clip(y, -1, 1) * 32767).astype(np.int16).tobytes())
+    print(dst, '덩어리', len(regs))
+
+
+if __name__ == '__main__' and sys.argv[1] == '--retune':
+    retune(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else 'C4', float(sys.argv[5]) if len(sys.argv) > 5 else 0.7)
