@@ -1,0 +1,246 @@
+{
+ "cuts": [
+  {
+   "file": "ep01b/c00-gyul-work.mp4",
+   "subs": [
+    [
+     0,
+     2.8,
+     "타닥타닥타닥",
+     "tap tap tap tap"
+    ],
+    [
+     2.8,
+     6.62,
+     "(흥얼)",
+     "(humming)"
+    ],
+    [
+     6.62,
+     99,
+     "타닥타닥타닥",
+     "tap tap tap tap"
+    ]
+   ],
+   "vol": 0.5
+  },
+  {
+   "file": "ep01b/c0-boss-walk.mp4",
+   "ko": "또각 또각 (너한테 가는 중)",
+   "en": "click clack (coming for you)"
+  },
+  {
+   "file": "ep01b/c00b-gyul-look.mp4",
+   "subs": [
+    [
+     0,
+     1.3,
+     "또각! 또각!",
+     "CLICK! CLACK!"
+    ],
+    [
+     1.3,
+     99,
+     "(…설마 나?)",
+     "(…don't tell me it's me?)"
+    ]
+   ],
+   "vol": 0.5
+  },
+  {
+   "file": "ep01b/c1-boss-talk.mp4",
+   "subs": [
+    [
+     0,
+     0.7,
+     "(싸늘하다…)",
+     "(…chilling)"
+    ],
+    [
+     0.7,
+     99,
+     "이거 오늘까지좀 부탁해요.",
+     "Could you get this done by today?"
+    ]
+   ]
+  },
+  {
+   "file": "ep01b/c2-gyul-huh.mp4",
+   "ko": "네ㅔㅔ…? (멘붕)",
+   "en": "Huhhh…? (brain.exe stopped)"
+  },
+  {
+   "file": "ep01b/c3-boss-why.mp4",
+   "ko": "왜요? 어려운가요?",
+   "en": "Why? You wanna die?"
+  },
+  {
+   "file": "ep01b/e1-angel-bloom.mp4",
+   "ko": "그럴 리가요!",
+   "en": "Nooo way~!"
+  },
+  {
+   "file": "ep01b/e2-boss-leave.mp4",
+   "ko": "잘 부탁해요~",
+   "en": "I'm counting on you~"
+  },
+  {
+   "file": "ep01b/e3-gyul-rage.mp4",
+   "ko": "(불타는 중)",
+   "en": "(burning inside)"
+  },
+  {
+   "file": "ep01b/e4-boss-turn.mp4",
+   "ko": "(…휙)",
+   "en": "(…whip)"
+  },
+  {
+   "file": "ep01b/e5-angel-loop.mp4",
+   "ko": "헷 ><",
+   "en": "Hehe ><"
+  },
+  {
+   "file": "ep01b/e6-boss-away.mp4",
+   "ko": "또각 또각…",
+   "en": "click clack…"
+  },
+  {
+   "file": "ep01b/e7-gyul-type.mp4",
+   "ko": "타닥타닥타닥 (분노의 타자)",
+   "en": "tap tap tap (rage typing)",
+   "vol": 0.5
+  },
+  {
+   "file": "ep01b/e8-notepad.mp4",
+   "ko": "(직장인들의 진짜 마음)",
+   "en": "(what every office worker really means)",
+   "vol": 0.5
+  },
+  {
+   "file": "ep01b/e9-end.mp4",
+   "ko": "",
+   "en": "",
+   "no_title": true
+  }
+ ],
+ "sfx": [
+  [
+   "brand/bgm/daily-comedy.m4a",
+   "c00-gyul-work",
+   0,
+   0.07,
+   21.9,
+   1.0,
+   1.0,
+   0
+  ],
+  [
+   "brand/bgm/daily-comedy.m4a",
+   "e1-angel-bloom",
+   0.5,
+   0.07,
+   14.5,
+   1.0,
+   2.0,
+   0
+  ],
+  [
+   "voice/ep01b/hum-use.wav",
+   "c00-gyul-work",
+   2.8,
+   1.0
+  ],
+  [
+   "voice/ep01b/boss-bye-use.wav",
+   "e2-boss-leave",
+   0.15,
+   1.4
+  ],
+  [
+   "voice/ep01b/hehe-use.wav",
+   "e5-angel-loop",
+   0.15,
+   1.0
+  ],
+  [
+   "voice/ep01b/sigh-use.wav",
+   "e7-gyul-type",
+   0.05,
+   1.0
+  ],
+  [
+   "voice/ep01b/rage-use.wav",
+   "e3-gyul-rage",
+   0.05,
+   1.0
+  ],
+  [
+   "sfx/ep01/paper.wav",
+   "c1-boss-talk",
+   0.05,
+   0.3
+  ],
+  [
+   "sfx/anime/hatena-syn.wav",
+   "c2-gyul-huh",
+   0.25,
+   0.4
+  ],
+  [
+   "sfx/anime/kiran-syn.wav",
+   "c3-boss-why",
+   0.42,
+   0.4
+  ],
+  [
+   "sfx/anime/heartbeat-syn.wav",
+   "c3-boss-why",
+   1.95,
+   0.7
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "e1-angel-bloom",
+   0.2,
+   0.3
+  ],
+  [
+   "sfx/anime/pikit-syn.wav",
+   "e3-gyul-rage",
+   0.67,
+   0.4
+  ],
+  [
+   "sfx/anime/whoosh-syn.wav",
+   "e4-boss-turn",
+   0.4,
+   0.4
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "e5-angel-loop",
+   0.05,
+   0.3
+  ],
+  [
+   "sfx/anime/pikit-syn.wav",
+   "e7-gyul-type",
+   0.75,
+   0.3
+  ],
+  [
+   "sfx/anime/tiring-syn.wav",
+   "e9-end",
+   0.35,
+   0.45
+  ],
+  [
+   "sfx/anime/fire-syn.wav",
+   "e3-gyul-rage",
+   0.5,
+   0.7
+  ]
+ ],
+ "reel_title": "두 얼굴",
+ "reel_title_en": "TWO FACES"
+}
