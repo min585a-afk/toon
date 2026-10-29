@@ -12,18 +12,15 @@ while True:
     if not ok: break
     v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA).astype(np.float32))
 base = cv2.resize(cv2.imread('ep02/s3-base.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
-edit = cv2.resize(cv2.imread('ep02/s3-butter-back.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
-d = (np.abs(edit - base).mean(2) > 22).astype(np.uint8); d[:, int(W * 0.62):] = 0             # 대리 = 왼쪽에서 바뀐 곳
-n_, lab, st, _ = cv2.connectedComponentsWithStats(d); keep = np.argmax(st[1:, 4]) + 1          # 제일 큰 덩어리
-m = (lab == keep).astype(np.uint8); m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
-cnts, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE); m = np.zeros_like(m); cv2.drawContours(m, cnts, -1, 1, -1)
+edit = cv2.resize(cv2.imread('ep02/s3-butter-back2.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)   # 혁 10/29: 더 위 · 왼쪽 30% 만 (편집 2번째 1cr)
+m = (cv2.imread('ep02/s3-butter-back2-mask.png', 0) > 127).astype(np.uint8)                                          # GrabCut 으로 대리만 오림
 M = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 2)[..., None]
 n = int((TYPE + LOOK) * FPS); v0 = len(v) / vf - LOOK - TYPE
 tmp = tempfile.mkdtemp()
 for k in range(n):
     fr = v[min(len(v) - 1, int((v0 + (k - k % 2) / FPS) * vf))]
     t = (k - k % 2) / FPS; p = np.clip((t - IN0) / (IN1 - IN0), 0, 1); p = 1 - (1 - p) ** 2.2          # 다가와서 멈춤(ease-out)
-    dx = -W * 0.55 * (1 - p); dy = -10 * abs(np.sin(p * np.pi * 3)) * (1 - p)                          # 걸음 살짝 들썩
+    dx = -W * 0.4 * (1 - p); dy = -10 * abs(np.sin(p * np.pi * 3)) * (1 - p)                          # 걸음 살짝 들썩
     A = np.float32([[1, 0, dx], [0, 1, dy]]); e2 = cv2.warpAffine(edit, A, (W, H)); m2 = cv2.warpAffine(M, A, (W, H))[..., None] if M.ndim == 3 else cv2.warpAffine(M, A, (W, H))
     m2 = m2.reshape(H, W, 1)
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr * (1 - m2) + e2 * m2, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
