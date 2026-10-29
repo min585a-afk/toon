@@ -66,8 +66,8 @@
   },
   {
    "file": "ep02/s9-butter-menu.mp4",
-   "ko": "삼겹살? 아니면 닭발~?",
-   "en": "Pork belly? Or chicken feet~?"
+   "ko": "삼겹살? 닭발~?",
+   "en": "Pork belly? Chicken feet~?"
   },
   {
    "file": "ep02/s10-gyul-zip.mp4",
@@ -150,6 +150,42 @@
    "e9-end",
    0.35,
    0.45
+  ],
+  [
+   "voice/ep02/lines/l03-use.wav",
+   "s3-butter-back",
+   1.65,
+   1.0
+  ],
+  [
+   "voice/ep02/lines/l06-use.wav",
+   "s6-butter-gesture",
+   0.15,
+   1.0
+  ],
+  [
+   "voice/ep02/lines/l09-use.wav",
+   "s9-butter-menu",
+   0.05,
+   1.0
+  ],
+  [
+   "voice/ep02/lines/l12-use.wav",
+   "s12-butter-wine",
+   0.3,
+   1.0
+  ],
+  [
+   "voice/ep02/lines/l15-use.wav",
+   "s15-butter-dream",
+   0.15,
+   1.0
+  ],
+  [
+   "voice/ep02/lines/l17-use.wav",
+   "s17-butter-frozen",
+   0.6,
+   1.0
   ]
  ]
 }

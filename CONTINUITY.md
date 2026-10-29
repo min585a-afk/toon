@@ -27,6 +27,7 @@
 | 기본 목소리 (항상 `@Audio1`) | `voice/ref/gyul-base.wav` — 20대 중반 · 투니버스 만화 더빙 톤 · 애기 X · 앵앵 X | `voice/ref/boss-base.wav` — 낮고 위압적 · **빠르게 딱딱 끊어서** (느리게 X) |
 | 감정 | 프롬프트로 (밝음 · 투덜 · 화남 · 깜짝 확인됨). 자주 쓰면 감정 레퍼런스 `@Audio2` | 프롬프트로 (차갑게 · 근엄 · 짜증 · 칼같이 지시 확인됨) |
 | 말투 | 팀장 앞: 밝은 존댓말 "네 알겠습니다!" "넵!" / 속마음 · 혼잣말: 반말 투덜 "하… 또 야근이야?" · 음흉한 웃음 "흐흐흐" | 짧은 존댓말 지시 "~해요" "~부탁해요" — 설명 없이 툭, 단어 끊어서 |
+| 최버터 (2화~) | `voice/ref/butter-base.wav` (Seed 프리셋 Dylan 에서 뽑은 젊은 남자 · 살짝 능글) 을 `@Audio1` 로 · 연기는 느끼하고 오버스럽게 (혁 10/29) | |
 | 만들기 | Seed Audio 한 줄 0.1cr → 입은 코드로 (`tools/talk.py`, 팀장 `char/boss/talk/`) |  |
 - 대사는 적게. 한 편에 캐릭터당 1~2줄, 나머지는 표정 · 효과 · 웃음소리로.
 - 프롬프트 공통: `Use exactly the same voice as @Audio1 (same person). 2000s Korean Tooniverse anime dub acting, crisp diction.` + 감정 한 줄.
