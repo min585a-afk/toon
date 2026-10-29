@@ -5,7 +5,7 @@ usage: python3 ep02/build_s6.py [목소리.wav] → ep02/s6-butter-gesture.mp4
 import subprocess, tempfile, sys
 import cv2
 FPS, W, H = 24, 1080, 810
-VOICE = sys.argv[1] if len(sys.argv) > 1 else 'voice/ep02/butter-lines/s6b-1-use.wav'   # 혁 10/29: 대사 '끝나고 저녁 어때~?' 로 바꿈
+VOICE = sys.argv[1] if len(sys.argv) > 1 else 'voice/ep02/butter-lines/s6b-2-use.wav'   # 혁 10/29: 대사 '끝나고 저녁 어때~?' 로 바꿈
 M0, M1, END = 4, 47, 58                                          # 입 벌림 · 입 다묾 · 끝 프레임
 VLEN = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', VOICE], capture_output=True, text=True).stdout)
 cap = cv2.VideoCapture('ep02/video/s6-butter-gesture-h3.mp4'); vf = cap.get(cv2.CAP_PROP_FPS); v = []
