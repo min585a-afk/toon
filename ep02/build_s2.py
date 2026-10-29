@@ -9,7 +9,9 @@ FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 3.4, 2.6     # 혁 10/29: '퇴근
 op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
 cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-blink.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
 def outfit(im):                                                # 혁 10/29: 2화 은서 복장 = 검정 가디건 + 흰 티 (빨강 → 검정, 크레딧 0) · 좌우반전 전 좌표
-    im = to_black(im, y_min=0.55, face=(0.48, 0.45, 0.26, 0.27)); return to_black(im, y_min=0.75, x_range=(0.5, 1.0), s_min=50, hue_hi=140)
+    im1 = to_black(im, y_min=0.55, face=(0.48, 0.45, 0.26, 0.27)); im1 = to_black(im1, y_min=0.75, x_range=(0.5, 1.0), s_min=50, hue_hi=140)
+    near = cv2.dilate((np.abs(im1 - im).mean(2) > 8).astype(np.uint8), np.ones((25, 25), np.uint8))   # 이미 검정 된 가디건 바로 옆만
+    return to_black(im1, y_min=0.8, x_range=(0.4, 1.0), s_min=22, hue_hi=140, extra_mask=near)       # 모니터 빛 닿은 가디건 끝 분홍 줄
 op = cv2.flip(outfit(cv2.flip(op, 1)), 1); cl = cv2.flip(outfit(cv2.flip(cl, 1)), 1)
 BLINKS = (0.6, 1.9, 2.8)                                          # 깜빡이는 시각
 def eye(t):                                                    # 0 = 뜸 · 1 = 감음 (0.17초)
