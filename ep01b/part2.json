@@ -1,5 +1,5 @@
 {
- "reel_title": "사회생활 만렙",
+ "reel_title": "직장인의 스킬",
  "cuts": [
   {
    "file": "ep01b/e1-angel-bloom.mp4",
@@ -48,5 +48,6 @@
    "no_title": true
   }
  ],
- "reel_title_en": "SOCIAL SKILLS: MAX"
+ "reel_title_en": "OFFICE SKILL",
+ "title_color": "#24ffc4"
 }

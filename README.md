@@ -64,7 +64,7 @@
   - 후처리도 늘 같게: `rubberband=pitch=1.1:formant=preserved,highpass=f=220,lowpass=f=5500` → 톤이 편마다 같아짐.
 
 ## ▶ 이어서 하기 (10/27 최신 · 새 채팅/다른 계정은 여기부터)
-- **지금 (10/28): 1화 「사회생활 만렙」(SOCIAL SKILLS: MAX, 10/29 제목 바뀜 · 예전 이름 두 얼굴) 영상 거의 완성 — `frame/ep01-full.mp4` (41.6초)**. 이어붙이기 `python3 tools/assemble.py ep01b/full.json frame/ep01-full.mp4` (컷별 build 스크립트 `ep01b/build_*.py`).
+- **지금 (10/28): 1화 「직장인의 스킬」(OFFICE SKILL, 10/29 제목 바뀜 · 예전 이름 두 얼굴) 영상 거의 완성 — `frame/ep01-full.mp4` (41.6초)**. 이어붙이기 `python3 tools/assemble.py ep01b/full.json frame/ep01-full.mp4` (컷별 build 스크립트 `ep01b/build_*.py`).
   - **소리 (10/29)**: 배경음 없음 · 대사 = Seed Audio(`voice/ep01b/*-use.wav`, 끝 딸깍 잘라냄) · 흥얼 확정 `hum-neon3-G4`(자연 흥얼 hum-neon3-raw 를 `tools/hum_psola.py --retune` 로 솔 하나로 고정 · 박자 그대로) · 효과음 코드 합성. 남은 것: 혁 최종 확인 · 자막 소리 괄호 통일 여부.
   - (이전) **소리 1차 넣음 (10/28)**: 배경음 `brand/bgm/daily-comedy.m4a`(일상 코믹) · `angel-sparkle.m4a`(천사 반짝) — Sonilo 1.25cr씩 · 효과음 = `tools/anime_sfx.py` 코드 합성. 큐는 `ep01b/full.json` `sfx` (배경음 구간도 여기, 애니처럼 뚝 끊김). 혁 확인 후 다듬기 → 1화 완성. 그다음 대본 · 제목 다듬기, 남은 목소리(잘 부탁해요~ · 헷 >< · 그럴 리가요 최종).
   - 확정: 릴스 틀 위 제목 = 자막 글꼴(Gothic A1 800 기울임) + 아래 영어 제목 (`reel_title` · `reel_title_en`) · 감정 괄호 자막 (불타는 중) 식 · 영어 자막은 살짝 애니 톤 · 끝 = 검정 '끝' + END (위 제목 없음, `no_title`).

@@ -5,7 +5,8 @@ spec = {"title": ["두 얼굴", "TWO FACES", 시작초, 길이초] (없으면 �
         "cuts": [{"file": "...mp4", "ko": "", "en": "", "sec": null}, ...]}
 """
 import json, os, subprocess, sys, tempfile
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
+TITLE_RGB = (0x24, 0xff, 0xc4)   # 위 제목 색 (spec "title_color" 로 바꿈)
 sys.path.insert(0, 'tools')
 from reel_frame import W, H, TOP, VH, FJ, FG, slanted
 
@@ -22,8 +23,12 @@ def frame_png(path, title, ko, en):
     o = Image.new('RGBA', (W, H), (0, 0, 0, 255)); d = ImageDraw.Draw(o)
     d.rectangle((0, TOP, W, TOP + VH), fill=(0, 0, 0, 0))
     tko, ten = title if isinstance(title, tuple) else (title, '')   # 위 제목 = 자막 글꼴 + 아래 영어 제목 (혁 10/28)
-    if tko: slanted(o, tko, ImageFont.truetype(FG, 108), (255, 228, 92), TOP - (215 if ten else 180))
-    if ten: slanted(o, ten, ImageFont.truetype(FG, 40), (255, 228, 92), TOP - 85)
+    if tko or ten:                                    # 위 제목 = 네온 (혁 10/29: #24ffc4 · 은은한 번짐)
+        lay = Image.new('RGBA', (W, TOP), (0, 0, 0, 0))
+        if tko: slanted(lay, tko, ImageFont.truetype(FG, 108), TITLE_RGB, TOP - (215 if ten else 180))
+        if ten: slanted(lay, ten, ImageFont.truetype(FG, 40), TITLE_RGB, TOP - 85)
+        glow = lay.filter(ImageFilter.GaussianBlur(14)); ga = glow.split()[3].point(lambda v: int(v * 0.8)); glow.putalpha(ga)
+        o.alpha_composite(glow, (0, 0)); o.alpha_composite(lay, (0, 0))
     if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 30)
     if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 118)
     o.save(path)
@@ -31,6 +36,8 @@ def frame_png(path, title, ko, en):
 
 def main():
     spec = json.load(open(sys.argv[1])); out = sys.argv[2]; tmp = tempfile.mkdtemp()
+    global TITLE_RGB
+    if spec.get('title_color'): h = spec['title_color'].lstrip('#'); TITLE_RGB = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
     parts, times, cut_times, no_title, t = [], [], [], [], 0.0
     for i, c in enumerate(spec['cuts']):
