@@ -54,15 +54,17 @@ def kirakira():                                      # 키라키라: 펜타토�
     return verb(y, 1.2, 0.45)
 
 
-def pyororong():                                     # 뾰로롱~: 하프처럼 빠르게 올라가고 마지막 음이 느끼하게 흔들림 (최버터 등장)
-    y = np.zeros(int(1.6 * SR)); notes = [1047, 1319, 1568, 2093, 2637, 3136]
-    for i, f in enumerate(notes):
-        s = int(i * 0.045 * SR); b = bell(f, 0.5, ((1, 1), (2, .35), (3, .12))) * 0.5; y[s:s + len(b)] += b[:len(y) - s]
-    t = t_(0.9); f = 2637 * (1 + 0.035 * np.sin(2 * np.pi * 6.5 * t) * np.minimum(1, t / 0.15))      # 마지막 '롱~' 비브라토
-    ph = 2 * np.pi * np.cumsum(f) / SR; x = (np.sin(ph) + 0.4 * np.sin(2 * ph) + 0.15 * np.sin(3 * ph)) * np.minimum(1, t / 0.02) * np.exp(-t * 3.2)
-    s = int(0.29 * SR); y[s:s + len(x)] += x * 0.55
-    sh = bell(4186, 1.0) * np.sin(2 * np.pi * 11 * t_(1.0)) ** 2 * 0.25; s = int(0.3 * SR); y[s:s + len(sh)] += sh[:len(y) - s]
-    return verb(y, 0.9, 0.4)
+def pyororong():                                     # 뾰로롱~ 뾰로롱~: 하프 올라감 두 번 + 느끼하게 흔들리는 '롱~' + 반짝 쉬머 (최버터 등장 → 대사 전까지 약 1.4초 꽉 채움)
+    y = np.zeros(int(2.6 * SR)); notes = [1047, 1319, 1568, 2093, 2637, 3136]
+    for s0, top in ((0.0, 2637), (0.62, 3136)):
+        for i, f in enumerate(notes):
+            s = int((s0 + i * 0.04) * SR); b = bell(f, 0.45, ((1, 1), (2, .35), (3, .12))) * 0.45; y[s:s + len(b)] += b[:len(y) - s]
+        t = t_(1.1); f = top * (1 + 0.04 * np.sin(2 * np.pi * 6 * t) * np.minimum(1, t / 0.12))       # '롱~' 비브라토
+        ph = 2 * np.pi * np.cumsum(f) / SR; x = (np.sin(ph) + 0.4 * np.sin(2 * ph) + 0.15 * np.sin(3 * ph)) * np.minimum(1, t / 0.02) * np.exp(-t * 2.6)
+        s = int((s0 + 0.25) * SR); y[s:s + len(x)] += x[:len(y) - s] * 0.5
+    t = t_(1.7); sh = sum(bell(f, 1.7) for f in (4186, 5274)) * np.sin(2 * np.pi * 9 * t) ** 2 * 0.18 * np.minimum(1, t / 0.2)
+    s = int(0.2 * SR); y[s:s + len(sh)] += sh[:len(y) - s]
+    return verb(y, 1.0, 0.4)
 
 
 def poyon():                                         # 뽀용: 동글 통통 튀는 소리 (헷 ><)

@@ -1,12 +1,12 @@
 """EP02 장면 1: 벽시계 5:55 · 초침이 실제로 째깍째깍 (코드 바늘) + 째깍 소리. 크레딧 0.
-usage: python3 ep02/build_s1.py [시 분 초 길이 out] → ep02/s1-clock.mp4 (기본 5 55 0 2.6)
+usage: python3 ep02/build_s1.py [시 분 초 길이 out] → ep02/s1-clock.mp4 (기본 5 55 0 3.4 · 똑 딱 똑 딱 네 번)
 """
 import subprocess, tempfile, wave, sys
 import numpy as np, cv2
 sys.path.insert(0, 'ep02'); from clock import clock_at
 FPS, W, H, SR = 24, 1080, 810, 44100
 a = sys.argv[1:]; T0 = (int(a[0]) * 3600 + int(a[1]) * 60 + float(a[2])) if a else 5 * 3600 + 55 * 60.0
-SEC = float(a[3]) if len(a) > 3 else 2.6; OUT = a[4] if len(a) > 4 else 'ep02/s1-clock.mp4'
+SEC = float(a[3]) if len(a) > 3 else 3.4; OUT = a[4] if len(a) > 4 else 'ep02/s1-clock.mp4'
 SPEED = float(a[a.index('--speed') + 1]) if '--speed' in a else 1.0   # 시간 빨리 감기 (5:57 → 5:58 등)
 FLASH = '--flash' in a                                          # 6:00 땡: 정각 순간 흰 번쩍 1장 + 띠링
 tmp = tempfile.mkdtemp()
