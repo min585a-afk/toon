@@ -122,6 +122,16 @@ def tick():                                         # 째깍: 시계 초침 (짧
     return verb(x, 0.25, 0.12)
 
 
+def _click(f, q):                                    # 벽시계 기계 딸깍 한 번 (짧고 마른 소리, 울림 거의 없음)
+    t = t_(0.05); x = np.sin(2 * np.pi * f * t) * np.exp(-t * q) + 0.6 * np.sin(2 * np.pi * f * 1.9 * t) * np.exp(-t * q * 1.6)
+    x += rng.normal(0, 1, len(t)) * np.exp(-t * 900) * 0.5
+    return verb(x, 0.12, 0.06)
+
+
+def tik(): return _click(3200, 260)                  # 똑 (높게)
+def tok(): return _click(2100, 220)                  # 딱 (조금 낮게)
+
+
 def gloom():                                        # 우울 '뿌우우~' (축 처지는 낮은 소리 · 개그 우울)
     d = 1.6; t = t_(d); f = 150 * (1 - 0.35 * t / d); ph = 2 * np.pi * np.cumsum(f) / SR
     x = sum(np.sin(k * ph) / k for k in range(1, 6)) * np.minimum(1, t / 0.06) * np.exp(-np.maximum(0, t - 1.0) * 3)
@@ -129,7 +139,7 @@ def gloom():                                        # 우울 '뿌우우~' (축 �
     return verb(x * 0.5, 0.6, 0.25)
 
 
-ALL = dict(gloom=gloom, tick=tick, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+ALL = dict(gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85

@@ -15,11 +15,12 @@ for k in range(int(SEC * FPS)):
     fr = cv2.resize(clock_at(min(tc, 18 * 3600) if FLASH else tc), (W, H), interpolation=cv2.INTER_AREA)
     if FLASH and abs(tc - 18 * 3600) < 1.5 / FPS * SPEED: fr[:] = 255
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
-tk = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/anime/tick-syn.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+rd = lambda p: np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+tks = [rd('sfx/anime/tik-syn.wav'), rd('sfx/anime/tok-syn.wav')]   # 그냥 똑딱똑딱 (혁 10/29): 똑 · 딱 번갈아
 a = np.zeros(int(SEC * SR), np.float32)
 step = max(1.0 / SPEED, 0.07)                                   # 빨리 감기면 째깍도 촤라락
-for s in np.arange((np.ceil(T0) - T0) / SPEED, SEC, step):
-    j = int(s * SR); a[j:j + len(tk)] += tk[:len(a) - j] * (0.6 if SPEED == 1 else 0.4)
+for i, s in enumerate(np.arange((np.ceil(T0) - T0) / SPEED, SEC, step)):
+    tk = tks[(int(np.ceil(T0)) + i) % 2]; j = int(s * SR); a[j:j + len(tk)] += tk[:len(a) - j] * (0.5 if SPEED == 1 else 0.35)
 if FLASH:
     ding = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/anime/tiring-syn.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
     j = int((18 * 3600 - T0) / SPEED * SR); a[j:j + len(ding)] += ding[:len(a) - j] * 0.8
