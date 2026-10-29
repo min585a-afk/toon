@@ -22,7 +22,7 @@
     [
      1.6,
      99,
-     "은서 씨?",
+     "은서 씨~?",
      "Eunseo~?"
     ]
    ]
@@ -152,7 +152,7 @@
    0.45
   ],
   [
-   "voice/ep02/lines/l03-use.wav",
+   "voice/ep02/butter-lines/s3-1-use.wav",
    "s3-butter-back",
    1.65,
    1.0
