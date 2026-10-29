@@ -2,7 +2,8 @@
 usage: python3 ep02/build_s3.py → ep02/s3-butter-back.mp4
 """
 import subprocess, tempfile, wave
-import numpy as np, cv2
+import numpy as np, cv2, sys
+sys.path.insert(0, 'tools'); from recolor_outfit import to_black
 FPS, W, H, SR = 24, 1080, 810, 44100
 TYPE, LOOK = 1.6, 0.9                                          # 은서 혼자 타닥 → 최버터가 왼쪽에서 다가옴(0.8~1.6초) → 눈 위로(영상 끝 0.9초)
 IN0, IN1 = 0.75, 1.55                                          # 다가오는 구간 (혁 10/29: 일하는 은서에게 최버터가 오는 연결)
@@ -18,7 +19,7 @@ M = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 2)[..., None]
 n = int((TYPE + LOOK) * FPS); v0 = len(v) / vf - LOOK - TYPE
 tmp = tempfile.mkdtemp()
 for k in range(n):
-    fr = v[min(len(v) - 1, int((v0 + (k - k % 2) / FPS) * vf))]
+    fr = to_black(v[min(len(v) - 1, int((v0 + (k - k % 2) / FPS) * vf))], y_min=0.35, x_range=(0.3, 0.85), face=(0.53, 0.34, 0.14, 0.14))   # 2화 복장: 검정 가디건
     t = (k - k % 2) / FPS; p = np.clip((t - IN0) / (IN1 - IN0), 0, 1); p = 1 - (1 - p) ** 2.2          # 다가와서 멈춤(ease-out)
     dx = -W * 0.4 * (1 - p); dy = -10 * abs(np.sin(p * np.pi * 3)) * (1 - p)                          # 걸음 살짝 들썩
     A = np.float32([[1, 0, dx], [0, 1, dy]]); e2 = cv2.warpAffine(edit, A, (W, H)); m2 = cv2.warpAffine(M, A, (W, H))[..., None] if M.ndim == 3 else cv2.warpAffine(M, A, (W, H))

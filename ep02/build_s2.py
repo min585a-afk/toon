@@ -2,11 +2,15 @@
 usage: python3 ep02/build_s2.py → ep02/s2-gyul-monitor.mp4
 """
 import subprocess, tempfile, wave
-import numpy as np, cv2
+import numpy as np, cv2, sys
+sys.path.insert(0, 'tools'); from recolor_outfit import to_black
 FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 3.4, 2.6     # 혁 10/29: '퇴근각 재는 중' 2초 더      # 장면 1 에서 이어지는 초 (째깍 박자 맞춤)
 # 혁 10/29: 좌우 반전 · 눈 깜빡 · 모니터 빛 비추는 효과
 op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
 cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-blink.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
+def outfit(im):                                                # 혁 10/29: 2화 은서 복장 = 검정 가디건 + 흰 티 (빨강 → 검정, 크레딧 0) · 좌우반전 전 좌표
+    im = to_black(im, y_min=0.55, face=(0.48, 0.45, 0.26, 0.27)); return to_black(im, y_min=0.75, x_range=(0.5, 1.0), s_min=50, hue_hi=140)
+op = cv2.flip(outfit(cv2.flip(op, 1)), 1); cl = cv2.flip(outfit(cv2.flip(cl, 1)), 1)
 BLINKS = (0.6, 1.9, 2.8)                                          # 깜빡이는 시각
 def eye(t):                                                    # 0 = 뜸 · 1 = 감음 (0.17초)
     for b in BLINKS:
