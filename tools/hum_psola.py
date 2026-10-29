@@ -32,29 +32,35 @@ def marks(s, fmin=190, fmax=450):                    # 주기마다 표시 (봉�
     return np.array(m)
 
 
-def psola(s, f_target, dur):
+def psola(s, f_target, dur, keep=0.6, vib=0.0, scoop=40):
+    """keep = 원래 음 흔들림을 얼마나 남길지(0 = 기계처럼 딱 · 1 = 원래대로). vib = 비브라토 cent. scoop = 음 시작에 아래서 올라오는 cent (사람처럼)."""
     pm = marks(s)
     if len(pm) < 4: return np.zeros(int(dur * SR), np.float32)
-    T = SR / f_target; out = np.zeros(int(dur * SR) + 2048, np.float32); t = pm[0] * 0.0; n_syn = int(dur * SR / T)
-    for k in range(n_syn):
-        ts = k * T; ta = pm[0] + (pm[-1] - pm[0]) * ts / (dur * SR)  # 시간은 음표 길이에 맞게 늘이고 줄임
-        j = int(np.argmin(np.abs(pm - ta))); P = int((pm[min(j + 1, len(pm) - 1)] - pm[max(j - 1, 0)]) / 2) or int(T)
-        a, b = pm[j] - P, pm[j] + P
-        if a < 0 or b > len(s): continue
-        g = s[a:b] * np.hanning(b - a); c = int(ts) - P
-        if c < 0: continue
-        out[c:c + len(g)] += g[:len(out) - c]
-    out = out[:int(dur * SR)]; f = int(0.015 * SR); out[:f] *= np.linspace(0, 1, f); f = int(0.04 * SR); out[-f:] *= np.linspace(1, 0, f)
+    per = np.diff(pm).astype(float); fn = SR / per; med = np.median(fn)
+    out = np.zeros(int(dur * SR) + 2048, np.float32); ts = 0.0; L = dur * SR
+    while ts < L:
+        ta = pm[0] + (pm[-1] - pm[0]) * ts / L; j = int(np.clip(np.searchsorted(pm, ta), 1, len(pm) - 2))
+        tt = ts / SR; cents = 1200 * np.log2(fn[min(j, len(fn) - 1)] / med) * keep          # 원래 흔들림 일부
+        cents += -scoop * np.exp(-tt / 0.04)                                                  # 시작에 살짝 아래서
+        cents += vib * np.sin(2 * np.pi * 5.5 * tt) * min(1, max(0, (tt - 0.12) / 0.15))      # 긴 음 끝쪽 비브라토
+        T = SR / (f_target * 2 ** (cents / 1200))
+        P = int((pm[j + 1] - pm[j - 1]) / 2); A, B = pm[j] - P, pm[j] + P
+        if A >= 0 and B <= len(s):
+            g = s[A:B] * np.hanning(B - A); c = int(ts) - P
+            if c >= 0: out[c:c + len(g)] += g[:len(out) - c]
+        ts += T
+    out = out[:int(L)]; f = int(0.015 * SR); out[:f] *= np.linspace(0, 1, f); f = int(0.04 * SR); out[-f:] *= np.linspace(1, 0, f)
     return out
 
 
 if __name__ == '__main__':
     src, dst, bpm, seq = sys.argv[1], sys.argv[2], float(sys.argv[3]), sys.argv[4].split()
     rep = int(sys.argv[5]) if len(sys.argv) > 5 else 1; rest = float(sys.argv[6]) if len(sys.argv) > 6 else 1.0
+    KEEP = float(sys.argv[7]) if len(sys.argv) > 7 else 0.6; VIB = float(sys.argv[8]) if len(sys.argv) > 8 else 25   # 원래 흔들림 남김 · 비브라토(cent)
     x = load(src); beat = 60 / bpm; parts = notes_of(x, len(seq)); ph = []
     for (a, b), tok in zip(parts, seq):
         n, d = tok.split(':'); dur = beat * 4 / int(d)
-        seg = psola(x[a:b], hz(n), dur * (0.92 if int(d) >= 8 else 0.9))
+        seg = psola(x[a:b], hz(n), dur * (0.92 if int(d) >= 8 else 0.9), keep=KEEP, vib=0 if int(d) >= 8 else VIB)
         ph += [seg / (np.abs(seg).max() + 1e-9) * (0.85 if int(d) >= 8 else 0.8), np.zeros(int(dur * SR) - len(seg), np.float32)]
     ph = np.concatenate(ph); y = np.concatenate(sum([[ph, np.zeros(int(rest * beat * SR), np.float32)] for _ in range(rep)], [])[:-1])
     y = y / np.abs(y).max() * 0.8
