@@ -125,6 +125,26 @@
  ],
  "sfx": [
   [
+   "brand/bgm/daily-comedy.m4a",
+   "c00-gyul-work",
+   0,
+   0.06,
+   23.83,
+   1.0,
+   1.0,
+   0
+  ],
+  [
+   "brand/bgm/daily-comedy.m4a",
+   "e1-angel-bloom",
+   0.5,
+   0.06,
+   19.33,
+   1.0,
+   1.5,
+   0
+  ],
+  [
    "voice/ep01b/hum-use.wav",
    "c00-gyul-work",
    2.8,
@@ -193,7 +213,7 @@
   [
    "sfx/anime/whoosh-syn.wav",
    "e4-boss-turn",
-   0.4,
+   0.52,
    0.4
   ],
   [

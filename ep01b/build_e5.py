@@ -26,10 +26,10 @@ def write(frames, audio, out):
     print(out, round(len(frames) / FPS, 2), 's')
 
 
-# 은서 꽃밭: 장면 1 에서 꽃이 다 핀 뒤(반짝 깜빡) 구간만 반복 → 1.6초
+# 은서 꽃밭: 장면 1 에서 꽃이 다 핀 뒤(반짝 깜빡) 구간만 반복 → 1.95초
 e1 = video('ep01b/e1-angel-bloom.mp4'); tail = e1[-int(1.0 * FPS):]
 loop = (tail + tail[::-1]) * 3
-write(loop[:int(1.6 * FPS)], None, 'ep01b/e5-angel-loop.mp4')
+write(loop[:int(1.95 * FPS)], None, 'ep01b/e5-angel-loop.mp4')   # 혁 10/29: 0.35초 더
 
 # 다시 걸어나감: 돌아본 고개 → 옆얼굴 → 반쯤 → 뒷모습 (휙 돌아섬) → H3 2.0초부터 남은 걸음
 sz = lambda p: cv2.resize(cv2.imread(p), (W, H), interpolation=cv2.INTER_AREA)

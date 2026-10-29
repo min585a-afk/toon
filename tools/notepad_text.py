@@ -1,5 +1,5 @@
 """모니터 메모장에 글자를 한 글자씩 쳐 나가는 영상 (글씨는 그림 말고 코드로 → 안 깨짐). 크레딧 0.
-usage: python3 tools/notepad_text.py out.mp4 "첫 줄" "둘째 줄" ... [--sec 2.2] [--hold 0.5]
+usage: python3 tools/notepad_text.py out.mp4 "첫 줄" "둘째 줄" ... [--hold 0.5] [--at "시작:시간 ..."]
 한 글자 = 3프레임(초당 8글자) · 줄 바꿀 때 4프레임 쉼 · 끝나고 hold 초 멈춤. 크기 1080x810.
 """
 import argparse, subprocess, tempfile
@@ -35,12 +35,22 @@ def draw(lines, caret=True, total=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('lines', nargs='+'); ap.add_argument('--hold', type=float, default=0.5)
+    ap.add_argument('--at', help='줄마다 치기 시작 초,치는 시간 "0.05:1.6 2.0:1.6 3.85:0.4" (노래 · 흥얼 박자에 맞출 때)')
     a = ap.parse_args(); tmp = tempfile.mkdtemp(); frames = []
     global TOTAL_LINES; TOTAL_LINES = len(a.lines)
     shown = ['']
     def hold(img, n): frames.extend([img] * n)
-    hold(draw(shown), 4)
-    for li, line in enumerate(a.lines):
+    if a.at:                                          # 줄마다 정한 시각에 정한 시간 동안 침
+        at = [tuple(map(float, x.split(':'))) for x in a.at.split()]
+        for li, (line, (t0, td)) in enumerate(zip(a.lines, at)):
+            if li: shown.append('')
+            hold(draw(shown), max(0, round(t0 * FPS) - len(frames)))
+            n = len(line); end = round((t0 + td) * FPS)
+            for k in range(1, n + 1):
+                shown[-1] = line[:k]; hold(draw(shown), max(1, round(t0 * FPS + td * FPS * k / n) - len(frames)))
+    else:
+      hold(draw(shown), 4)
+      for li, line in enumerate(a.lines):
         if li: shown.append(''); hold(draw(shown), 4)
         for k in range(1, len(line) + 1):
             shown[-1] = line[:k]; hold(draw(shown, caret=(k % 2 == 0) or True), 3)

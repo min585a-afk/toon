@@ -15,8 +15,8 @@ while True:
 walk = [v[min(len(v) - 1, int((1.5 + (k - k % 2) / FPS) * f))] for k in range(12)]          # 0.5초 걷다가
 back, half, side, look = [sz(f'ep01b/e5-boss-far-{n}.png' if n == 'back' else f'ep01b/e5-boss-far-{n}-fix.png') for n in ['back', 'half', 'side', 'look']]
 walk = []                                                                                   # 걷기는 장면 2 에 (사이에 은서 분노 컷)
-frames = [back] * 8 + [half] * 1 + [side] * 1 + [look] * 26                                 # 멈춘 뒷모습 0.33초 → 휙 (2프레임) → 돌아봄 1.1초
-TURN = len(walk) + 5
+frames = [back] * 13 + [half] * 1 + [side] * 1 + [look] * 26                                # 멈춘 뒷모습 0.54초(혁 10/29: 0.2초 늦게) → 휙 (2프레임) → 돌아봄 1.1초
+TURN = 13
 step = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/heel-step.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 glint = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/glint.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 a = np.zeros(int(len(frames) / FPS * SR) + SR, np.float32)
