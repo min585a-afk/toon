@@ -61,8 +61,7 @@ tmp = tempfile.mkdtemp()
 for f in range(n):
     k = f - f % 2; fr = vv[min(len(vv) - 1, int(src_t(k / FPS) * vf))].copy()
     if f >= PPAJIK_AT:
-        sx, sy = np.random.default_rng(k).normal(0, 3, 2)
-        fr = cv2.warpAffine(fr, np.float32([[1, 0, sx], [0, 1, sy]]), (W, H), borderMode=cv2.BORDER_REPLICATE)   # 부들부들
+        # 화면 흔들림(부들부들) 뺌 — 이 컷만 흔들려서 어색 (혁 10/29)
         fr = ppajik(fr, int(W * 0.8), int(H * 0.3), int(H * 0.36), f - PPAJIK_AT)
     cv2.imwrite(f'{tmp}/{f:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=mono',
