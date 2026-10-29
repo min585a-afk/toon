@@ -65,7 +65,8 @@
 
 ## ▶ 이어서 하기 (10/27 최신 · 새 채팅/다른 계정은 여기부터)
 - **지금 (10/28): 1화 「두 얼굴」 영상 거의 완성 — `frame/ep01-full.mp4` (41.6초)**. 이어붙이기 `python3 tools/assemble.py ep01b/full.json frame/ep01-full.mp4` (컷별 build 스크립트 `ep01b/build_*.py`).
-  - **소리 1차 넣음 (10/28)**: 배경음 `brand/bgm/daily-comedy.m4a`(일상 코믹) · `angel-sparkle.m4a`(천사 반짝) — Sonilo 1.25cr씩 · 효과음 = `tools/anime_sfx.py` 코드 합성. 큐는 `ep01b/full.json` `sfx` (배경음 구간도 여기, 애니처럼 뚝 끊김). 혁 확인 후 다듬기 → 1화 완성. 그다음 대본 · 제목 다듬기, 남은 목소리(잘 부탁해요~ · 헷 >< · 그럴 리가요 최종).
+  - **소리 (10/29)**: 배경음 없음 · 대사 = Seed Audio(`voice/ep01b/*-use.wav`, 끝 딸깍 잘라냄) · 흥얼 확정 `hum-neon3-raw`(니온 앤 비온드 ×2, 자연 흥얼이 제일 사람 같음 — 코드로 음 고정하면 기계음) · 효과음 코드 합성. 남은 것: 혁 최종 확인 · 자막 소리 괄호 통일 여부.
+  - (이전) **소리 1차 넣음 (10/28)**: 배경음 `brand/bgm/daily-comedy.m4a`(일상 코믹) · `angel-sparkle.m4a`(천사 반짝) — Sonilo 1.25cr씩 · 효과음 = `tools/anime_sfx.py` 코드 합성. 큐는 `ep01b/full.json` `sfx` (배경음 구간도 여기, 애니처럼 뚝 끊김). 혁 확인 후 다듬기 → 1화 완성. 그다음 대본 · 제목 다듬기, 남은 목소리(잘 부탁해요~ · 헷 >< · 그럴 리가요 최종).
   - 확정: 릴스 틀 위 제목 = 자막 글꼴(Gothic A1 800 기울임) + 아래 영어 제목 (`reel_title` · `reel_title_en`) · 감정 괄호 자막 (불타는 중) 식 · 영어 자막은 살짝 애니 톤 · 끝 = 검정 '끝' + END (위 제목 없음, `no_title`).
 - **지금 (10/27 저녁 영상 작업 전):** 1화 「두 얼굴」 콘티 `ep01b/CONTI.md` · 보드 `ep01b/storyboard-full.jpg` · **고정 설정 `CONTINUITY.md` 꼭 지키기**. 목소리 3개 준비됨(`voice/ep01/`). 다음 = 컷 1·2 입 맞춤(0cr) → 컷 3·6b 편집 → 이어붙이기 → 무드 25% → 릴스 틀. 효과음은 영상 만들 때 따로.
 - **캐릭터 에셋 완료 → `char/gyul/README.md`** (기준 얼굴 `char/gyul/face/front.png` · 도안 `char/gyul/sheet.png`). 그림 = GPT Image 2.5 + 진짜 90년대 캡처(혁이 다시 올려야 함).
