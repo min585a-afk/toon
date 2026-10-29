@@ -58,8 +58,19 @@ src_t = lambda t: min(V1, V0 + t * SPD if V0 + t * SPD < CUT_A else CUT_B + (V0 
 n = int(((CUT_A - V0) + (V1 - CUT_B)) / SPD * FPS) + int(0.75 * FPS);   # 혁 10/29: 끝 모습 0.75초 더 유지
 PPAJIK_AT = int(((CUT_A - V0) + (2.45 - CUT_B)) / SPD * FPS)
 tmp = tempfile.mkdtemp()
+# 혁 10/29: 끝 모습 멈춤 동안 뒤 불만 계속 움직임 — 인물은 마지막 모습 그대로, 배경(어두운 빨강 · 불꽃 색)만 마지막 0.7초를 왔다 갔다
+N_MAIN = n - int(0.75 * FPS); FROZEN = vv[min(len(vv) - 1, int(V1 * vf))]
+_hsv = cv2.cvtColor(FROZEN.astype(np.uint8), cv2.COLOR_BGR2HSV); hh, ss_, vv_ = _hsv[..., 0], _hsv[..., 1], _hsv[..., 2]
+_bg = (((hh < 30) | (hh > 165)) & (ss_ > 110)).astype(np.uint8)                     # 빨강 배경 · 주황/노랑 불
+_yy, _xx = np.mgrid[0:H, 0:W]; _char = (_xx > 0.29 * W) & (_xx < 0.84 * W) & (_yy > 0.16 * H)   # 은서(빨강 가디건 포함) 자리는 빼기
+_bg[_char] = 0; _bg = cv2.morphologyEx(_bg, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+FIRE_M = cv2.GaussianBlur(_bg.astype(np.float32), (0, 0), 4)[..., None]
+_lo, _hi = int((V1 - 0.7) * vf), int(V1 * vf); _pp = list(range(_lo, _hi)) + list(range(_hi, _lo, -1))
 for f in range(n):
     k = f - f % 2; fr = vv[min(len(vv) - 1, int(src_t(k / FPS) * vf))].copy()
+    if f >= N_MAIN:
+        mv = vv[_pp[((k - N_MAIN) // 2 * 2) % len(_pp)]]                                # 12fps 느낌 유지
+        fr = FROZEN * (1 - FIRE_M) + mv * FIRE_M
     if f >= PPAJIK_AT:
         # 화면 흔들림(부들부들) 뺌 — 이 컷만 흔들려서 어색 (혁 10/29)
         fr = ppajik(fr, int(W * 0.8), int(H * 0.3), int(H * 0.36), f - PPAJIK_AT)
