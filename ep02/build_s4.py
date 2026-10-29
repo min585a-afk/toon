@@ -1,4 +1,4 @@
-"""EP02 장면 4: 최버터 H3 영상(ep02/video/s4-butter-talk-h3.mp4, 10cr) — 머리 쓸어넘기며 "오늘 퇴근 후에 뭐 해애~?" → 윙크.
+"""EP02 장면 4: 최버터 H3 영상(ep02/video/s4-butter-talk-h3.mp4, 10cr) — 머리 쓸어넘기며 "퇴근 후에 뭐 해~?" → 윙크.
 처음 1.6초 이름 '최버터 (대리)' + 반짝이 · 12fps · 목소리는 임시(나중에 정함). 크레딧 0.
 usage: python3 ep02/build_s4.py [목소리.wav] → ep02/s4-butter-face.mp4
 """
@@ -7,7 +7,7 @@ import numpy as np, cv2
 sys.path.insert(0, 'tools'); from name_card import card, fade
 sys.path.insert(0, 'ep02'); from fx import star
 FPS, W, H = 24, 1080, 810
-VOICE = sys.argv[1] if len(sys.argv) > 1 else 'voice/ep02/butter-dylan-use.wav'
+VOICE = sys.argv[1] if len(sys.argv) > 1 else 'voice/ref/butter-base.wav'   # 확정 E2 '퇴근 후에 뭐 해~?' (혁 10/29)
 HOLD, V_AT = 1.6, 1.3                                           # 이름 떠 있는 시간 · 목소리 시작(영상 입 움직이기 시작하는 곳)
 cap = cv2.VideoCapture('ep02/video/s4-butter-talk-h3.mp4'); vf = cap.get(cv2.CAP_PROP_FPS); v = []
 while True:

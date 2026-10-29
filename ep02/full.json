@@ -39,7 +39,7 @@
     [
      1.3,
      99,
-     "오늘 퇴근 후에 뭐 해애~?",
+     "퇴근 후에 뭐 해~?",
      "Whatcha doin' after work~?"
     ]
    ]
@@ -152,7 +152,7 @@
    0.45
   ],
   [
-   "voice/ep02/butter-lines/s3-1-use.wav",
+   "voice/ep02/butter-lines/s3-2-use.wav",
    "s3-butter-back",
    1.65,
    1.0
