@@ -4,9 +4,12 @@ usage: python3 ep02/build_s5.py → ep02/s5-gyul-huh.mp4
 import subprocess, tempfile
 import cv2
 FPS, W, H = 24, 1080, 810
-A, Q1, M, Q3, B = [cv2.resize(cv2.imread(p), (W, H)) for p in ['ep02/s5a-gyul-huh-butter.png', 'ep02/s5a-gyul-q1-butter.png', 'ep02/s5a-gyul-mid-butter.png', 'ep02/s5a-gyul-q3-butter.png', 'ep02/s5a-gyul-glance-butter.png']]
-# 혁 10/29: 너무 끊김 → 눈 5단계 (0 · 25 · 50 · 75 · 100%) 12fps 로 천천히 갔다 옴
-seq = [A] * 8 + [Q1] * 2 + [M] * 2 + [Q3] * 2 + [B] * 10 + [Q3] * 2 + [M] * 2 + [Q1] * 2 + [A] * 6
+import numpy as np
+# 혁 10/29 프레임 분석: 처음 그림(huh-big)만 눈 모양이 달라 튀고, 75% 그림이 100% 보다 더 가 있어서 눈이 왔다갔다 → 같은 눈 모양 그림만 · 잰 위치 순서대로
+P0, P1, P2 = [cv2.resize(cv2.imread(p), (W, H)) for p in ['ep02/s5a-gyul-q1-butter.png', 'ep02/s5a-gyul-mid-butter.png', 'ep02/s5a-gyul-q3-butter.png']]
+sharpen = lambda im: cv2.addWeighted(im, 1.35, cv2.GaussianBlur(im, (0, 0), 1.2), -0.35, 0)            # 편집본 살짝 흐린 것 맞춤
+P0, P1, P2 = [sharpen(x) for x in (P0, P1, P2)]
+seq = [P0] * 9 + [P1] * 3 + [P2] * 11 + [P1] * 3 + [P0] * 8     # 최버터 → 중간 → 11시(머묾) → 중간 → 최버터
 tmp = tempfile.mkdtemp()
 for i, fr in enumerate(seq): cv2.imwrite(f'{tmp}/{i:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=mono',
