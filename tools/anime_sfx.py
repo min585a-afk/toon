@@ -122,7 +122,14 @@ def tick():                                         # 째깍: 시계 초침 (짧
     return verb(x, 0.25, 0.12)
 
 
-ALL = dict(tick=tick, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+def gloom():                                        # 우울 '뿌우우~' (축 처지는 낮은 소리 · 개그 우울)
+    d = 1.6; t = t_(d); f = 150 * (1 - 0.35 * t / d); ph = 2 * np.pi * np.cumsum(f) / SR
+    x = sum(np.sin(k * ph) / k for k in range(1, 6)) * np.minimum(1, t / 0.06) * np.exp(-np.maximum(0, t - 1.0) * 3)
+    x *= 1 + 0.15 * np.sin(2 * np.pi * 5 * t)
+    return verb(x * 0.5, 0.6, 0.25)
+
+
+ALL = dict(gloom=gloom, tick=tick, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85
