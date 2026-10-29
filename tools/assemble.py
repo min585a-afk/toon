@@ -73,7 +73,8 @@ def main():
     cmd = ['ffmpeg', '-y', '-v', 'error', '-i', src] + sum([['-i', f'{tmp}/f{i}.png'] for i in range(len(pngs))], [])
     fc = f'[0:v]pad={W}:{H}:0:{TOP}:black[v0];'
     for i, (a, b) in enumerate(pngs):
-        fc += f"[v{i}][{i + 1}:v]overlay=0:0:enable='between(t,{a:.3f},{b - 0.001:.3f})'[v{i + 1}];"
+        b2 = pngs[i + 1][0] if i + 1 < len(pngs) else b + 5           # 혁 10/29: 다음 자막 시작까지 빈틈 없이 → 제목 · 자막 깜빡임 X
+        fc += f"[v{i}][{i + 1}:v]overlay=0:0:enable='gte(t,{a:.4f})*lt(t,{b2:.4f})'[v{i + 1}];"
     vlast = f'[v{len(pngs)}]'
     # 효과음 · 배경음 구간: spec["sfx"] = [["파일", "컷 이름 일부", 컷 안 초, 볼륨, (길이, 페이드인, 페이드아웃, 파일 시작초)], ...]
     sfx = []
