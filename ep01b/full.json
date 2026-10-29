@@ -233,21 +233,6 @@
  ],
  "reel_title": "직장인의 |스킬",
  "reel_title_en": "OFFICE |SKILL",
- "bed": {
-  "file": "brand/bgm/daily-comedy.m4a",
-  "from": 3.0,
-  "to": 15.5,
-  "vol": 0.16,
-  "duck_vol": 0.07,
-  "duck_cuts": [
-   "c1-boss-talk",
-   "c2-gyul-huh",
-   "c3-boss-why",
-   "e1-angel-bloom",
-   "e2-boss-leave",
-   "e5-angel-loop"
-  ]
- },
  "title_color": "#6dffd9",
  "watermark": "@byeoltoon",
  "watermark_y": 232
