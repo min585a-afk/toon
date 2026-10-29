@@ -5,8 +5,8 @@ import subprocess, tempfile, wave
 import numpy as np, cv2, sys
 FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 3.4, 2.6     # 혁 10/29: '퇴근각 재는 중' 2초 더      # 장면 1 에서 이어지는 초 (째깍 박자 맞춤)
 # 혁 10/29: 좌우 반전 · 눈 깜빡 · 모니터 빛 비추는 효과
-op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-black.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
-cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-black-blink.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
+op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-black-ribbon.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
+cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-black-blink-ribbon.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
 # 혁 10/29: 복장은 코드로 칠하면 모니터 빛 닿은 곳 분홍이 남아서 → 검정 가디건으로 다시 편집한 그림(1cr) 씀
 BLINKS = (0.6, 1.9, 2.8)                                          # 깜빡이는 시각
 def eye(t):                                                    # 0 = 뜸 · 1 = 감음 (0.17초)
