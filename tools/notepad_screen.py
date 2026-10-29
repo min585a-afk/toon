@@ -9,6 +9,7 @@ import chat_screen as cs
 W, H, INK, f = cs.W, cs.H, cs.INK, cs.f
 ROWS = int(sys.argv[2]) if len(sys.argv) > 2 else 3
 COLS = int(sys.argv[3]) if len(sys.argv) > 3 else 10
+HOLD = 8   # 다 쓰고 멈춤 프레임 (혁 10/29: 오래 있지 말고 바로 엔딩)
 
 
 def glyph(d, x, y, s):
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     tmp = tempfile.mkdtemp(); frames = []
     frames += [draw(0)] * 6
     for n in range(1, total + 1): frames += [draw(n)] * 2   # 한 칸 = 2프레임(12fps 로 빠르게)
-    frames += [draw(total, caret=(i // 6) % 2 == 0) for i in range(30)]
+    frames += [draw(total, caret=(i // 6) % 2 == 0) for i in range(HOLD)]
     for i, im in enumerate(frames): cs.grain(im, i // 3).resize((1080, 810)).save(f'{tmp}/{i:05d}.jpg', quality=92)
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', '24', '-i', f'{tmp}/%05d.jpg', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out], check=True)
     print(out, round(len(frames) / 24, 1), 's')

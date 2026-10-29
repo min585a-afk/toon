@@ -79,6 +79,6 @@ write(frames, a, 'ep01b/e7-gyul-type.mp4')
 # 메모장 凸 연타 (tools/notepad_screen.py → cel_look) + 빠른 타닥타닥 · 끝 멈춤
 subprocess.run(['python3', 'tools/notepad_screen.py', 'ep01b/e8-notepad-raw.mp4'], check=True)
 subprocess.run(['python3', 'tools/cel_look.py', 'ep01b/e8-notepad-raw.mp4', 'ep01b/e8-notepad-cel.mp4', '--ref', 'ep01b/c00-gyul-work.png', '--amount', '0.6'], check=True)
-nv, _ = video('ep01b/e8-notepad-cel.mp4'); n = len(nv); type_end = n - 30
+nv, _ = video('ep01b/e8-notepad-cel.mp4'); n = len(nv); type_end = n - 8
 a = np.tile(typing, 6)[:int(n / FPS * SR)].copy() * 0.55; a[int(type_end / FPS * SR):] = 0
 write(nv, a, 'ep01b/e8-notepad.mp4')

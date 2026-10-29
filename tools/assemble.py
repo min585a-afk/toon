@@ -79,6 +79,22 @@ def main():
     sfx = []
     for e in spec.get('sfx', []):                     # [파일, 컷 이름 일부, 컷 안에서 초, 볼륨] → 전체 시간으로
         f, cut, off, vol, *x = e; st = next(a for (a, b), c in zip(cut_times, spec['cuts']) if cut in c['file']); sfx.append((f, st + off, vol, x))
+    if spec.get('bed'):                               # 배경음 바닥: 곡의 좋은 구간을 이어 깔고(크로스페이드) 대사 컷에서만 살짝 낮춤 (혁 10/29)
+        import numpy as np, wave
+        b = spec['bed']; SRb = 44100
+        y = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', b['file'], '-ac', '2', '-ar', str(SRb), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32).reshape(-1, 2)
+        seg = y[int(b['from'] * SRb):int(b['to'] * SRb)]; xf = int(0.6 * SRb); bed = seg.copy()
+        while len(bed) < total * SRb + SRb:
+            r = np.linspace(0, 1, xf)[:, None]; bed = np.concatenate([bed[:-xf], bed[-xf:] * (1 - r) + seg[:xf] * r, seg[xf:]])
+        bed = bed[:int(total * SRb)]; tt = np.arange(len(bed)) / SRb; duck = np.zeros(len(bed))
+        for (a0, b0), c in zip(cut_times, spec['cuts']):
+            if any(k in c['file'] for k in b.get('duck_cuts', [])):
+                duck = np.maximum(duck, np.clip((tt - a0 + 0.25) / 0.25, 0, 1) * np.clip((b0 + 0.25 - tt) / 0.25, 0, 1))
+        g = b['vol'] - (b['vol'] - b['duck_vol']) * duck
+        g *= np.clip(tt / 1.0, 0, 1) * np.clip((total - tt) / 1.5, 0, 1)            # 처음 페이드 인 · 끝 페이드 아웃
+        bed = bed * g[:, None]
+        with wave.open(f'{tmp}/bed.wav', 'w') as w: w.setnchannels(2); w.setsampwidth(2); w.setframerate(SRb); w.writeframes((np.clip(bed, -1, 1) * 32767).astype(np.int16).tobytes())
+        sfx.append((f'{tmp}/bed.wav', 0.0, 1.0, []))
     si0 = len(pngs) + 1
     for f, at, vol, x in sfx: cmd += ['-i', f]
     vmain = '0:a'

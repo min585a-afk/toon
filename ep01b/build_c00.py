@@ -10,7 +10,7 @@ sys.path.insert(0, 'tools'); from name_card import card, fade
 
 FPS, W, H, SR = 24, 1080, 810, 44100
 T1, T2 = 0.8, 1.5                      # 첫 장면 훅(혁 10/27): 귤이 타닥타닥 T1 → 모니터 메모장 '출근 앤 퇴근 / 9 to 6' → 다시 귤이 T2
-SCREEN = 'ep01b/c00s-screen.mp4'       # notepad_text.py ... --at "0.05:1.55 2.0:1.6 3.85:0.35" (흥얼 두 소절에 맞춤, 혁 10/29) → c00s-screen-raw.mp4 → tools/cel_look.py --ref ep01b/c00-gyul-work.png --amount 0.6
+SCREEN = 'ep01b/c00s-screen.mp4'       # notepad_text.py "니온 앤 니온" "퇴근 앤 엽떡" --at "0.05:1.55 2.0:1.6" --hold 0.35 (흥얼 두 소절에 맞춤 · 퇴근! 뺌, 혁 10/29) → c00s-screen-raw.mp4 → tools/cel_look.py --ref ep01b/c00-gyul-work.png --amount 0.6
 _cap = cv2.VideoCapture(SCREEN); SCREEN_N = int(_cap.get(cv2.CAP_PROP_FRAME_COUNT))
 INTRO = 2.0                            # 1화 인물 소개: 첫 장면 멈춤 + '은서 (사원)' (혁 10/27)
 GYUL_CARD = ('은서', '(사원)', 540, 730)   # 이름 · 괄호 · 위치(아래 가운데)
