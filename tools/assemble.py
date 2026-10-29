@@ -8,6 +8,7 @@ import json, os, subprocess, sys, tempfile
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 TITLE_RGB = (0x24, 0xff, 0xc4)   # 위 제목 색 (spec "title_color" 로 바꿈)
 WATERMARK = ''                   # spec "watermark"
+WM_Y = 198                       # 워터마크 높이 (영상 아래에서 px, spec "watermark_y")
 sys.path.insert(0, 'tools')
 from reel_frame import W, H, TOP, VH, FJ, FG, slanted
 
@@ -31,7 +32,7 @@ def frame_png(path, title, ko, en):
     if tko: slanted(o, two(tko)[0], ImageFont.truetype(FG, 86), two(tko)[1], TOP - (196 if ten else 160), track=-5)   # 혁 10/29: 80% 크기 · 영상과 간격 넉넉히 (위 UI 220px 은 피함)
     if ten: slanted(o, two(ten)[0], ImageFont.truetype(FG, 32), two(ten)[1], TOP - 98, track=-2)
     if WATERMARK and not (isinstance(title, tuple) and not any(title)):   # 끝 화면(제목 없는 구간)엔 워터마크도 뺌 (혁 10/29)                                     # 워터마크 (혁 10/29): 자막이랑 같은 글꼴 · 기울임 · 작게 · 반투명 · 아래 UI(1470~) 위
-        slanted(o, WATERMARK, ImageFont.truetype(FG, 30), (255, 255, 255, 130), TOP + VH + 198, track=-1)
+        slanted(o, WATERMARK, ImageFont.truetype(FG, 30), (255, 255, 255, 130), TOP + VH + WM_Y, track=-1)
     if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 52)   # 혁 10/29: 영상에서 살짝 떨어뜨림
     if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 126)   # 혁 10/29: 한글에 살짝 붙임
     o.save(path)
@@ -39,8 +40,8 @@ def frame_png(path, title, ko, en):
 
 def main():
     spec = json.load(open(sys.argv[1])); out = sys.argv[2]; tmp = tempfile.mkdtemp()
-    global TITLE_RGB, WATERMARK
-    WATERMARK = spec.get('watermark', '')
+    global TITLE_RGB, WATERMARK, WM_Y
+    WATERMARK = spec.get('watermark', ''); WM_Y = spec.get('watermark_y', WM_Y)
     if spec.get('title_color'): h = spec['title_color'].lstrip('#'); TITLE_RGB = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
     parts, times, cut_times, no_title, t = [], [], [], [], 0.0
