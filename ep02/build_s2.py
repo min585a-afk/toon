@@ -3,11 +3,11 @@ usage: python3 ep02/build_s2.py → ep02/s2-gyul-monitor.mp4
 """
 import subprocess, tempfile, wave
 import numpy as np, cv2
-FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 1.6, 2.6      # 장면 1 에서 이어지는 초 (째깍 박자 맞춤)
+FPS, W, H, SR, SEC, T0 = 24, 1080, 810, 44100, 3.4, 2.6     # 혁 10/29: '퇴근각 재는 중' 2초 더      # 장면 1 에서 이어지는 초 (째깍 박자 맞춤)
 # 혁 10/29: 좌우 반전 · 눈 깜빡 · 모니터 빛 비추는 효과
 op = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)
 cl = cv2.flip(cv2.resize(cv2.imread('ep02/s2-gyul-monitor-blink.png'), (W, H), interpolation=cv2.INTER_AREA), 1).astype(np.float32)   # 감은 눈 (편집 1cr · 눈 자리만 합침)
-BLINKS = (0.55, 1.25)                                          # 깜빡이는 시각
+BLINKS = (0.6, 1.9, 2.8)                                          # 깜빡이는 시각
 def eye(t):                                                    # 0 = 뜸 · 1 = 감음 (0.17초)
     for b in BLINKS:
         d = t - b
