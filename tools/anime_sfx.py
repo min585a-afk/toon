@@ -54,6 +54,17 @@ def kirakira():                                      # 키라키라: 펜타토�
     return verb(y, 1.2, 0.45)
 
 
+def pyororong():                                     # 뾰로롱~: 하프처럼 빠르게 올라가고 마지막 음이 느끼하게 흔들림 (최버터 등장)
+    y = np.zeros(int(1.6 * SR)); notes = [1047, 1319, 1568, 2093, 2637, 3136]
+    for i, f in enumerate(notes):
+        s = int(i * 0.045 * SR); b = bell(f, 0.5, ((1, 1), (2, .35), (3, .12))) * 0.5; y[s:s + len(b)] += b[:len(y) - s]
+    t = t_(0.9); f = 2637 * (1 + 0.035 * np.sin(2 * np.pi * 6.5 * t) * np.minimum(1, t / 0.15))      # 마지막 '롱~' 비브라토
+    ph = 2 * np.pi * np.cumsum(f) / SR; x = (np.sin(ph) + 0.4 * np.sin(2 * ph) + 0.15 * np.sin(3 * ph)) * np.minimum(1, t / 0.02) * np.exp(-t * 3.2)
+    s = int(0.29 * SR); y[s:s + len(x)] += x * 0.55
+    sh = bell(4186, 1.0) * np.sin(2 * np.pi * 11 * t_(1.0)) ** 2 * 0.25; s = int(0.3 * SR); y[s:s + len(sh)] += sh[:len(y) - s]
+    return verb(y, 0.9, 0.4)
+
+
 def poyon():                                         # 뽀용: 동글 통통 튀는 소리 (헷 ><)
     t = t_(0.45); f = 380 + 260 * np.exp(-t * 9) * np.cos(2 * np.pi * 7 * t); x = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 6)
     return verb(x * 0.8, 0.3, 0.2)
@@ -139,7 +150,7 @@ def gloom():                                        # 우울 '뿌우우~' (축 �
     return verb(x * 0.5, 0.6, 0.25)
 
 
-ALL = dict(gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+ALL = dict(gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85
