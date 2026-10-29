@@ -14,7 +14,8 @@ def slanted(o, text, font, fill, y, x_right_pad=30, track=-2):
     ws = [d.textlength(ch, font=font) for ch in text]
     tw = int(sum(ws) + track * (len(text) - 1)) + 60                    # track = 자간 (음수면 좁게, 혁 10/28)
     layer = Image.new('RGBA', (tw, font.size + 40), (0, 0, 0, 0)); ld = ImageDraw.Draw(layer); x = 30
-    for ch, w in zip(text, ws): ld.text((x, 8), ch, font=font, fill=fill, stroke_width=2, stroke_fill=(0, 0, 0)); x += w + track
+    fills = fill if isinstance(fill, list) else [fill] * len(text)           # 글자마다 색 따로도 됨 (제목 두 색)
+    for ch, w, fc in zip(text, ws, fills): ld.text((x, 8), ch, font=font, fill=fc, stroke_width=2, stroke_fill=(0, 0, 0)); x += w + track
     layer = layer.transform(layer.size, Image.AFFINE, (1, 0.18, -0.18 * layer.height / 2, 0, 1, 0), Image.BICUBIC)
     o.paste(layer, ((W - tw) // 2 - x_right_pad, y), layer)
 

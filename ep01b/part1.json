@@ -101,7 +101,8 @@
    0.7
   ]
  ],
- "reel_title": "직장인의 스킬",
- "reel_title_en": "OFFICE SKILL",
- "title_color": "#24ffc4"
+ "reel_title": "직장인의 |스킬",
+ "reel_title_en": "OFFICE |SKILL",
+ "title_color": "#6dffd9",
+ "watermark": "@byeoltoon"
 }

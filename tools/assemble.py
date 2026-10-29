@@ -7,6 +7,7 @@ spec = {"title": ["두 얼굴", "TWO FACES", 시작초, 길이초] (없으면 �
 import json, os, subprocess, sys, tempfile
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 TITLE_RGB = (0x24, 0xff, 0xc4)   # 위 제목 색 (spec "title_color" 로 바꿈)
+WATERMARK = ''                   # spec "watermark"
 sys.path.insert(0, 'tools')
 from reel_frame import W, H, TOP, VH, FJ, FG, slanted
 
@@ -24,8 +25,15 @@ def frame_png(path, title, ko, en):
     d.rectangle((0, TOP, W, TOP + VH), fill=(0, 0, 0, 0))
     tko, ten = title if isinstance(title, tuple) else (title, '')   # 위 제목 = 자막 글꼴 + 아래 영어 제목 (혁 10/28)
     # 위 제목: 색만 (혁 10/29 · 번짐 효과 X) · 자간 살짝 좁게 · 인스타 위 UI(약 260px) 피해서 조금 아래로
-    if tko: slanted(o, tko, ImageFont.truetype(FG, 108), TITLE_RGB, TOP - (178 if ten else 160), track=-6)
-    if ten: slanted(o, ten, ImageFont.truetype(FG, 40), TITLE_RGB, TOP - 60, track=-3)
+    def two(t):                                       # '앞말|강조말' → 앞은 흰색 · 뒤는 제목 색 (혁 10/29: 직장인의(흰) 스킬(민트))
+        if '|' not in t: return t, TITLE_RGB
+        a, b = t.split('|', 1); return a + b, [(255, 255, 255)] * len(a) + [TITLE_RGB] * len(b)
+    if tko: slanted(o, two(tko)[0], ImageFont.truetype(FG, 108), two(tko)[1], TOP - (178 if ten else 160), track=-6)
+    if ten: slanted(o, two(ten)[0], ImageFont.truetype(FG, 40), two(ten)[1], TOP - 60, track=-3)
+    if WATERMARK:                                     # 워터마크 (혁 10/29): 자막 아래 가운데 · 작게 · 반투명 · 아래 UI(1470~) 위
+        d = ImageDraw.Draw(o); fw = ImageFont.truetype(FG, 30); tw = d.textlength(WATERMARK, font=fw)
+        wl = Image.new('RGBA', (W, 60), (0, 0, 0, 0)); ImageDraw.Draw(wl).text(((W - tw) / 2, 10), WATERMARK, font=fw, fill=(255, 255, 255, 120))
+        o.alpha_composite(wl, (0, TOP + VH + 205))
     if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 30)
     if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 118)
     o.save(path)
@@ -33,7 +41,8 @@ def frame_png(path, title, ko, en):
 
 def main():
     spec = json.load(open(sys.argv[1])); out = sys.argv[2]; tmp = tempfile.mkdtemp()
-    global TITLE_RGB
+    global TITLE_RGB, WATERMARK
+    WATERMARK = spec.get('watermark', '')
     if spec.get('title_color'): h = spec['title_color'].lstrip('#'); TITLE_RGB = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
     parts, times, cut_times, no_title, t = [], [], [], [], 0.0
