@@ -19,22 +19,26 @@ VOICE, V_AT = 'voice/ep02/gyul-lines/s5-2-use.wav', 4 / FPS      # "예? 왜요?
 # 영상은 입이 '예?' 한 번만 벌어짐 (4~9) → 쉬는 동안 다문 입(10 · 11) 잡고, '왜요?' 때 4~9 한 번 더 (혁 10/29: 다음 장면 대사까지 입혀서)
 # 혁 10/29: '왜요?' 뒤 늦게 천천히 눈 돌리는 게 너무 정적 → 왜요 끝나자마자 빠르게 눈 휙 + '?' 뿅(하테나 소리) · 멍하니 보는 구간 줄이고 바로 깜빡
 SEQ = list(range(10)) + [10, 10, 11, 11] * 2 + [10] + [4, 4, 5, 5, 6, 6, 7, 7, 8, 9] + [15, 15, 18, 18, 21, 21, 24, 24] + list(range(24, 36)) + list(range(62, n))
-Q_AT = 37                                                        # '?' 뜨는 출력 프레임 (눈 다 돌아간 순간)
-import sys; sys.path.insert(0, 'ep02'); from qmark import make_q
-QI = make_q(230)                                                 # 만화 셀 재질 '?' (혁 10/29: 우리 그림체에 맞게)
-def qmark(img, k):                                               # '?' 뿅: 커졌다 제자리 + 살짝 통통
+Q_AT = 4                                                         # '?' 뜨는 출력 프레임 (혁 10/29: 처음 '예?' 할 때)
+QI = cv2.imread('ep02/fx/qmark.png', cv2.IMREAD_UNCHANGED)     # GPT Image 로 그린 셀 '?' (1cr · 혁 10/29: 우리 그림체 · 리본 빨강)
+QH = 250                                                         # 화면에서 높이 (살짝 크게)
+def ribbon(fr):                                                  # 리본(빨강) 가운데 — '?' 가 리본 오른쪽에 따라붙게
+    h = cv2.cvtColor(fr, cv2.COLOR_BGR2HSV); m = (((h[..., 0] < 8) | (h[..., 0] > 172)) & (h[..., 1] > 140) & (h[..., 2] > 90)).astype(np.uint8)
+    m[:, :400] = 0; ys, xs = np.nonzero(m); return (int(xs.mean()), int(ys.mean())) if len(xs) > 50 else (700, 235)
+def qmark(img, k, rc):                                           # '?' 뿅: 커졌다 제자리 + 살짝 통통
     a = (k - Q_AT) - (k - Q_AT) % 2
     if a < 0: return img
     sc = [0.4, 1.2, 1.0][min(2, a // 2)] * (1 + 0.04 * np.sin(a * 0.9)); dy = int(6 * np.sin(a * 0.45))
-    z = int(230 * sc); q = cv2.resize(QI, (z, z), interpolation=cv2.INTER_AREA); x0, y0 = 860 - z // 2, 135 - z // 2 + dy
-    al = q[..., 3:] / 255.0; rgb = q[..., :3][..., ::-1].astype(np.float32)
-    P = 300; big = cv2.copyMakeBorder(img, P, P, P, P, cv2.BORDER_CONSTANT); x0 += P; y0 += P   # 화면 밖으로 살짝 나가도 되게
-    sub = big[y0:y0 + z, x0:x0 + z].astype(np.float32)
-    big[y0:y0 + z, x0:x0 + z] = (rgb * al + sub * (1 - al)).astype(np.uint8); return big[P:-P, P:-P]
+    zh = int(QH * sc); zw = int(zh * QI.shape[1] / QI.shape[0]); q = cv2.resize(QI, (zw, zh), interpolation=cv2.INTER_AREA)
+    x0, y0 = rc[0] + 75, rc[1] - zh + 40 + dy                    # 리본 오른쪽 위
+    al = q[..., 3:] / 255.0; rgb = q[..., :3].astype(np.float32)
+    P = 400; big = cv2.copyMakeBorder(img, P, P, P, P, cv2.BORDER_CONSTANT); x0 += P; y0 += P
+    sub = big[y0:y0 + zh, x0:x0 + zw].astype(np.float32)
+    big[y0:y0 + zh, x0:x0 + zw] = (rgb * al + sub * (1 - al)).astype(np.uint8); return big[P:-P, P:-P]
 for k, j in enumerate(SEQ):
     fr = v[min(len(v) - 1, int((V0 + (j - j % 2) / FPS * SPD) * vf))]
-    fr = qmark(np.clip(fr * (1 - M) + E * M, 0, 255).astype(np.uint8), k)
+    fr = np.clip(fr * (1 - M) + E * M, 0, 255).astype(np.uint8); fr = qmark(fr, k, ribbon(fr))
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-i', 'sfx/anime/hatena-syn.wav', '-filter_complex', f'[1:a]adelay={int(V_AT * 1000)}:all=1[v];[2:a]volume=0.35,adelay={int((Q_AT - 2) / FPS * 1000)}:all=1[q];[v][q]amix=2:normalize=0,apad[a]',
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-i', 'sfx/anime/hatena-syn.wav', '-filter_complex', f'[1:a]adelay={int(V_AT * 1000)}:all=1[v];[2:a]volume=0.3,adelay={int(Q_AT / FPS * 1000)}:all=1[q];[v][q]amix=2:normalize=0,apad[a]',
                 '-map', '0:v', '-map', '[a]', '-t', str(len(SEQ) / FPS), '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', 'ep02/s5-gyul-huh.mp4'], check=True)
 print('ep02/s5-gyul-huh.mp4', round(len(SEQ) / FPS, 2), 's')
