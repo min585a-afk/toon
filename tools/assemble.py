@@ -34,12 +34,13 @@ def main():
     # 1) 컷마다 같은 크기 · fps · 소리 형식으로
     parts, times, cut_times, no_title, t = [], [], [], [], 0.0
     for i, c in enumerate(spec['cuts']):
-        p = f'{tmp}/p{i}.mp4'; d = c.get('sec') or dur(c['file'])
-        cmd = ['ffmpeg', '-y', '-v', 'error', '-i', c['file']]
-        if not has_audio(c['file']): cmd += ['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo']
-        cmd += ['-t', str(d), '-vf', f'scale=1080:810,fps={FPS},setsar=1', '-map', '0:v', '-map', '0:a' if has_audio(c['file']) else '1:a',
-                '-ar', '44100', '-ac', '2', '-af', f"volume={c.get('vol', 1)}", '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', p]   # "vol": 컷 소리 크기 (타닥타닥 줄이기 등)
-        subprocess.run(cmd, check=True)
+        p = f'{tmp}/p{i}.mp4'; d = c.get('sec') or dur(c['file']); d = round(d * FPS) / FPS   # 프레임 단위로 딱 맞춤
+        # 영상 · 소리 따로 만들고(소리는 wav 로 길이 정확히) 나중에 합침 → 컷 이을 때 소리가 조금씩 밀리던 것(10/29 한숨 싱크) 없앰
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', c['file'], '-t', str(d), '-vf', f'scale=1080:810,fps={FPS},setsar=1,tpad=stop_mode=clone:stop_duration=1',
+                        '-frames:v', str(round(d * FPS)), '-an', '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', p], check=True)
+        af = f"volume={c.get('vol', 1)},apad,atrim=0:{d},afade=t=in:d=0.012,afade=t=out:st={max(0, d - 0.025)}:d=0.025"   # "vol": 컷 소리 크기 · 컷 끝 뚝 소리 X
+        src = ['-i', c['file']] if has_audio(c['file']) else ['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo']
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', *src, '-af', af, '-ar', '44100', '-ac', '2', '-c:a', 'pcm_s16le', f'{tmp}/a{i}.wav'], check=True)
         parts.append(p); cut_times.append((t, t + d))
         if c.get('subs'):                               # 한 컷 안에서 자막 나누기: [[시작, 끝, 한글, 영어], ...] (컷 안 초)
             for a0, b0, ko, en in c['subs']: times.append((t + a0, t + min(b0, d), ko, en))
@@ -47,10 +48,13 @@ def main():
         if c.get('no_title'): no_title.append((t, t + d))  # 끝 화면 등: 위 제목 없이
         t += d
     open(f'{tmp}/l.txt', 'w').write(''.join(f"file '{p}'\n" for p in parts))
-    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/l.txt', '-c', 'copy', f'{tmp}/cat.mp4'], check=True)
+    open(f'{tmp}/la.txt', 'w').write(''.join(f"file '{tmp}/a{i}.wav'\n" for i in range(len(parts))))
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/l.txt', '-c', 'copy', f'{tmp}/catv.mp4'], check=True)
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/la.txt', '-c', 'copy', f'{tmp}/cata.wav'], check=True)
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/catv.mp4', '-i', f'{tmp}/cata.wav', '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'pcm_s16le', f'{tmp}/cat.mov'], check=True)
     # 2) 무드 25% → 3) 화 제목
-    subprocess.run(['python3', 'tools/mood.py', f'{tmp}/cat.mp4', f'{tmp}/mood.mp4'], check=True, capture_output=True)
-    src = f'{tmp}/mood.mp4'
+    subprocess.run(['python3', 'tools/mood.py', f'{tmp}/cat.mov', f'{tmp}/mood.mov'], check=True, capture_output=True)
+    src = f'{tmp}/mood.mov'
     if spec.get('title'):
         ko, en, st, du = spec['title']
         subprocess.run(['python3', 'tools/title_card.py', src, f'{tmp}/title.mp4', ko, en, '--start', str(st), '--dur', str(du)], check=True, capture_output=True); src = f'{tmp}/title.mp4'

@@ -7,10 +7,10 @@ import numpy as np
 import cv2, sys
 sys.path.insert(0, 'tools'); from name_card import card, fade
 BOSS_CARD = ('강서늘', '(팀장)', 540, 730)   # 이름 · 괄호 · 위치(은서와 같은 자리)
-INTRO_SEC = 1.8
+INTRO_SEC = 2.1   # 이름 조금 더 오래 (컷 줄인 만큼)
 
 FPS, W, H = 24, 1080, 810
-VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 2.0, 2.8, 0   # 1화 소개: 대사 전 1.4초 멈춤 + 이름 자막   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
+VOICE, PRE, WIDE_SEC, ZOOM_F = 'voice/ep01/c1-boss.wav', 0.7, 2.2, 0   # 혁 10/29: 대사 전 멈춤 길어서 줄임 → 서류 들고 바로 대사   # 1화 소개: 대사 전 1.4초 멈춤 + 이름 자막   # 대사 0.4초에 시작 · 상반신 1.3초 → 바로 얼굴 클로즈업 컷 (줌 과정 X · 템포 살짝 천천히, 혁 10/27)
 FACE_IN_WIDE = (1150, 300)                                                 # 상반신 원본(2336x1744)에서 얼굴 가운데
 WW, WH = 2336, 1744
 tmp = tempfile.mkdtemp()
