@@ -116,7 +116,13 @@ def fire():                                         # 화르륵: 불길 확 붙�
     return verb(y, 0.4, 0.2)
 
 
-ALL = dict(fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
+def tick():                                         # 째깍: 시계 초침 (짧은 나무 딸깍 두 겹)
+    t = t_(0.09); x = np.sin(2 * np.pi * 2600 * t) * np.exp(-t * 160) + 0.5 * np.sin(2 * np.pi * 1300 * t) * np.exp(-t * 90)
+    x += rng.normal(0, 1, len(t)) * np.exp(-t * 400) * 0.4
+    return verb(x, 0.25, 0.12)
+
+
+ALL = dict(tick=tick, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85
