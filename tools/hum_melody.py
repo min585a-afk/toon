@@ -102,16 +102,16 @@ def syllables(src, out, bpm, seq):
         if n != 'R':
             s = (long_[k % len(long_)] if int(d) <= 4 else short[k % len(short)]); k += 1
             mid = s[len(s) // 3: len(s) // 3 + 2048] if len(s) > 2400 else s; r = float(np.clip(hz(n) / f0(mid, 190, 450), 0.6, 1.6))   # 은서 목소리 음역(190~450Hz)에서만 찾음 → 옥타브 착각 X
-            want = dur * (1.0 if int(d) <= 4 else 0.95)                       # 음표 길이에 맞춰 늘이고 줄임 (끊지 않고 이어지게)
-            r *= 2 ** (HR.normal(0, 8) / 1200)                               # 사람처럼: 음 아주 살짝(±8cent) 흔들림
-            with wave.open(f'{tmp}/i.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(s, -1, 1) * 32767).astype(np.int16).tobytes())
-            subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/i.wav', '-af', f'rubberband=pitch={r}:tempo={len(s) / SR / want}:formant=preserved', f'{tmp}/o.wav'], check=True)
-            s = load(f'{tmp}/o.wav'); f = int(0.02 * SR); s[:f] *= np.linspace(0, 1, f); f = int(0.07 * SR); s[-f:] *= np.linspace(1, 0, f)
-            seg = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7) * HR.uniform(0.75, 1.0)   # 사람처럼: 세기 들쭉날쭉
+            r *= 2 ** (HR.normal(0, 6) / 1200)                               # 사람처럼: 음 아주 살짝 흔들림
+            # 혁 10/28: 늘이기/rubberband 는 목소리가 2~3겹으로 들림 → 그냥 재생 속도로 음만 맞춤(겹침 X) · 음표 길이에서 깔끔히 자름
+            src_i = np.arange(0, len(s) - 1, r); s = np.interp(src_i, np.arange(len(s)), s).astype(np.float32)
+            n_len = int(dur * SR * (0.95 if int(d) <= 4 else 0.9)); s = s[:n_len]
+            f = int(0.012 * SR); s[:f] *= np.linspace(0, 1, f); f = min(len(s) // 3, int(0.05 * SR)); s[-f:] *= np.linspace(1, 0, f)
+            seg = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7) * HR.uniform(0.8, 1.0)
         y.append((dur, seg))
     L = sum(d for d, _ in y); out_a = np.zeros(int(L * SR) + SR, np.float32); t = 0.0
-    for d, seg in y:                                                       # 사람처럼: 박자 ±12ms 흔들림 · 다음 음과 살짝 겹쳐 이어짐(레가토)
-        i = max(0, int((t + HR.normal(0, 0.012)) * SR)); out_a[i:i + len(seg)] += seg[:len(out_a) - i]; t += d
+    for d, seg in y:                                                       # 사람처럼: 박자 살짝 흔들림
+        i = max(0, int((t + abs(HR.normal(0, 0.008))) * SR)); out_a[i:i + len(seg)] += seg[:len(out_a) - i]; t += d   # 늦게만 살짝 → 앞 음과 안 겹침
     y = out_a[:int(L * SR) + int(0.15 * SR)]; y = y / (np.abs(y).max() + 1e-9) * 0.8
     with wave.open(out, 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((y * 32767).astype(np.int16).tobytes())
     print(out, round(len(y) / SR, 2), 's · 음절', len(syl), '개')
