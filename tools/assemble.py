@@ -28,14 +28,12 @@ def frame_png(path, title, ko, en):
     def two(t):                                       # '앞말|강조말' → 앞은 흰색 · 뒤는 제목 색 (혁 10/29: 직장인의(흰) 스킬(민트))
         if '|' not in t: return t, TITLE_RGB
         a, b = t.split('|', 1); return a + b, [(255, 255, 255)] * len(a) + [TITLE_RGB] * len(b)
-    if tko: slanted(o, two(tko)[0], ImageFont.truetype(FG, 108), two(tko)[1], TOP - (178 if ten else 160), track=-6)
-    if ten: slanted(o, two(ten)[0], ImageFont.truetype(FG, 40), two(ten)[1], TOP - 60, track=-3)
-    if WATERMARK:                                     # 워터마크 (혁 10/29): 자막 아래 가운데 · 작게 · 반투명 · 아래 UI(1470~) 위
-        d = ImageDraw.Draw(o); fw = ImageFont.truetype(FG, 30); tw = d.textlength(WATERMARK, font=fw)
-        wl = Image.new('RGBA', (W, 60), (0, 0, 0, 0)); ImageDraw.Draw(wl).text(((W - tw) / 2, 10), WATERMARK, font=fw, fill=(255, 255, 255, 120))
-        o.alpha_composite(wl, (0, TOP + VH + 205))
+    if tko: slanted(o, two(tko)[0], ImageFont.truetype(FG, 108), two(tko)[1], TOP - (196 if ten else 175), track=-6)   # 혁 10/29: 영상과 간격 살짝 더
+    if ten: slanted(o, two(ten)[0], ImageFont.truetype(FG, 40), two(ten)[1], TOP - 80, track=-3)
+    if WATERMARK:                                     # 워터마크 (혁 10/29): 자막이랑 같은 글꼴 · 기울임 · 작게 · 반투명 · 아래 UI(1470~) 위
+        slanted(o, WATERMARK, ImageFont.truetype(FG, 30), (255, 255, 255, 130), TOP + VH + 196, track=-1)
     if ko: slanted(o, ko, ImageFont.truetype(FG, 63), (255, 255, 255), TOP + VH + 30)
-    if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 118)
+    if en: slanted(o, en, ImageFont.truetype(FG, 38), (57, 255, 20), TOP + VH + 104)   # 혁 10/29: 한글에 살짝 붙임
     o.save(path)
 
 
