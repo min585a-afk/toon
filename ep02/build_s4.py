@@ -4,25 +4,13 @@ usage: python3 ep02/build_s4.py [목소리.wav] → ep02/s4-butter-face.mp4
 import subprocess, tempfile, sys, os
 import numpy as np, cv2
 sys.path.insert(0, 'tools'); from name_card import card, fade
+sys.path.insert(0, 'ep02'); from fx import star
 FPS, W, H = 24, 1080, 810
 VOICE = sys.argv[1] if len(sys.argv) > 1 else 'voice/ep02/butter-line1.wav'
 HOLD = 1.6                                                       # 혁 10/29: 얼굴 나오고 1~2초 멈춤 + 이름
 tmp = tempfile.mkdtemp()
 subprocess.run(['python3', 'tools/talk_mouth.py', 'char/butter/talk/mouth-1-closed.png', 'char/butter/talk/mouth-2-open.png', VOICE, f'{tmp}/talk.mp4',
                 '--mouth', '1204,861', '--r', '150,70', '--size', '2336x1744', '--pre', str(HOLD), '--post', '0.7'], check=True)
-
-
-def star(fr, x, y, L):                                           # 1화 반짝이 그대로 (ep01b/build_c6.py)
-    if L < 3: return fr
-    lay = np.zeros(fr.shape[:2], np.float32); w = max(2, L // 6)
-    for (dx, dy), ln in [((1, 0), L * 0.7), ((0, 1), L)]:
-        p = np.array([(x - dx * ln, y - dy * ln), (x + dy * w, y + dx * w), (x + dx * ln, y + dy * ln), (x - dy * w, y - dx * w)], np.int32)
-        cv2.fillPoly(lay, [p], 1.0, cv2.LINE_AA)
-    cv2.circle(lay, (x, y), max(2, L // 5), 1.0, -1, cv2.LINE_AA)
-    glow = cv2.GaussianBlur(lay, (0, 0), L * 0.35) * 2.2 + cv2.GaussianBlur(lay, (0, 0), L * 0.1)
-    g = np.clip(glow, 0, 1)[..., None]; c = np.clip(lay, 0, 1)[..., None]
-    o = fr.astype(np.float32) + g * np.array([90, 190, 255], np.float32) * 0.9
-    return np.clip(o * (1 - c) + 255 * c, 0, 255).astype(np.uint8)
 
 
 cap = cv2.VideoCapture(f'{tmp}/talk.mp4'); frames = []
