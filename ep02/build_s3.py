@@ -16,10 +16,18 @@ base = cv2.resize(cv2.imread('ep02/s3-base.png'), (W, H), interpolation=cv2.INTE
 edit = cv2.resize(cv2.imread('ep02/s3-butter-back2.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)   # 혁 10/29: 더 위 · 왼쪽 30% 만 (편집 2번째 1cr)
 m = (cv2.imread('ep02/s3-butter-back2-mask.png', 0) > 127).astype(np.uint8)                                          # GrabCut 으로 대리만 오림
 M = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 2)[..., None]
+# 혁 10/29: 2화 빨간 리본 — 편집본(1cr)에서 리본만 떼서 은서 머리 움직임 따라 붙임
+RIB = cv2.resize(cv2.imread('ep02/s3-ribbon-aligned.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
+RM = cv2.GaussianBlur(cv2.resize(cv2.imread('ep02/s3-ribbon-mask.png', 0), (W, H)).astype(np.float32) / 255, (0, 0), 1.5)[..., None]
+HB = (430, 760, 90, 360)                                       # 머리 추적 영역 x0 x1 y0 y1
+gray = lambda im: cv2.cvtColor(im[HB[2]:HB[3], HB[0]:HB[1]].astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)
+G0 = gray(base)
 n = int((TYPE + LOOK) * FPS); v0 = len(v) / vf - LOOK - TYPE
 tmp = tempfile.mkdtemp()
 for k in range(n):
     fr = to_black(v[min(len(v) - 1, int((v0 + (k - k % 2) / FPS) * vf))], y_min=0.35, x_range=(0.3, 0.85), face=(0.53, 0.34, 0.14, 0.14))   # 2화 복장: 검정 가디건
+    (hx, hy), _ = cv2.phaseCorrelate(G0, gray(fr)); A2 = np.float32([[1, 0, hx], [0, 1, hy]])
+    rm = cv2.warpAffine(RM, A2, (W, H)).reshape(H, W, 1); fr = fr * (1 - rm) + cv2.warpAffine(RIB, A2, (W, H)) * rm
     t = (k - k % 2) / FPS; p = np.clip((t - IN0) / (IN1 - IN0), 0, 1); p = 1 - (1 - p) ** 2.2          # 다가와서 멈춤(ease-out)
     dx = -W * 0.4 * (1 - p); dy = -10 * abs(np.sin(p * np.pi * 3)) * (1 - p)                          # 걸음 살짝 들썩
     A = np.float32([[1, 0, dx], [0, 1, dy]]); e2 = cv2.warpAffine(edit, A, (W, H)); m2 = cv2.warpAffine(M, A, (W, H))[..., None] if M.ndim == 3 else cv2.warpAffine(M, A, (W, H))
