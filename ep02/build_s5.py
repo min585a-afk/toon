@@ -20,16 +20,17 @@ VOICE, V_AT = 'voice/ep02/gyul-lines/s5-2-use.wav', 4 / FPS      # "예? 왜요?
 # 혁 10/29: '왜요?' 뒤 늦게 천천히 눈 돌리는 게 너무 정적 → 왜요 끝나자마자 빠르게 눈 휙 + '?' 뿅(하테나 소리) · 멍하니 보는 구간 줄이고 바로 깜빡
 SEQ = list(range(10)) + [10, 10, 11, 11] * 2 + [10] + [4, 4, 5, 5, 6, 6, 7, 7, 8, 9] + [15, 15, 18, 18, 21, 21, 24, 24] + list(range(24, 36)) + list(range(62, n))
 Q_AT = 37                                                        # '?' 뜨는 출력 프레임 (눈 다 돌아간 순간)
-from PIL import Image, ImageDraw, ImageFont
-QF = ImageFont.truetype('tools/fonts/sfx-DoHyeon.ttf', 130)
+import sys; sys.path.insert(0, 'ep02'); from qmark import make_q
+QI = make_q(230)                                                 # 만화 셀 재질 '?' (혁 10/29: 우리 그림체에 맞게)
 def qmark(img, k):                                               # '?' 뿅: 커졌다 제자리 + 살짝 통통
     a = (k - Q_AT) - (k - Q_AT) % 2
     if a < 0: return img
-    sc = [0.4, 1.25, 1.0][min(2, a // 2)] * (1 + 0.04 * np.sin(a * 0.9)); dy = int(6 * np.sin(a * 0.45))
-    im = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)); lay = Image.new('RGBA', (220, 220)); d = ImageDraw.Draw(lay)
-    d.text((110, 110), '?', font=QF, fill=(30, 25, 40), anchor='mm', stroke_width=7, stroke_fill=(255, 255, 255))
-    lay = lay.rotate(-12, resample=Image.BICUBIC); z = int(220 * sc); lay = lay.resize((z, z), Image.LANCZOS)
-    im.paste(lay, (860 - z // 2, 135 - z // 2 + dy), lay); return cv2.cvtColor(np.array(im), cv2.COLOR_RGB2BGR)
+    sc = [0.4, 1.2, 1.0][min(2, a // 2)] * (1 + 0.04 * np.sin(a * 0.9)); dy = int(6 * np.sin(a * 0.45))
+    z = int(230 * sc); q = cv2.resize(QI, (z, z), interpolation=cv2.INTER_AREA); x0, y0 = 860 - z // 2, 135 - z // 2 + dy
+    al = q[..., 3:] / 255.0; rgb = q[..., :3][..., ::-1].astype(np.float32)
+    P = 300; big = cv2.copyMakeBorder(img, P, P, P, P, cv2.BORDER_CONSTANT); x0 += P; y0 += P   # 화면 밖으로 살짝 나가도 되게
+    sub = big[y0:y0 + z, x0:x0 + z].astype(np.float32)
+    big[y0:y0 + z, x0:x0 + z] = (rgb * al + sub * (1 - al)).astype(np.uint8); return big[P:-P, P:-P]
 for k, j in enumerate(SEQ):
     fr = v[min(len(v) - 1, int((V0 + (j - j % 2) / FPS * SPD) * vf))]
     fr = qmark(np.clip(fr * (1 - M) + E * M, 0, 255).astype(np.uint8), k)
