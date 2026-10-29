@@ -78,11 +78,78 @@
    "file": "ep02/s11-clock558.mp4",
    "ko": "(5:58)",
    "en": "(5:58 PM)"
+  },
+  {
+   "file": "ep02/s12-butter-wine.mp4",
+   "ko": "아님 와인~? 분위기 있게~?",
+   "en": "Or wine~? Something romantic~?"
+  },
+  {
+   "file": "ep02/s13-gyul-tiny.mp4",
+   "ko": "그게요오…",
+   "en": "Well, you see…"
+  },
+  {
+   "file": "ep02/s14-clock600.mp4",
+   "subs": [
+    [
+     0,
+     3.0,
+     "(5:59…)",
+     "(5:59…)"
+    ],
+    [
+     3.0,
+     99,
+     "(땡!)",
+     "(DING!)"
+    ]
+   ]
+  },
+  {
+   "file": "ep02/s15-butter-dream.mp4",
+   "ko": "그럼 7시에 거기서 보자~ 은서 씨?",
+   "en": "See you there at 7~ Eunseo?"
+  },
+  {
+   "file": "ep02/s16-empty.mp4",
+   "ko": "(…휘잉)",
+   "en": "(…whoosh)"
+  },
+  {
+   "file": "ep02/s17-butter-frozen.mp4",
+   "ko": "…은서 씨?",
+   "en": "…Eunseo?"
+  },
+  {
+   "file": "ep01b/e9-end.mp4",
+   "ko": "",
+   "en": "",
+   "no_title": true
   }
  ],
  "reel_title": "퇴근 |5분 전",
  "reel_title_en": "5 MINUTES |TO SIX",
  "title_color": "#6dffd9",
  "watermark": "@byeoltoon",
- "sfx": []
+ "sfx": [
+  [
+   "sfx/anime/whoosh-syn.wav",
+   "s16-empty",
+   0.1,
+   0.5
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "s15-butter-dream",
+   0.1,
+   0.25
+  ],
+  [
+   "sfx/anime/tiring-syn.wav",
+   "e9-end",
+   0.35,
+   0.45
+  ]
+ ]
 }
