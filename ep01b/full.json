@@ -13,13 +13,13 @@
      2.8,
      6.62,
      "(흥얼)",
-     "(humming)"
+     "(feat. neon)"
     ],
     [
      6.62,
      99,
-     "타닥타닥타닥",
-     "tap tap tap tap"
+     "타닥타닥타닥 (열일하는 척)",
+     "tap tap tap (pretending to work)"
     ]
    ],
    "vol": 0.5
@@ -27,7 +27,7 @@
   {
    "file": "ep01b/c0-boss-walk.mp4",
    "ko": "또각 또각 (너한테 가는 중)",
-   "en": "click clack (coming for you)"
+   "en": "click clack (I'm going~)"
   },
   {
    "file": "ep01b/c00b-gyul-look.mp4",
@@ -35,14 +35,14 @@
     [
      0,
      1.3,
-     "또각! 또각!",
-     "CLICK! CLACK!"
+     "(싸늘하다…)",
+     "(…chilly)"
     ],
     [
      1.3,
      99,
      "(…설마 나?)",
-     "(…don't tell me it's me?)"
+     "(…me??)"
     ]
    ],
    "vol": 0.5
@@ -53,8 +53,8 @@
     [
      0,
      0.7,
-     "(싸늘하다…)",
-     "(…chilling)"
+     "(응 너야!)",
+     "(yes, YOU!)"
     ],
     [
      0.7,
@@ -86,8 +86,8 @@
   },
   {
    "file": "ep01b/e3-gyul-rage.mp4",
-   "ko": "(불타는 중)",
-   "en": "(burning inside)"
+   "ko": "열받아..",
+   "en": "(so pissed..)"
   },
   {
    "file": "ep01b/e4-boss-turn.mp4",
@@ -101,19 +101,19 @@
   },
   {
    "file": "ep01b/e6-boss-away.mp4",
-   "ko": "또각 또각…",
-   "en": "click clack…"
+   "ko": "(또각 또각)",
+   "en": "(click clack)"
   },
   {
    "file": "ep01b/e7-gyul-type.mp4",
-   "ko": "타닥타닥타닥 (분노의 타자)",
-   "en": "tap tap tap (rage typing)",
+   "ko": "타닥타닥타닥 (분노표출중)",
+   "en": "tap tap tap (rage mode ON)",
    "vol": 0.5
   },
   {
    "file": "ep01b/e8-notepad.mp4",
-   "ko": "(직장인들의 진짜 마음)",
-   "en": "(what every office worker really means)",
+   "ko": "(직장인들의 마음)",
+   "en": "(i want young & rich)",
    "vol": 0.5
   },
   {
