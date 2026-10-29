@@ -100,11 +100,17 @@ def syllables(src, out, bpm, seq):
     for tok in seq:
         n, d = tok.split(':'); dur = beat * 4 / int(d); seg = np.zeros(int(dur * SR * 0.5), np.float32)
         if n != 'R':
-            s = (long_[k % len(long_)] if int(d) <= 4 else short[k % len(short)]); k += 1
-            mid = s[len(s) // 3: len(s) // 3 + 2048] if len(s) > 2400 else s; r = float(np.clip(hz(n) / f0(mid, 190, 450), 0.6, 1.6))   # 은서 목소리 음역(190~450Hz)에서만 찾음 → 옥타브 착각 X
+            s = (long_[0] if int(d) <= 4 else short[k % len(short)]); k += 1   # 4분음표는 음 안정된 긴 음절 하나로
+            fv = np.median([f0(s[i:i + 2048], 190, 450) for i in range(len(s) // 5, max(len(s) // 5 + 1, len(s) - 2048), 512)]) if len(s) > 2600 else f0(s, 190, 450); r = float(np.clip(hz(n) / fv, 0.6, 1.6))   # 여러 곳 재서 가운데값   # 은서 목소리 음역(190~450Hz)에서만 찾음 → 옥타브 착각 X
             r *= 2 ** (HR.normal(0, 6) / 1200)                               # 사람처럼: 음 아주 살짝 흔들림
             # 혁 10/28: 늘이기/rubberband 는 목소리가 2~3겹으로 들림 → 그냥 재생 속도로 음만 맞춤(겹침 X) · 음표 길이에서 깔끔히 자름
-            src_i = np.arange(0, len(s) - 1, r); s = np.interp(src_i, np.arange(len(s)), s).astype(np.float32)
+            s0 = s
+            for _ in range(3):                                               # 맞춘 뒤 다시 재서 한 번 더 보정 (음 정확히)
+                src_i = np.arange(0, len(s0) - 1, r); s = np.interp(src_i, np.arange(len(s0)), s0).astype(np.float32)
+                n_len = int(dur * SR * (0.95 if int(d) <= 4 else 0.9)); chk = s[:n_len]
+                got = np.median([f0(chk[i:i + 2048], 190, 450) for i in range(int(len(chk) * 0.2), max(int(len(chk) * 0.2) + 1, int(len(chk) * 0.6)), 512)]) if len(chk) > 2600 else hz(n)
+                r *= hz(n) / got
+            src_i = np.arange(0, len(s0) - 1, r); s = np.interp(src_i, np.arange(len(s0)), s0).astype(np.float32)
             n_len = int(dur * SR * (0.95 if int(d) <= 4 else 0.9)); s = s[:n_len]
             f = int(0.012 * SR); s[:f] *= np.linspace(0, 1, f); f = min(len(s) // 3, int(0.05 * SR)); s[-f:] *= np.linspace(1, 0, f)
             seg = s / (np.abs(s).max() + 1e-9) * (0.8 if int(d) <= 4 else 0.7) * HR.uniform(0.8, 1.0)
