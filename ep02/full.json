@@ -186,6 +186,12 @@
    "s17-butter-frozen",
    0.6,
    1.0
+  ],
+  [
+   "voice/ep02/gyul-hmm/H3-use.wav",
+   "s2-gyul-monitor",
+   1.2,
+   1.0
   ]
  ]
 }

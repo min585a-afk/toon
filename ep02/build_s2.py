@@ -25,10 +25,11 @@ for k in range(int(SEC * FPS)):
     f = glow * (0.16 * flick + 0.10 * band)
     fr = fr * (1 - f) + np.float32([255, 225, 185]) * f            # 차가운 하늘빛 (BGR)
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
-tk = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/anime/tick-syn.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+rd = lambda p: np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+tks = [rd('sfx/anime/tik-syn.wav'), rd('sfx/anime/tok-syn.wav')]   # 똑딱 (장면 1 과 같은 소리)
 a = np.zeros(int(SEC * SR), np.float32)
-for s in np.arange(np.ceil(T0) - T0, SEC, 1.0):
-    j = int(s * SR); a[j:j + len(tk)] += tk[:len(a) - j] * 0.45                            # 째깍 (조금 멀게)
+for i, s in enumerate(np.arange(np.ceil(T0) - T0, SEC, 1.0)):
+    tk = tks[(int(np.ceil(T0)) + i) % 2]; j = int(s * SR); a[j:j + len(tk)] += tk[:len(a) - j] * 0.35   # 똑딱 (조금 멀게)
 with wave.open(f'{tmp}/a.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(a, -1, 1) * 32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', f'{tmp}/a.wav', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep02/s2-gyul-monitor.mp4'], check=True)
 print('ep02/s2-gyul-monitor.mp4', SEC, 's')
