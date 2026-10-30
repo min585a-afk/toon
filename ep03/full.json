@@ -4,9 +4,36 @@
  "title_color": "#6dffd9",
  "watermark": "@byeoltoon",
  "cuts": [
-  {"file": "ep03/s1-think-talk.mp4", "subs": [[0, 2.46, "흐음……", "Hmm……"], [2.46, 99, "아니야! 너가 시무룩할 필요가 없어!", "Nope! No need to be down!"]]}
+  {
+   "file": "ep03/s1-think-talk.mp4",
+   "subs": [
+    [
+     0,
+     2.46,
+     "흐음……",
+     "Hmm……"
+    ],
+    [
+     2.46,
+     3.3,
+     "아니야!",
+     "Nope!"
+    ],
+    [
+     3.3,
+     99,
+     "너는 부족한 게 없어!",
+     "You're not lacking anything!"
+    ]
+   ]
+  }
  ],
  "sfx": [
-  ["voice/ep03/s1-place.wav", "s1-think-talk", 0.0, 1.0]
+  [
+   "voice/ep03/s1-place.wav",
+   "s1-think-talk",
+   0.0,
+   1.0
+  ]
  ]
 }
