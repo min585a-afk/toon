@@ -1,6 +1,6 @@
 """EP03 상상 컷 '샤랄라' (0cr): 그림 한 장 + 옛날 애니식 움직임 — 반짝이 깜빡깜빡 · 꽃잎 팔랑 떨어짐 · 비눗방울 둥실 · 아주 천천히 다가감. 12fps.
 usage: python3 ep03/build_sharala.py 그림.png 초 out.mp4 [--flash] [--shake]
-  --flash: 카메라 플래시 팡팡 (패셔니스타) · --shake: 시작에 깜짝 놀라 흔들림 · --glint x,y: 안경 번쩍 · --bloom: 둘레에 꽃이 하나씩 피어나며 나타남 (혁 10/30 '꽃 페이드')
+  --flash: 카메라 플래시 팡팡 (패셔니스타) · --shake: 시작에 깜짝 놀라 흔들림 · --glint x,y: 번쩍 (안경 · 메달) · --confetti: 색종이 · --bloom: 둘레에 꽃이 하나씩 피어나며 나타남 (혁 10/30 '꽃 페이드')
 """
 import subprocess, tempfile, shutil, sys
 import numpy as np, cv2
@@ -12,6 +12,8 @@ STARS = [(rng.uniform(60, 1020), rng.uniform(40, 770), rng.uniform(0, 1.2)) for 
 PET = [dict(x=rng.uniform(0, W), y=rng.uniform(-H, H), s=rng.uniform(14, 26), sp=rng.uniform(60, 120), ph=rng.uniform(0, 6)) for _ in range(14)]
 BUB = [dict(x=rng.uniform(80, 1000), y=rng.uniform(200, 900), r=rng.uniform(18, 40), sp=rng.uniform(25, 50)) for _ in range(6)]
 FLASH, SHAKE, BLOOM = '--flash' in sys.argv, '--shake' in sys.argv, '--bloom' in sys.argv
+CONF = '--confetti' in sys.argv                                   # --confetti: 색종이 팔랑 (신부)
+CF = [dict(x=rng.uniform(0, W), y=rng.uniform(-H, H), w=rng.uniform(8, 14), sp=rng.uniform(90, 160), ph=rng.uniform(0, 6), c=[(240, 200, 120), (180, 220, 250), (200, 170, 250), (150, 230, 200)][i % 4]) for i in range(22)]
 GLINT = tuple(int(v) for v in sys.argv[sys.argv.index('--glint') + 1].split(',')) if '--glint' in sys.argv else None   # --glint x,y : 안경 번쩍 (0.3초에 크게)
 FLW = [(90, 120, 0.15), (990, 90, 0.3), (60, 470, 0.45), (1020, 420, 0.55), (180, 760, 0.7), (900, 760, 0.8), (520, 40, 0.95), (330, 770, 1.05), (720, 790, 1.15)]   # (x, y, 피기 시작 초) — 얼굴 피해 둘레
 def flower(fr, x, y, r, a, rot, col=(200, 175, 250), dark=(150, 120, 215)):   # 셀 꽃: 다섯 꽃잎 + 노란 가운데 · a = 불투명도

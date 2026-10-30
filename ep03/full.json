@@ -46,6 +46,11 @@
    "file": "ep03/s5-work.mp4",
    "ko": "넌 일도 잘하고~",
    "en": "You're great at work~"
+  },
+  {
+   "file": "ep03/s6-bride.mp4",
+   "ko": "1등 신부감이야!",
+   "en": "You're total wife material!"
   }
  ],
  "sfx": [
@@ -124,6 +129,24 @@
   [
    "voice/ep03/s5-1-use.wav",
    "s5-work",
+   0.2,
+   1.0
+  ],
+  [
+   "sfx/anime/kiran-syn.wav",
+   "s6-bride",
+   0.2,
+   0.35
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "s6-bride",
+   0.0,
+   0.25
+  ],
+  [
+   "voice/ep03/s6-1-use.wav",
+   "s6-bride",
    0.2,
    1.0
   ]

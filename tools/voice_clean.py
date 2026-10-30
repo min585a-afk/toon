@@ -9,7 +9,9 @@ src, out = sys.argv[1], sys.argv[2]; speed = float(sys.argv[3]) if len(sys.argv)
 af = ['-af', f'atempo={speed}'] if speed != 1.0 else []
 x = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', src, *af, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32).copy()
 x = x[:-int(0.08 * SR / speed)]
-e = np.array([np.sqrt((x[i:i + 441] ** 2).mean()) for i in range(0, len(x) - 441, 441)]); on = np.nonzero(e > e.max() * 0.03)[0]
+e = np.array([np.sqrt((x[i:i + 441] ** 2).mean()) for i in range(0, len(x) - 441, 441)])
+loud = e > np.percentile(e, 99) * 0.05; run = np.convolve(loud, np.ones(5), 'same') >= 5   # 5칸(0.05초) 이어진 소리만 말소리로 (10/30: 앞 딸깍 하나로 앞 무음 남던 것)
+on = np.nonzero(run)[0] if run.any() else np.nonzero(loud)[0]
 x = x[max(0, on[0] * 441 - 800):min(len(x), on[-1] * 441 + int(0.3 * SR))]
 f = int(0.12 * SR); x[-f:] *= np.linspace(1, 0, f) ** 2
 fr = np.array([np.sqrt((x[i:i + 2205] ** 2).mean()) for i in range(0, len(x) - 2205, 2205)]); act = fr[fr > fr.max() * 0.2]
