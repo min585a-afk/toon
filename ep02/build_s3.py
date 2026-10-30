@@ -32,7 +32,11 @@ for k in range(n):
     dx = -W * 0.4 * (1 - p); dy = -10 * abs(np.sin(p * np.pi * 3)) * (1 - p)                          # 걸음 살짝 들썩
     A = np.float32([[1, 0, dx], [0, 1, dy]]); e2 = cv2.warpAffine(edit, A, (W, H)); m2 = cv2.warpAffine(M, A, (W, H))[..., None] if M.ndim == 3 else cv2.warpAffine(M, A, (W, H))
     m2 = m2.reshape(H, W, 1)
-    cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr * (1 - m2) + e2 * m2, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
+    o = np.clip(fr * (1 - m2) + e2 * m2, 0, 255).astype(np.uint8)
+    if t > TYPE + 0.6:                                             # 영상 끝나고 멈춘 동안 천천히 다가감 (혁 10/30: 멈춘 티 안 나게)
+        z = 1 + 0.035 * min(1, (t - TYPE - 0.6) / (LOOK - 0.6)) ** 0.8
+        o = cv2.warpAffine(o, cv2.getRotationMatrix2D((W * 0.55, H * 0.4), 0, z), (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    cv2.imwrite(f'{tmp}/{k:05d}.jpg', o, [cv2.IMWRITE_JPEG_QUALITY, 93])
 typing = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/typing-norm.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 a = np.zeros(int(n / FPS * SR), np.float32); L = int(TYPE * SR); a[:L] = np.tile(typing, 3)[:L] * 0.25; a[L - 800:L] *= np.linspace(1, 0, 800)   # 10/30 혁: 키보드 너무 큼 (0.45 → 0.25)
 step = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/heel-step.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
