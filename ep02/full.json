@@ -129,7 +129,7 @@
  "watermark": "@byeoltoon",
  "sfx": [
   [
-   "sfx/anime/whoosh-syn.wav",
+   "sfx/anime/wind-syn.wav",
    "s16-empty",
    0.1,
    0.5
@@ -165,7 +165,7 @@
    0.45
   ],
   [
-   "voice/ep02/gyul-lines/s10-1-use.wav",
+   "voice/ep02/gyul-lines/s10-2-use.wav",
    "s10-gyul-zip",
    0.2,
    1.0

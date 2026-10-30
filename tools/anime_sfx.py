@@ -145,6 +145,14 @@ def tik(): return _click(3200, 260)                  # 똑 (높게)
 def tok(): return _click(2100, 220)                  # 딱 (조금 낮게)
 
 
+def wind():                                         # 휘잉: 짧은 바람 한 줄기 (빈자리 · 혁 10/30)
+    d = 1.1; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.sin(np.pi * t / d) ** 1.5 * (1 + 0.25 * np.sin(2 * np.pi * 3.3 * t))
+    y = np.zeros_like(n); f = 500 + 900 * np.sin(np.pi * t / d); a = 0.0; lp = 0.0; bp = 0.0
+    for i in range(len(n)):                                       # 움직이는 공진 필터 (바람 '휘~' 음높이 올라갔다 내려감)
+        w = 2 * np.pi * f[i] / SR; lp += w * bp; hp = n[i] - lp - 0.12 * bp; bp += w * hp; y[i] = bp
+    return verb(y * env, 0.5, 0.2)
+
+
 def gloom():                                        # 우울 '뿌우우~' (축 처지는 낮은 소리 · 개그 우울)
     d = 1.6; t = t_(d); f = 150 * (1 - 0.35 * t / d); ph = 2 * np.pi * np.cumsum(f) / SR
     x = sum(np.sin(k * ph) / k for k in range(1, 6)) * np.minimum(1, t / 0.06) * np.exp(-np.maximum(0, t - 1.0) * 3)
@@ -152,7 +160,7 @@ def gloom():                                        # 우울 '뿌우우~' (축 �
     return verb(x * 0.5, 0.6, 0.25)
 
 
-ALL = dict(gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
+ALL = dict(wind=wind, gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85
