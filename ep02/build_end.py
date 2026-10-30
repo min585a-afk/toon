@@ -1,13 +1,13 @@
-"""EP02 끝 장면 (혁 10/30): '끝' 대신 웃기게 — 검정 화면에 '회식 안 해.' + 아래 작게 NO TEAM DINNER. · 0.4초 페이드 인. 무음 (띠링은 full.json).
+"""EP02 끝 장면 (혁 10/30): '끝' 대신 웃기게 — 검정 화면에 '응, 회식 안 해.' + 아래 작게 YEP. NO TEAM DINNER. · 0.4초 페이드 인. 무음 (띠링은 full.json).
 usage: python3 ep02/build_end.py → ep02/e-end.mp4  (1화 끝 ep01b/build_end.py 와 같은 틀)"""
 import subprocess, tempfile
 import numpy as np, cv2
 from PIL import Image, ImageDraw, ImageFont
-# 글꼴: 1화 '끝' 과 같은 나눔명조 ExtraBold ('회식안해.' 만 든 subset — Google Fonts css2 ?text=)
+# 글꼴: 1화 '끝' 과 같은 나눔명조 ExtraBold ('응,회식안해.' 만 든 subset — Google Fonts css2 ?text=)
 FPS, W, H, SEC, FADE = 24, 1080, 810, 2.2, 0.4
 img = Image.new('L', (W, H), 0); d = ImageDraw.Draw(img)
-d.text((W // 2, H // 2 - 30), '회식 안 해.', font=ImageFont.truetype('tools/fonts/end2-NanumMyeongjo-800.ttf', 118), fill=232, anchor='mm')
-d.text((W // 2, H // 2 + 85), 'NO TEAM DINNER.', font=ImageFont.truetype('tools/fonts/ga1-800.ttf', 38), fill=200, anchor='mm')
+d.text((W // 2, H // 2 - 30), '응, 회식 안 해.', font=ImageFont.truetype('tools/fonts/end2-NanumMyeongjo-800.ttf', 118), fill=232, anchor='mm')
+d.text((W // 2, H // 2 + 85), 'YEP. NO TEAM DINNER.', font=ImageFont.truetype('tools/fonts/ga1-800.ttf', 38), fill=200, anchor='mm')
 txt = cv2.GaussianBlur(np.array(img, np.float32), (0, 0), 0.8)
 tmp = tempfile.mkdtemp(); rng = np.random.default_rng(9)
 for k in range(int(SEC * FPS)):

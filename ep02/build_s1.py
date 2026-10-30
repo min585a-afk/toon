@@ -13,7 +13,7 @@ SIX = 6 * 3600                                                  # 6:00 (시계�
 tmp = tempfile.mkdtemp()
 for k in range(int(SEC * FPS)):
     tc = T0 + k / FPS * SPEED
-    fr = cv2.resize(clock_at(min(tc, SIX) if FLASH else tc), (W, H), interpolation=cv2.INTER_AREA)
+    fr = cv2.resize(clock_at(tc), (W, H), interpolation=cv2.INTER_AREA)   # 10/30 혁: 6시 땡 뒤에도 시계 계속 감
     if FLASH and abs(tc - SIX) < 1.5 / FPS * SPEED: fr[:] = 255
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
 rd = lambda p: np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
