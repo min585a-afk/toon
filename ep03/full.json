@@ -41,6 +41,11 @@
    "file": "ep03/s4-number.mp4",
    "ko": "내가 남자였으면 바로 번호 땄어!",
    "en": "If I were a guy, I'd ask for your number!"
+  },
+  {
+   "file": "ep03/s5-work.mp4",
+   "ko": "넌 일도 잘하고~",
+   "en": "You're great at work~"
   }
  ],
  "sfx": [
@@ -108,6 +113,18 @@
    "voice/ep03/s4-1-use.wav",
    "s4-number",
    0.25,
+   1.0
+  ],
+  [
+   "sfx/anime/kiran-syn.wav",
+   "s5-work",
+   0.2,
+   0.35
+  ],
+  [
+   "voice/ep03/s5-1-use.wav",
+   "s5-work",
+   0.2,
    1.0
   ]
  ]
