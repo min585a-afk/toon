@@ -1,7 +1,7 @@
 """EP02 장면 6: 최버터 H3 영상(ep02/video/s6-butter-gesture-h3.mp4, 10cr) — 머리 쓸어넘기며 윙크 "끝나고 저녁 어때~?"
 입 움직이는 구간(4~47 프레임)만 대사 길이에 맞춰 돌리고, 다문 입 웃음(47~57)으로 끝. 12fps. 크레딧 0.
 usage: python3 ep02/build_s6.py [목소리.wav 시작 입벌림 입다묾 끝 out.mp4] → 기본 ep02/s6-butter-gesture.mp4
-      장면 9: python3 ep02/build_s6.py voice/ep02/butter-lines/s9b-1-use.wav 56 58 117 124 ep02/s9-butter-menu.mp4 (같은 영상 뒷부분)
+      (장면 9 는 새 영상 · ep02/build_s9.py)
 """
 import subprocess, tempfile, sys
 import cv2

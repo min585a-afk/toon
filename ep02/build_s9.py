@@ -1,0 +1,24 @@
+"""EP02 장면 9: 최버터 H3 영상(ep02/video/s9-butter-count-h3.mp4, 10cr) — 손가락 하나 "삼겹살?" → 두 개 "아니면 닭발?" → 윙크.
+대사 마디에 맞춰 영상 프레임을 구간별로 맞춤 (쉬는 동안은 입 다문 프레임). 12fps. 크레딧 0.
+usage: python3 ep02/build_s9.py → ep02/s9-butter-menu.mp4
+"""
+import subprocess, tempfile
+import numpy as np, cv2
+FPS, W, H = 24, 1080, 810
+VOICE = 'voice/ep02/butter-lines/s9b-1-use.wav'                 # 삼겹살? 0.03~1.16 · 아니면 1.47~2.35 · 닭발? 2.65~3.03
+LEAD = 0.25                                                      # 손 올라오는 걸 조금 먼저 (영상 10 → 16)
+# (목소리 초, 영상 프레임): 손가락 하나 + 말 16~54 · 쉼(입 다묾 54) · 두 개로 바뀌며 '아니면' 70~92 · 쉼 96 · '닭발?' 98~108
+KEY = [(-LEAD, 10), (0.0, 16), (1.16, 54), (1.47, 54), (1.5, 70), (2.35, 92), (2.4, 96), (2.62, 96), (2.65, 98), (3.03, 108)]
+TAIL = (112, 124)                                                # 끝: 입 다물고 윙크
+cap = cv2.VideoCapture('ep02/video/s9-butter-count-h3.mp4'); v = []
+while True:
+    ok, fr = cap.read()
+    if not ok: break
+    v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA))
+kt, kf = zip(*KEY); seq = []
+for k in range(int((LEAD + kt[-1]) * FPS)): t = (k - k % 2) / FPS - LEAD; seq.append(int(np.interp(t, kt, kf)))
+seq += list(range(*TAIL)); tmp = tempfile.mkdtemp()
+for k, j in enumerate(seq): cv2.imwrite(f'{tmp}/{k:05d}.jpg', v[min(len(v) - 1, j - j % 2 if k % 2 else j)], [cv2.IMWRITE_JPEG_QUALITY, 93])
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-filter_complex', f'[1:a]adelay={int(LEAD * 1000)}:all=1,apad[a]',
+                '-map', '0:v', '-map', '[a]', '-t', str(len(seq) / FPS), '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', 'ep02/s9-butter-menu.mp4'], check=True)
+print('ep02/s9-butter-menu.mp4', round(len(seq) / FPS, 2), 's')
