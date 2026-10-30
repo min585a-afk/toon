@@ -24,11 +24,12 @@ def hand(img, theta, r0, r1, w, col, shadow=True):
     cv2.line(img, tuple(a.astype(int)), tuple(b.astype(int)), col, w, cv2.LINE_AA)
 
 
-def clock_at(t):
+def clock_at(t, snap_min=False):                     # snap_min: 분침이 1분마다 딱 넘어감 (10/30 혁: 5:59 → 6:00 땡 하고 바뀌게)
     img = SRC.copy().astype(np.uint8)
     s = t % 60; si = int(s); fr = s - si
     tick = si + min(1.0, fr / 0.08) + 0.12 * np.sin(min(1.0, fr / 0.25) * np.pi) * (fr < 0.25)  # 째깍: 0.08초에 넘어가고 살짝 튕김
     m = (t / 60) % 60; h = (t / 3600) % 12
+    if snap_min: m = np.floor(t / 60) % 60; h = (np.floor(t / 60) / 60) % 12
     hand(img, h / 12 * 2 * np.pi, -0.08, 0.48, 26, (70, 50, 60))
     hand(img, m / 60 * 2 * np.pi, -0.1, 0.74, 18, (70, 50, 60))
     hand(img, tick / 60 * 2 * np.pi, -0.18, 0.84, 6, (60, 60, 220))
