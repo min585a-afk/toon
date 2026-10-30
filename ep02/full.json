@@ -22,8 +22,8 @@
     [
      1.4,
      99,
-     "은서 씨~?",
-     "Eunseo~?"
+     "- 은서 씨~?",
+     "- Eunseo~?"
     ]
    ]
   },
@@ -39,20 +39,20 @@
     [
      1.375,
      99,
-     "퇴근 후에 뭐 해~?",
-     "Whatcha doin' after work~?"
+     "- 퇴근 후에 뭐 해~?",
+     "- Whatcha doin' after work~?"
     ]
    ]
   },
   {
    "file": "ep02/s5-gyul-huh.mp4",
-   "ko": "예? 왜요?",
-   "en": "Huh? Why?"
+   "ko": "- 예? 왜요?",
+   "en": "- Huh? Why?"
   },
   {
    "file": "ep02/s6-butter-gesture.mp4",
-   "ko": "끝나고 저녁 어때~?",
-   "en": "Dinner after work~?"
+   "ko": "- 끝나고 저녁 어때~?",
+   "en": "- Dinner after work~?"
   },
   {
    "file": "ep02/s7-clock557.mp4",
@@ -61,18 +61,18 @@
   },
   {
    "file": "ep02/s8-gyul-haha.mp4",
-   "ko": "하하…",
-   "en": "Ha… haha…"
+   "ko": "- 하하…",
+   "en": "- Ha… haha…"
   },
   {
    "file": "ep02/s9-butter-menu.mp4",
-   "ko": "삼겹살? 아니면 닭발?",
-   "en": "Pork belly? Or chicken feet?"
+   "ko": "- 삼겹살? 아니면 닭발?",
+   "en": "- Pork belly? Or chicken feet?"
   },
   {
    "file": "ep02/s10-gyul-zip.mp4",
-   "ko": "음… 글쎄요…",
-   "en": "Umm… well…"
+   "ko": "- 음… 글쎄요…",
+   "en": "- Umm… well…"
   },
   {
    "file": "ep02/s11-clock559.mp4",
@@ -81,8 +81,8 @@
   },
   {
    "file": "ep02/s12-butter-wine.mp4",
-   "ko": "어머나~ 갈비도 맛있겠다~",
-   "en": "Oh~ I like LA galbi~"
+   "ko": "- 어머나~ 갈비도 맛있겠다~",
+   "en": "- Oh~ I like LA galbi~"
   },
   {
    "file": "ep02/s14-clock600.mp4",
@@ -103,8 +103,8 @@
   },
   {
    "file": "ep02/s15-butter-dream.mp4",
-   "ko": "은서 씨, 어때~?",
-   "en": "Eunseo, how about it~?"
+   "ko": "- 은서 씨, 어때~?",
+   "en": "- Eunseo, how about it~?"
   },
   {
    "file": "ep02/s16-empty.mp4",
@@ -113,8 +113,8 @@
   },
   {
    "file": "ep02/s17-butter-frozen.mp4",
-   "ko": "…은서 씨?",
-   "en": "…Eunseo?"
+   "ko": "- …은서 씨?",
+   "en": "- …Eunseo?"
   },
   {
    "file": "ep02/e-end.mp4",

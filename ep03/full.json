@@ -10,47 +10,47 @@
     [
      0,
      2.46,
-     "흐음……",
-     "Hmm……"
+     "- 흐음……",
+     "- Hmm……"
     ],
     [
      2.46,
      3.3,
-     "아니야!",
-     "Nope!"
+     "- 아니야!",
+     "- Nope!"
     ],
     [
      3.3,
      99,
-     "너는 부족한 게 없어!",
-     "You're not lacking anything!"
+     "- 너는 부족한 게 없어!",
+     "- You're not lacking anything!"
     ]
    ]
   },
   {
    "file": "ep03/s2-sharala.mp4",
-   "ko": "얼굴도 이쁘지~",
-   "en": "So pretty~"
+   "ko": "- 얼굴도 이쁘지~",
+   "en": "- So pretty~"
   },
   {
    "file": "ep03/s3-fashion.mp4",
-   "ko": "옷도 잘 입지!",
-   "en": "Great style, too!"
+   "ko": "- 옷도 잘 입지!",
+   "en": "- Great style, too!"
   },
   {
    "file": "ep03/s4-number.mp4",
-   "ko": "내가 남자였으면 바로 번호 땄어!",
-   "en": "If I were a guy, I'd ask for your number!"
+   "ko": "- 내가 남자였으면 바로 번호 땄어!",
+   "en": "- If I were a guy, I'd ask for your number!"
   },
   {
    "file": "ep03/s5-work.mp4",
-   "ko": "넌 일도 잘하고~",
-   "en": "You're great at work~"
+   "ko": "- 넌 일도 잘하고~",
+   "en": "- You're great at work~"
   },
   {
    "file": "ep03/s6-bride.mp4",
-   "ko": "1등 신부감이야!",
-   "en": "You're total wife material!"
+   "ko": "- 1등 신부감이야!",
+   "en": "- You're total wife material!"
   },
   {
    "file": "ep03/s10-door.mp4",
@@ -58,8 +58,8 @@
     [
      0,
      5.17,
-     "모과야, 다녀올게~!",
-     "Mogwa, I'm off~!"
+     "- 모과야, 다녀올게!",
+     "- Mogwa, I'm off!"
     ],
     [
      5.17,
@@ -174,7 +174,7 @@
    1.0
   ],
   [
-   "voice/ep03/s10-1-use.wav",
+   "voice/ep03/s10-2-use.wav",
    "s10-door",
    0.35,
    1.0

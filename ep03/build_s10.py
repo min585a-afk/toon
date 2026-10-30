@@ -26,19 +26,17 @@ n_, lab, st, cc = cv2.connectedComponentsWithStats(dm); i_ = 1 + np.argmax(st[1:
 def view(fr, z, fx, fy):                                         # (fx, fy) 를 가운데로 z 배 확대
     M = np.float32([[z * W / SW, 0, W / 2 - z * W / SW * fx], [0, z * H / SH, H / 2 - z * H / SH * fy]])
     return cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_REPLICATE)
-Z, ZIN, HOLD, ZOUT = 2.6, 0.25, 1.7, 0.3                         # 확대 배율 · 들어가는 시간 · 머묾 · 빠지는 시간
+Z, ZIN, HOLD, ZOUT = 2.6, 0.0, 1.7, 0.0                           # 혁 10/30: 줌인 말고 그냥 확대 컷 (바로 툭 · 바로 툭 돌아옴)
 frames = []
 for i in range(len(A)): frames.append(view(A[i], 1, SW / 2, SH / 2))
 ZOOM_AT = len(frames) / FPS
 n = int((ZIN + HOLD + ZOUT) * FPS)
 for k in range(n):
     t = k / FPS
-    if t < ZIN: p = 1 - (1 - t / ZIN) ** 3
-    elif t < ZIN + HOLD: p = 1
-    else: p = 1 - ((t - ZIN - HOLD) / ZOUT) ** 2
+    p = 1
     z = 1 + (Z - 1) * p; fx = SW / 2 + (cx - SW / 2) * p; fy = SH / 2 + (cy - SH / 2) * p
     fr = view(END, z, fx, fy)
-    if ZIN * 0.6 < t < ZIN + HOLD: fr = card(fr, '모과', '(3살)', 540, 730, 0, alpha=fade(int((t - ZIN * 0.6) * FPS), int((HOLD + ZIN * 0.4) * FPS)))
+    fr = card(fr, '모과', '(3살)', 540, 730, 0, alpha=fade(k, n))
     frames.append(fr)
 BACK_AT = len(frames) / FPS
 for i in range(0, 100): frames.append(view(B[i], 1, SW / 2, SH / 2))
