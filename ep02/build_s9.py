@@ -31,7 +31,8 @@ def unglint(fr):                                                 # 영상에 박
     if core.sum() == 0: return fr
     ys, xs = np.nonzero(core); cy, cx = ys.mean(), xs.mean()
     yy, xx = np.mgrid[0:c.shape[0], 0:c.shape[1]]; near = (yy - cy) ** 2 + (xx - cx) ** 2 < 22 ** 2
-    m = near & (((h[..., 2] > 205) & (h[..., 1] < 45)) | core)      # 별 + 둘레 하얀 빛 (이빨은 V 190 쯤이라 거의 안 걸림)
+    tick = (np.abs(xx - cx) <= 4) & (yy > cy) & (yy - cy < 24) & (h[..., 2] > 210) & (h[..., 1] < 125)   # 혀 위로 내려간 별 꼬리 (혁 10/30)
+    m = (near & (((h[..., 2] > 205) & (h[..., 1] < 45)) | core)) | tick          # 별 + 둘레 하얀 빛 (이빨은 V 190 쯤이라 거의 안 걸림)
     m = cv2.dilate(m.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
     for r in np.unique(np.nonzero(m)[0]):                        # 줄마다 왼쪽 · 오른쪽 안 빛난 색으로 이어 칠함 (이빨 · 입술선 · 혀 경계가 가로라 맞음)
         row = m[r]; ok = np.nonzero(~row)[0]
