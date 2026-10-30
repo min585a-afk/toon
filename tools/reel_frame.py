@@ -9,7 +9,7 @@ W, H, TOP, VH = 1080, 1920, 420, 810
 FJ, FG = 'tools/fonts/jua.ttf', 'tools/fonts/ga1-800.ttf'
 
 
-def slanted(o, text, font, fill, y, x_right_pad=30, track=-2):
+def slanted(o, text, font, fill, y, x_right_pad=0, track=-2):   # 10/30 혁: 가운데 아님 → 왼쪽으로 30px 밀던 것 뺌
     d = ImageDraw.Draw(o)
     ws = [d.textlength(ch, font=font) for ch in text]
     tw = int(sum(ws) + track * (len(text) - 1)) + 60                    # track = 자간 (음수면 좁게, 혁 10/28)
