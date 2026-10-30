@@ -20,7 +20,9 @@ def dogc(fr):                                                    # 모과 가운
     n, lab, st, c = cv2.connectedComponentsWithStats(m)
     if n < 2: return SW / 2, SH * .55
     i = 1 + np.argmax(st[1:, 4]); return c[i]
-END = A[-1]; cx, cy = dogc(END)
+END = A[-1]
+dm = (cv2.GaussianBlur(np.abs(B[0].astype(int) - B[-1].astype(int)).sum(2).astype(np.float32), (0, 0), 6) > 60).astype(np.uint8)   # 모과 자리 = 모과 있을 때 − 나간 뒤
+n_, lab, st, cc = cv2.connectedComponentsWithStats(dm); i_ = 1 + np.argmax(st[1:, 4]); cx, cy = cc[i_]; cy -= st[i_, 3] * 0.15   # 얼굴 쪽으로 살짝 위
 def view(fr, z, fx, fy):                                         # (fx, fy) 를 가운데로 z 배 확대
     M = np.float32([[z * W / SW, 0, W / 2 - z * W / SW * fx], [0, z * H / SH, H / 2 - z * H / SH * fy]])
     return cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_REPLICATE)
