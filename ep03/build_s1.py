@@ -1,5 +1,5 @@
 """EP03 장면 1: H3 영상(ep03/video/s1-think-talk-h3.mp4, 10cr) — 팔짱 -ㅅ- 흐음… → 눈 번쩍 말 터짐.
-영상 52~58 프레임(팔 풀 때 손이 뭉개진 중간 그림, 혁 10/30 '이런 건?') 은 빼고 50 → 60 으로 바로 넘김 + 넘어가는 순간 확 다가왔다 돌아오는 줌(애니 '번쩍' 컷). 12fps. 크레딧 0.
+영상 52~58 프레임(팔 풀 때 손이 뭉개진 중간 그림) 대신 깨끗하게 다시 그린 '두 손 번쩍' 키 그림(ep03/s1-handsup.png, 1cr)을 0.33초 넣음 (혁 10/30: 손 드는 동작은 좋은데 뭉개짐만 문제) + 그 순간 확 다가왔다 돌아오는 줌. 12fps. 크레딧 0.
 usage: python3 ep03/build_s1.py → ep03/s1-think-talk.mp4
 """
 import subprocess, tempfile, shutil
@@ -11,7 +11,8 @@ while True:
     ok, fr = cap.read()
     if not ok: break
     v.append(cv2.resize(fr, (W, H), interpolation=cv2.INTER_AREA))
-seq = list(range(0, CUT_A + 1)) + list(range(CUT_B, len(v))); tmp = tempfile.mkdtemp()
+KEY = cv2.resize(cv2.imread('ep03/s1-handsup.png'), (W, H), interpolation=cv2.INTER_AREA); HOLD = 8
+v.append(KEY); seq = list(range(0, CUT_A + 1)) + [len(v) - 1] * HOLD + list(range(CUT_B, len(v) - 1)); tmp = tempfile.mkdtemp()
 for k in range(len(seq)):
     j = seq[k - k % 2]; fr = v[j]; a = k - (CUT_A + 1)
     if 0 <= a < 8:                                               # 번쩍: 1.1배로 확 → 4프레임 동안 돌아옴
