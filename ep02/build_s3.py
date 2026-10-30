@@ -5,7 +5,7 @@ import subprocess, tempfile, wave
 import numpy as np, cv2, sys
 sys.path.insert(0, 'tools'); from recolor_outfit import to_black
 FPS, W, H, SR = 24, 1080, 810, 44100
-TYPE, LOOK = 1.6, 0.9                                          # 은서 혼자 타닥 → 최버터가 왼쪽에서 다가옴(0.8~1.6초) → 눈 위로(영상 끝 0.9초)
+TYPE, LOOK = 1.6, 1.6                                          # 은서 혼자 타닥 → 최버터가 왼쪽에서 다가옴(0.8~1.6초) → 눈 위로(영상 끝 0.9초 + 마지막 그림 0.7초 · 혁 10/30 "은서 씨~?" 끝까지)
 IN0, IN1 = 0.75, 1.55                                          # 다가오는 구간 (혁 10/29: 일하는 은서에게 최버터가 오는 연결)
 cap = cv2.VideoCapture('ep01b/video/c00-gyul-type-look-h3.mp4'); vf = cap.get(cv2.CAP_PROP_FPS); v = []
 while True:

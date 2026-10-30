@@ -15,10 +15,10 @@ while True:
 E = cv2.resize(cv2.imread('ep02/s3-butter-back2.png'), (W, H), interpolation=cv2.INTER_AREA).astype(np.float32)
 M = cv2.GaussianBlur((cv2.imread('ep02/s3-butter-back2-mask.png', 0) > 127).astype(np.float32), (0, 0), 2)[..., None]
 n = int((V1 - V0) / SPD * FPS); tmp = tempfile.mkdtemp()
-VOICE, V_AT = 'voice/ep02/gyul-lines/s5-2-use.wav', 4 / FPS      # "예? 왜요?" (예 0.02~0.25 · 왜요 0.64~1.04초) · 입 벌리는 4번 프레임에 시작
+VOICE, V_AT = 'voice/ep02/gyul-lines/s5-3-use.wav', 4 / FPS      # "예? 왜요?" (예 0.02~0.34 · 왜요 0.82~1.4초 · 혁 10/30 끝 안 잘린 걸로) · 입 벌리는 4번 프레임에 시작
 # 영상은 입이 '예?' 한 번만 벌어짐 (4~9) → 쉬는 동안 다문 입(10 · 11) 잡고, '왜요?' 때 4~9 한 번 더 (혁 10/29: 다음 장면 대사까지 입혀서)
 # 혁 10/29: '왜요?' 뒤 늦게 천천히 눈 돌리는 게 너무 정적 → 왜요 끝나자마자 빠르게 눈 휙 + '?' 뿅(하테나 소리) · 멍하니 보는 구간 줄이고 바로 깜빡
-SEQ = list(range(10)) + [10, 10, 11, 11] * 2 + [10] + [4, 4, 5, 5, 6, 6, 7, 7, 8, 9] + [15, 15, 18, 18, 21, 21, 24, 24] + list(range(24, 36)) + list(range(62, n))
+SEQ = list(range(10)) + [10, 10, 11, 11] * 3 + [10, 10] + [4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 8, 9] + [15, 15, 18, 18, 21, 21, 24, 24] + list(range(24, 36)) + list(range(62, n))
 Q_AT = 4                                                         # '?' 뜨는 출력 프레임 (혁 10/29: 처음 '예?' 할 때)
 QI = cv2.imread('ep02/fx/qmark.png', cv2.IMREAD_UNCHANGED)     # GPT Image 로 그린 셀 '?' (1cr · 혁 10/29: 우리 그림체 · 리본 빨강)
 QH = 250                                                         # 화면에서 높이 (살짝 크게)

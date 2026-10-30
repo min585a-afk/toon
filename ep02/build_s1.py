@@ -20,7 +20,7 @@ tks = [rd('sfx/anime/tik-syn.wav'), rd('sfx/anime/tok-syn.wav')]   # 그냥 똑�
 a = np.zeros(int(SEC * SR), np.float32)
 step = max(1.0 / SPEED, 0.07)                                   # 빨리 감기면 째깍도 촤라락
 for i, s in enumerate(np.arange((np.ceil(T0) - T0) / SPEED, SEC, step)):
-    tk = tks[(int(np.ceil(T0)) + i) % 2]; j = int(s * SR); a[j:j + len(tk)] += tk[:len(a) - j] * (0.5 if SPEED == 1 else 0.35)
+    tk = tks[(int(np.ceil(T0)) + i) % 2]; j = int((s + 0.05) * SR); a[j:j + len(tk)] += tk[:len(a) - j] * (0.5 if SPEED == 1 else 0.35)   # +0.05초: 컷 맨 앞 소리는 이어 붙일 때 먹혀서 (10/30 5:57 · 5:59 첫 똑 안 들림)
 if FLASH:
     ding = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/anime/tiring-syn.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
     j = int((18 * 3600 - T0) / SPEED * SR); a[j:j + len(ding)] += ding[:len(a) - j] * 0.8

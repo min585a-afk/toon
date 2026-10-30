@@ -133,7 +133,7 @@ def main():
     subprocess.run(cmd, check=True)
     # 릴스 소리 크기 맞춤 (-14 LUFS · 폰에서 작게 안 들리게)
     os.replace(out, f'{tmp}/pre.mp4')
-    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/pre.mp4', '-c:v', 'copy', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', '44100', '-c:a', 'aac', '-b:a', '192k', out], check=True)
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', f'{tmp}/pre.mp4', '-c:v', 'copy', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.8:attack=2:release=60:level=disabled', '-ar', '44100', '-c:a', 'aac', '-b:a', '192k', out], check=True)   # 10/30: 한 번에 하는 loudnorm 이 +2dB 넘쳐서 리미터로 막음
     print(out, round(total, 1), 's'); [print(f'  {round(a, 2):6.2f}~{round(b, 2):6.2f}  {k}') for a, b, k, _ in times]
 
 

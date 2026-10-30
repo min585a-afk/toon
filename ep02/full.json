@@ -15,12 +15,12 @@
    "subs": [
     [
      0,
-     1.6,
+     1.4,
      "(타닥타닥)",
      "(tap tap)"
     ],
     [
-     1.6,
+     1.4,
      99,
      "은서 씨~?",
      "Eunseo~?"
@@ -132,7 +132,7 @@
    "sfx/anime/wind-syn.wav",
    "s16-empty",
    0.1,
-   0.5
+   0.9
   ],
   [
    "sfx/anime/kirakira-syn.wav",
@@ -147,9 +147,9 @@
    0.45
   ],
   [
-   "voice/ep02/butter-lines/s3-2-use.wav",
+   "voice/ep02/butter-lines/s3-4-use.wav",
    "s3-butter-back",
-   1.65,
+   1.4,
    1.0
   ],
   [

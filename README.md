@@ -63,7 +63,11 @@
   - 영상 만들 때: `--image-references <장면그림> --audio-references voice/ref/girl-voice.wav` + 프롬프트에 "use the exact voice from the reference audio".
   - 후처리도 늘 같게: `rubberband=pitch=1.1:formant=preserved,highpass=f=220,lowpass=f=5500` → 톤이 편마다 같아짐.
 
-## ▶ 이어서 하기 (10/27 최신 · 새 채팅/다른 계정은 여기부터)
+## ▶ 이어서 하기 (10/30 최신 · 새 채팅/다른 계정은 여기부터)
+- **지금 (10/30): 2화 「퇴근 5분 전」 전체본 `ep02/ep02-full.mp4` (46.9초)** — `python3 tools/assemble.py ep02/full.json ep02/ep02-full.mp4`. 콘티 `ep02/CONTI.md` (뒷부분 확정 표). 컷별 `ep02/build_s*.py`. 혁 최종 확인 남음.
+  - 목소리: 은서 `voice/ref/gyul-base.wav` · 최버터 `voice/ref/butter-base.wav` 를 @Audio1 로, 짧은 프롬프트 + **"Finish the last word fully, then one second of silence."** (안 넣으면 끝 글자 잘려 나옴) → `tools/voice_clean.py 원본 out [빠르기]`. 버터는 1.15배.
+  - 소리 점검: 효과음 31곳 다 들림 · -13.7 LUFS · 피크 -1.9dB (assemble 끝에 리미터 넣음).
+  - 크레딧: 한 편 200 이하 (CLAUDE.md). 2화는 이미 넘음 → 남은 건 0cr 위주.
 - **재활용 모음 `ASSETS.md`** (EP01 에서 만든 도구 · 연출 · 소리 · 틀 설정).
 - **지금 (10/28): 1화 「직장인의 스킬」(OFFICE SKILL, 10/29 제목 바뀜 · 예전 이름 두 얼굴) 영상 거의 완성 — `frame/ep01-full.mp4` (41.6초)**. 이어붙이기 `python3 tools/assemble.py ep01b/full.json frame/ep01-full.mp4` (컷별 build 스크립트 `ep01b/build_*.py`).
   - **소리 (10/29)**: 배경음 없음 · 대사 = Seed Audio(`voice/ep01b/*-use.wav`, 끝 딸깍 잘라냄) · 흥얼 확정 `hum-neon3-G4`(자연 흥얼 hum-neon3-raw 를 `tools/hum_psola.py --retune` 로 솔 하나로 고정 · 박자 그대로) · 효과음 코드 합성. 남은 것: 혁 최종 확인 · 자막 소리 괄호 통일 여부.
