@@ -51,6 +51,29 @@
    "file": "ep03/s6-bride.mp4",
    "ko": "1등 신부감이야!",
    "en": "You're total wife material!"
+  },
+  {
+   "file": "ep03/s10-door.mp4",
+   "subs": [
+    [
+     0,
+     5.17,
+     "모과야, 다녀올게~!",
+     "Mogwa, I'm off~!"
+    ],
+    [
+     5.17,
+     7.42,
+     "",
+     ""
+    ],
+    [
+     7.42,
+     99,
+     "(왜 저래…)",
+     "(what's up with her…)"
+    ]
+   ]
   }
  ],
  "sfx": [
@@ -148,6 +171,12 @@
    "voice/ep03/s6-1-use.wav",
    "s6-bride",
    0.2,
+   1.0
+  ],
+  [
+   "voice/ep03/s10-1-use.wav",
+   "s10-door",
+   0.35,
    1.0
   ]
  ]
