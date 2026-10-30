@@ -1,0 +1,12 @@
+{
+ "reel_title": "",
+ "reel_title_en": "",
+ "title_color": "#6dffd9",
+ "watermark": "@byeoltoon",
+ "cuts": [
+  {"file": "ep03/s1-think-talk.mp4", "subs": [[0, 2.46, "흐음……", "Hmm……"], [2.46, 99, "아니야! 너가 시무룩할 필요가 없어!", "Nope! No need to be down!"]]}
+ ],
+ "sfx": [
+  ["voice/ep03/s1-place.wav", "s1-think-talk", 0.0, 1.0]
+ ]
+}

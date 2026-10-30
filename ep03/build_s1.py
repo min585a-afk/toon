@@ -5,7 +5,7 @@ A 61~65 프레임(팔 풀 때 손 뭉개진 2~3장, 혁 10/30)은 빼고 바로 
 usage: python3 ep03/build_s1.py [--nozoom] → ep03/s1-think-talk.mp4 (줌 없이: …-nozoom.mp4)
 """
 import subprocess, tempfile, shutil, sys
-ZOOM = '--nozoom' not in sys.argv; OUT = 'ep03/s1-think-talk.mp4' if ZOOM else 'ep03/s1-think-talk-nozoom.mp4'
+ZOOM = '--zoom' in sys.argv; OUT = 'ep03/s1-think-talk.mp4'   # 혁 10/30: 줌 없는 게 나음 (--zoom 으로 넣을 수 있음)
 import numpy as np, cv2
 FPS, W, H = 24, 1080, 810
 def load(p):
