@@ -26,6 +26,21 @@
      "You're not lacking anything!"
     ]
    ]
+  },
+  {
+   "file": "ep03/s2-sharala.mp4",
+   "ko": "얼굴도 이쁘지~",
+   "en": "So pretty~"
+  },
+  {
+   "file": "ep03/s3-fashion.mp4",
+   "ko": "옷도 잘 입지!",
+   "en": "Great style, too!"
+  },
+  {
+   "file": "ep03/s4-number.mp4",
+   "ko": "내가 남자였으면 바로 번호 땄어!",
+   "en": "If I were a guy, I'd ask for your number!"
   }
  ],
  "sfx": [
@@ -33,6 +48,66 @@
    "voice/ep03/s1-place.wav",
    "s1-think-talk",
    0.0,
+   1.0
+  ],
+  [
+   "sfx/anime/kirakira-syn.wav",
+   "s2-sharala",
+   0.0,
+   0.3
+  ],
+  [
+   "voice/ep03/s2-1-use.wav",
+   "s2-sharala",
+   0.2,
+   1.0
+  ],
+  [
+   "voice/ep03/s3-1-use.wav",
+   "s3-fashion",
+   0.15,
+   1.0
+  ],
+  [
+   "sfx/anime/shutter-syn.wav",
+   "s3-fashion",
+   0.25,
+   0.45
+  ],
+  [
+   "sfx/anime/shutter-syn.wav",
+   "s3-fashion",
+   0.9,
+   0.45
+  ],
+  [
+   "sfx/anime/shutter-syn.wav",
+   "s3-fashion",
+   1.5,
+   0.45
+  ],
+  [
+   "sfx/anime/shutter-syn.wav",
+   "s3-fashion",
+   2.2,
+   0.45
+  ],
+  [
+   "sfx/anime/shutter-syn.wav",
+   "s3-fashion",
+   2.7,
+   0.45
+  ],
+  [
+   "sfx/anime/heartbeat-syn.wav",
+   "s4-number",
+   0.0,
+   0.35
+  ],
+  [
+   "voice/ep03/s4-1-use.wav",
+   "s4-number",
+   0.25,
    1.0
   ]
  ]

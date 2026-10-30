@@ -153,6 +153,12 @@ def ttaeng():                                       # 땡!: 쇠종 한 번 세�
     y = verb(x * np.minimum(1, t / 0.002), 1.0, 0.3); return np.tanh(2.5 * y / np.abs(y).max())   # 살짝 눌러서 '땡!' 세게
 
 
+def shutter():                                      # 찰칵: 옛날 필름 카메라 셔터 (패셔니스타 플래시)
+    t = t_(0.12); x = rng.normal(0, 1, len(t)) * (np.exp(-t * 200) + 0.6 * np.exp(-np.maximum(0, t - 0.05) * 260) * (t > 0.05))
+    x += 0.4 * np.sin(2 * np.pi * 1800 * t) * np.exp(-t * 120)
+    return verb(x, 0.2, 0.1)
+
+
 def wind():                                         # 휘잉: 짧은 바람 한 줄기 (빈자리 · 혁 10/30)
     d = 3.0; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.minimum(1, t / 0.5) * np.minimum(1, (d - t) / 0.9) * (1 + 0.25 * np.sin(2 * np.pi * 2.2 * t))   # 10/30: 빈자리 장면(3초) 내내
     y = np.zeros_like(n); f = 500 + 900 * np.sin(np.pi * t / d); a = 0.0; lp = 0.0; bp = 0.0
@@ -168,7 +174,7 @@ def gloom():                                        # 우울 '뿌우우~' (축 �
     return verb(x * 0.5, 0.6, 0.25)
 
 
-ALL = dict(ttaeng=ttaeng, wind=wind, gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
+ALL = dict(shutter=shutter, ttaeng=ttaeng, wind=wind, gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85

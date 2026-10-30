@@ -1,5 +1,6 @@
 """EP03 상상 컷 '샤랄라' (0cr): 그림 한 장 + 옛날 애니식 움직임 — 반짝이 깜빡깜빡 · 꽃잎 팔랑 떨어짐 · 비눗방울 둥실 · 아주 천천히 다가감. 12fps.
-usage: python3 ep03/build_sharala.py 그림.png 초 out.mp4
+usage: python3 ep03/build_sharala.py 그림.png 초 out.mp4 [--flash] [--shake]
+  --flash: 카메라 플래시 팡팡 (패셔니스타) · --shake: 시작에 깜짝 놀라 흔들림 (번호 컷)
 """
 import subprocess, tempfile, shutil, sys
 import numpy as np, cv2
@@ -10,10 +11,14 @@ img = cv2.resize(cv2.imread(src), (W, H), interpolation=cv2.INTER_AREA); rng = n
 STARS = [(rng.uniform(60, 1020), rng.uniform(40, 770), rng.uniform(0, 1.2)) for _ in range(9)]
 PET = [dict(x=rng.uniform(0, W), y=rng.uniform(-H, H), s=rng.uniform(14, 26), sp=rng.uniform(60, 120), ph=rng.uniform(0, 6)) for _ in range(14)]
 BUB = [dict(x=rng.uniform(80, 1000), y=rng.uniform(200, 900), r=rng.uniform(18, 40), sp=rng.uniform(25, 50)) for _ in range(6)]
+FLASH, SHAKE = '--flash' in sys.argv, '--shake' in sys.argv
+FL = [(0.25, 120, 90), (0.9, 980, 120), (1.5, 140, 700), (2.2, 960, 690), (2.7, 560, 60)]   # (초, x, y) 플래시 터지는 곳
 tmp = tempfile.mkdtemp(); n = int(sec * FPS)
 for k in range(n):
     t = (k - k % 2) / FPS; z = 1 + 0.03 * t / sec
-    fr = cv2.warpAffine(img, cv2.getRotationMatrix2D((W / 2, H / 2), 0, z), (W, H), borderMode=cv2.BORDER_REPLICATE).astype(np.float32)
+    M = cv2.getRotationMatrix2D((W / 2, H / 2), 0, z)
+    if SHAKE and t < 0.5: M[0, 2] += 10 * np.sin(t * 60) * (1 - t / 0.5); M[1, 2] += 6 * np.cos(t * 50) * (1 - t / 0.5)
+    fr = cv2.warpAffine(img, M, (W, H), borderMode=cv2.BORDER_REPLICATE).astype(np.float32)
     lay = np.zeros_like(fr); al = np.zeros((H, W), np.float32)
     for p in BUB:                                                # 비눗방울: 테두리만 하얗게 · 위로 둥실
         y = (p['y'] - p['sp'] * t) % (H + 100) - 50; c = (int(p['x'] + 8 * np.sin(t * 2 + p['r'])), int(y))
@@ -23,6 +28,13 @@ for k in range(n):
         y = (p['y'] + p['sp'] * t) % (H + 120) - 60; x = p['x'] + 30 * np.sin(t * 1.5 + p['ph'])
         cv2.ellipse(fr, (int(x), int(y)), (int(p['s']), int(p['s'] * .55)), (t * 90 + p['ph'] * 50) % 180, 0, 360, (190, 170, 245), -1, cv2.LINE_AA)
         cv2.ellipse(fr, (int(x), int(y)), (int(p['s']), int(p['s'] * .55)), (t * 90 + p['ph'] * 50) % 180, 0, 360, (150, 120, 210), 1, cv2.LINE_AA)
+    if FLASH:
+        yy, xx = np.mgrid[0:H, 0:W]
+        for t0, fx, fy in FL:
+            a = t - t0
+            if 0 <= a < 0.25:
+                g = np.exp(-((xx - fx) ** 2 + (yy - fy) ** 2) / (2 * 260 ** 2)) * (1 - a / 0.25)
+                fr = fr + (255 - fr) * (g[..., None] * 0.9 + 0.25 * (1 - a / 0.25) * (a < 0.09))
     fr = np.clip(fr, 0, 255).astype(np.uint8)
     for x, y, t0 in STARS:                                       # 반짝이 깜빡
         ph = ((t + t0) % 1.2) / 0.5
