@@ -31,3 +31,5 @@ L = min(len(a), int(1.1 * SR)); a[:L] += np.tile(ty, 3)[:L] * np.linspace(0.12, 
 with wave.open(f'{tmp}/a.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(a, -1, 1) * 32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', f'{tmp}/a.wav', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep02/s2-gyul-monitor.mp4'], check=True)
 print('ep02/s2-gyul-monitor.mp4', SEC, 's')
+
+import shutil; shutil.rmtree(tmp, ignore_errors=True)   # 임시 프레임 지움 (10/30 디스크 꽉 참)

@@ -139,3 +139,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+import shutil; shutil.rmtree(tmp, ignore_errors=True)   # 임시 프레임 지움 (10/30 디스크 꽉 참)

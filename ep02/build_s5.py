@@ -42,3 +42,5 @@ for k, j in enumerate(SEQ):
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-i', 'sfx/anime/hatena-syn.wav', '-filter_complex', f'[1:a]adelay={int(V_AT * 1000)}:all=1[v];[2:a]volume=0.3,adelay={int(Q_AT / FPS * 1000)}:all=1[q];[v][q]amix=2:normalize=0,apad[a]',
                 '-map', '0:v', '-map', '[a]', '-t', str(len(SEQ) / FPS), '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', 'ep02/s5-gyul-huh.mp4'], check=True)
 print('ep02/s5-gyul-huh.mp4', round(len(SEQ) / FPS, 2), 's')
+
+import shutil; shutil.rmtree(tmp, ignore_errors=True)   # 임시 프레임 지움 (10/30 디스크 꽉 참)
