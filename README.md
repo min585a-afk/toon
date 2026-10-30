@@ -64,7 +64,7 @@
   - 후처리도 늘 같게: `rubberband=pitch=1.1:formant=preserved,highpass=f=220,lowpass=f=5500` → 톤이 편마다 같아짐.
 
 ## ▶ 이어서 하기 (10/30 최신 · 새 채팅/다른 계정은 여기부터)
-- **지금 (10/30): 2화 「퇴근 5분 전」 전체본 `ep02/ep02-full.mp4` (46.9초)** — `python3 tools/assemble.py ep02/full.json ep02/ep02-full.mp4`. 콘티 `ep02/CONTI.md` (뒷부분 확정 표). 컷별 `ep02/build_s*.py`. 혁 최종 확인 남음.
+- **지금 (10/30): 2화 「눈치 게임」(THE ESCAPE GAME) 전체본 `ep02/ep02-full.mp4` (46.9초)** — `python3 tools/assemble.py ep02/full.json ep02/ep02-full.mp4`. 콘티 `ep02/CONTI.md` (뒷부분 확정 표). 컷별 `ep02/build_s*.py`. 혁 최종 확인 남음.
   - 목소리: 은서 `voice/ref/gyul-base.wav` · 최버터 `voice/ref/butter-base.wav` 를 @Audio1 로, 짧은 프롬프트 + **"Finish the last word fully, then one second of silence."** (안 넣으면 끝 글자 잘려 나옴) → `tools/voice_clean.py 원본 out [빠르기]`. 버터는 1.15배.
   - 소리 점검: 효과음 31곳 다 들림 · -13.7 LUFS · 피크 -1.9dB (assemble 끝에 리미터 넣음).
   - 크레딧: 한 편 200 이하 (CLAUDE.md). 2화는 이미 넘음 → 남은 건 0cr 위주.
