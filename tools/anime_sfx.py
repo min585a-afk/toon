@@ -145,8 +145,16 @@ def tik(): return _click(3200, 260)                  # 똑 (높게)
 def tok(): return _click(2100, 220)                  # 딱 (조금 낮게)
 
 
+def ttaeng():                                       # 땡!: 쇠종 한 번 세게 (정각 · 혁 10/30) — 때리는 소리 + 금속 배음 길게 울림
+    d = 1.8; t = t_(d); f = 784
+    x = sum(a * np.sin(2 * np.pi * f * r * t + r) * np.exp(-t * k) for r, a, k in ((1, 1, 2.2), (2.0, .6, 3), (2.42, .5, 3.5), (3.0, .35, 4.5), (4.16, .25, 6), (5.43, .18, 8), (0.5, .3, 1.8)))
+    x *= 1 + 0.08 * np.sin(2 * np.pi * 4.5 * t)                  # 종 떨림
+    x += rng.normal(0, 1, len(t)) * np.exp(-t * 120) * 0.9         # 땡 치는 순간
+    y = verb(x * np.minimum(1, t / 0.002), 1.0, 0.3); return np.tanh(2.5 * y / np.abs(y).max())   # 살짝 눌러서 '땡!' 세게
+
+
 def wind():                                         # 휘잉: 짧은 바람 한 줄기 (빈자리 · 혁 10/30)
-    d = 1.1; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.sin(np.pi * t / d) ** 1.5 * (1 + 0.25 * np.sin(2 * np.pi * 3.3 * t))
+    d = 1.9; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.sin(np.pi * t / d) ** 1.2 * (1 + 0.25 * np.sin(2 * np.pi * 2.6 * t))   # 10/30: 0.8초 더 길게
     y = np.zeros_like(n); f = 500 + 900 * np.sin(np.pi * t / d); a = 0.0; lp = 0.0; bp = 0.0
     for i in range(len(n)):                                       # 움직이는 공진 필터 (바람 '휘~' 음높이 올라갔다 내려감)
         w = 2 * np.pi * f[i] / SR; lp += w * bp; hp = n[i] - lp - 0.12 * bp; bp += w * hp; y[i] = bp
@@ -160,7 +168,7 @@ def gloom():                                        # 우울 '뿌우우~' (축 �
     return verb(x * 0.5, 0.6, 0.25)
 
 
-ALL = dict(wind=wind, gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
+ALL = dict(ttaeng=ttaeng, wind=wind, gloom=gloom, tick=tick, tik=tik, tok=tok, fire=fire, heartbeat=heartbeat, whoosh=whoosh, tiyong=tiyong, zawa=zawa, tension=tension, kiran=kiran, hatena=hatena, gogogo=gogogo, kirakira=kirakira, pyororong=pyororong, poyon=poyon, pikit=pikit, tiring=tiring)
 if __name__ == '__main__':
     for name in sys.argv[1:] or ALL:
         x = ALL[name](); x = x / (np.abs(x).max() + 1e-9) * 0.85

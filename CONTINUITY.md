@@ -57,3 +57,6 @@
 - 마무리: 전체 이어붙이기 → `tools/mood.py` 25% → `tools/reel_frame.py` (9:16 틀 · 제목 · 한글+영어 자막, README '릴스 틀 확정').
 - **이어붙이기 = `python3 tools/assemble.py ep01b/rough-A.json out.mp4`** (컷 순서 · 컷별 자막 · 화 제목 · 배경음 `brand/bgm/` · 대사부터 배경음 작게). 보여줄 땐 항상 이어붙인 버전으로.
 - **효과음 = 우리가 코드로 만든 옛날 TV 애니 재질 소리** (혁 10/28: 저작권 걱정 없게 · 잘 나온 건 재활용). `tools/anime_sfx.py` → OK 받은 것만 `sfx/lib/` (목록 `sfx/lib/README.md`). 남의 효과음 파일은 안 씀.
+
+## 끝 장면 (혁 10/30)
+- **끝 = 한 문장 펀치라인** (우리 하이라이트). '끝' 대신 그 화를 한 문장으로 딱 끊는 말 — 2화 `회식 안 해.` / `NO TEAM DINNER.` (검정 화면 · 나눔명조 ExtraBold · 아래 영어 작게 · 0.4초 페이드 인 · 띠링). 만들기 `ep02/build_end.py` (글자 subset 은 Google Fonts css2 `?text=` 로 그 화 글자만).

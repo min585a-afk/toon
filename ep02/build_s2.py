@@ -26,6 +26,8 @@ for k in range(int(SEC * FPS)):
     fr = fr * (1 - f) + np.float32([255, 225, 185]) * f            # 차가운 하늘빛 (BGR)
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 a = np.zeros(int(SEC * SR), np.float32)                        # 시계 소리 없음 (혁 10/29: 장면 2 는 조용히 '흐음…'만)
+ty = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/typing-norm.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+L = min(len(a), int(1.1 * SR)); a[:L] += np.tile(ty, 3)[:L] * np.linspace(0.12, 0, L)   # 10/30 혁: 퇴근각 재는 중에 키보드 조금 (작게 시작해서 사라짐)
 with wave.open(f'{tmp}/a.wav', 'w') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(a, -1, 1) * 32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', f'{tmp}/a.wav', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', 'ep02/s2-gyul-monitor.mp4'], check=True)
 print('ep02/s2-gyul-monitor.mp4', SEC, 's')

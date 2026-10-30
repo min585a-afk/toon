@@ -34,7 +34,7 @@ for k in range(n):
     m2 = m2.reshape(H, W, 1)
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', np.clip(fr * (1 - m2) + e2 * m2, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 93])
 typing = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/typing-norm.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
-a = np.zeros(int(n / FPS * SR), np.float32); L = int(TYPE * SR); a[:L] = np.tile(typing, 3)[:L] * 0.45; a[L - 800:L] *= np.linspace(1, 0, 800)
+a = np.zeros(int(n / FPS * SR), np.float32); L = int(TYPE * SR); a[:L] = np.tile(typing, 3)[:L] * 0.25; a[L - 800:L] *= np.linspace(1, 0, 800)   # 10/30 혁: 키보드 너무 큼 (0.45 → 0.25)
 step = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'sfx/ep01/heel-step.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
 for i, t in enumerate(np.arange(0.35, IN1 + 0.01, 0.3)):
     j = int(t * SR); a[j:j + len(step)] += step[:len(a) - j] * (0.12 + 0.1 * i)

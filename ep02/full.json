@@ -117,7 +117,7 @@
    "en": "…Eunseo?"
   },
   {
-   "file": "ep01b/e9-end.mp4",
+   "file": "ep02/e-end.mp4",
    "ko": "",
    "en": "",
    "no_title": true
@@ -132,7 +132,7 @@
    "sfx/anime/wind-syn.wav",
    "s16-empty",
    0.1,
-   0.9
+   0.6
   ],
   [
    "sfx/anime/kirakira-syn.wav",
@@ -142,7 +142,7 @@
   ],
   [
    "sfx/anime/tiring-syn.wav",
-   "e9-end",
+   "e-end",
    0.35,
    0.45
   ],
@@ -187,6 +187,12 @@
    "s17-butter-frozen",
    0.5,
    1.0
+  ],
+  [
+   "sfx/anime/pyororong-syn.wav",
+   "s12-butter-wine",
+   3.05,
+   0.4
   ]
  ]
 }
