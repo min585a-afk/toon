@@ -18,7 +18,7 @@ while True:
 kt, kf = zip(*KEY); seq = []
 for k in range(int((LEAD + kt[-1]) * FPS)): t = (k - k % 2) / FPS - LEAD; seq.append(int(np.interp(t, kt, kf)))
 seq += list(range(*TAIL)); tmp = tempfile.mkdtemp()
-for k, j in enumerate(seq): cv2.imwrite(f'{tmp}/{k:05d}.jpg', v[min(len(v) - 1, j - j % 2 if k % 2 else j)], [cv2.IMWRITE_JPEG_QUALITY, 93])
+for k, j in enumerate(seq): cv2.imwrite(f'{tmp}/{k:05d}.jpg', v[min(len(v) - 1, j)], [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-filter_complex', f'[1:a]adelay={int(LEAD * 1000)}:all=1,apad[a]',
                 '-map', '0:v', '-map', '[a]', '-t', str(len(seq) / FPS), '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', 'ep02/s9-butter-menu.mp4'], check=True)
 print('ep02/s9-butter-menu.mp4', round(len(seq) / FPS, 2), 's')
