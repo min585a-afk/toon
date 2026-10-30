@@ -25,9 +25,23 @@ def tooth(fr):                                                   # 이빨 반짝
     n, lab, st, c = cv2.connectedComponentsWithStats(m)
     if n < 2: return None
     i = 1 + np.argmax(st[1:, 4]); return int(c[i][0]) + 480, int(c[i][1]) + 360
+def unglint(fr):                                                 # 영상에 박힌 이빨 반짝 점 지움 (혁 10/30: 계속 있음 → 반짝! 한 번만)
+    y0, x0 = 340, 440; c = fr[y0:460, x0:700].astype(np.float32); h = cv2.cvtColor(fr[y0:460, x0:700], cv2.COLOR_BGR2HSV)
+    core = (h[..., 2] > 242) & (h[..., 1] < 30)
+    if core.sum() == 0: return fr
+    ys, xs = np.nonzero(core); cy, cx = ys.mean(), xs.mean()
+    yy, xx = np.mgrid[0:c.shape[0], 0:c.shape[1]]; near = (yy - cy) ** 2 + (xx - cx) ** 2 < 22 ** 2
+    m = near & (((h[..., 2] > 205) & (h[..., 1] < 45)) | core)      # 별 + 둘레 하얀 빛 (이빨은 V 190 쯤이라 거의 안 걸림)
+    m = cv2.dilate(m.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+    for r in np.unique(np.nonzero(m)[0]):                        # 줄마다 왼쪽 · 오른쪽 안 빛난 색으로 이어 칠함 (이빨 · 입술선 · 혀 경계가 가로라 맞음)
+        row = m[r]; ok = np.nonzero(~row)[0]
+        if len(ok) < 2: continue
+        bad = np.nonzero(row)[0]
+        for ch in range(3): c[r, bad, ch] = np.interp(bad, ok, c[r, ok, ch])
+    out = fr.copy(); out[y0:460, x0:700] = np.clip(c, 0, 255).astype(np.uint8); return out
 for k, j in enumerate(seq):
-    fr = v[min(len(v) - 1, j)].copy(); t = (k - k % 2) / FPS
-    if GLINT[0] <= t <= GLINT[1] and (p := tooth(fr)):
+    fr = v[min(len(v) - 1, j)].copy(); t = (k - k % 2) / FPS; p = tooth(fr); fr = unglint(fr)
+    if GLINT[0] <= t <= GLINT[1] and p:
         ph = (t - GLINT[0]) / (GLINT[1] - GLINT[0]); fr = star(fr, p[0], p[1], int(40 * np.sin(ph * np.pi)))
     cv2.imwrite(f'{tmp}/{k:05d}.jpg', fr, [cv2.IMWRITE_JPEG_QUALITY, 93])
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-framerate', str(FPS), '-i', f'{tmp}/%05d.jpg', '-i', VOICE, '-i', 'sfx/anime/kiran-syn.wav', '-filter_complex', f'[1:a]adelay={int(LEAD * 1000)}:all=1[v];[2:a]volume=0.35[g];[v][g]amix=2:normalize=0,apad[a]',
