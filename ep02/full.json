@@ -71,35 +71,30 @@
   },
   {
    "file": "ep02/s10-gyul-zip.mp4",
-   "ko": "음… 글쎄요오…",
+   "ko": "음… 글쎄요…",
    "en": "Umm… well…"
   },
   {
-   "file": "ep02/s11-clock558.mp4",
-   "ko": "(5:58)",
-   "en": "(5:58 PM)"
+   "file": "ep02/s11-clock559.mp4",
+   "ko": "(5:59)",
+   "en": "(5:59 PM)"
   },
   {
    "file": "ep02/s12-butter-wine.mp4",
-   "ko": "아님 와인~? 분위기 있게~?",
-   "en": "Or wine~? Something romantic~?"
-  },
-  {
-   "file": "ep02/s13-gyul-tiny.mp4",
-   "ko": "그게요오…",
-   "en": "Well, you see…"
+   "ko": "어머나~ 갈비도 맛있겠다~",
+   "en": "Ooh~ galbi sounds good too~"
   },
   {
    "file": "ep02/s14-clock600.mp4",
    "subs": [
     [
      0,
-     3.0,
+     2.0,
      "(5:59…)",
      "(5:59…)"
     ],
     [
-     3.0,
+     2.0,
      99,
      "(땡!)",
      "(DING!)"
@@ -108,8 +103,8 @@
   },
   {
    "file": "ep02/s15-butter-dream.mp4",
-   "ko": "그럼 7시에 거기서 보자~ 은서 씨?",
-   "en": "See you there at 7~ Eunseo?"
+   "ko": "은서 씨, 어때~?",
+   "en": "Eunseo, how about it~?"
   },
   {
    "file": "ep02/s16-empty.mp4",
@@ -158,24 +153,6 @@
    1.0
   ],
   [
-   "voice/ep02/lines/l12-use.wav",
-   "s12-butter-wine",
-   0.3,
-   1.0
-  ],
-  [
-   "voice/ep02/lines/l15-use.wav",
-   "s15-butter-dream",
-   0.15,
-   1.0
-  ],
-  [
-   "voice/ep02/lines/l17-use.wav",
-   "s17-butter-frozen",
-   0.6,
-   1.0
-  ],
-  [
    "voice/ep02/gyul-hmm/H2-use.wav",
    "s2-gyul-monitor",
    1.2,
@@ -186,6 +163,30 @@
    "s4-butter-face",
    0.0,
    0.45
+  ],
+  [
+   "voice/ep02/gyul-lines/s10-1-use.wav",
+   "s10-gyul-zip",
+   0.2,
+   1.0
+  ],
+  [
+   "voice/ep02/butter-lines/s12-1-use.wav",
+   "s12-butter-wine",
+   0.15,
+   1.0
+  ],
+  [
+   "voice/ep02/butter-lines/s15-1-use.wav",
+   "s15-butter-dream",
+   0.2,
+   1.0
+  ],
+  [
+   "voice/ep02/butter-lines/s17-1-use.wav",
+   "s17-butter-frozen",
+   0.5,
+   1.0
   ]
  ]
 }
