@@ -129,9 +129,19 @@
  "watermark": "@byeoltoon",
  "sfx": [
   [
+   "brand/bgm/daily-comedy.m4a",
+   "s1-clock",
+   0,
+   0.14,
+   7.0,
+   0.5,
+   1.6,
+   3.0
+  ],
+  [
    "sfx/anime/wind-syn.wav",
    "s16-empty",
-   0.1,
+   0.0,
    0.6
   ],
   [

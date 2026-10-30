@@ -154,7 +154,7 @@ def ttaeng():                                       # 땡!: 쇠종 한 번 세�
 
 
 def wind():                                         # 휘잉: 짧은 바람 한 줄기 (빈자리 · 혁 10/30)
-    d = 1.9; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.sin(np.pi * t / d) ** 1.2 * (1 + 0.25 * np.sin(2 * np.pi * 2.6 * t))   # 10/30: 0.8초 더 길게
+    d = 3.0; t = t_(d); n = rng.normal(0, 1, len(t)); env = np.minimum(1, t / 0.5) * np.minimum(1, (d - t) / 0.9) * (1 + 0.25 * np.sin(2 * np.pi * 2.2 * t))   # 10/30: 빈자리 장면(3초) 내내
     y = np.zeros_like(n); f = 500 + 900 * np.sin(np.pi * t / d); a = 0.0; lp = 0.0; bp = 0.0
     for i in range(len(n)):                                       # 움직이는 공진 필터 (바람 '휘~' 음높이 올라갔다 내려감)
         w = 2 * np.pi * f[i] / SR; lp += w * bp; hp = n[i] - lp - 0.12 * bp; bp += w * hp; y[i] = bp
