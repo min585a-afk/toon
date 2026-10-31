@@ -1,10 +1,9 @@
 {
  "cuts": [
   {
-   "file": "ep02/s1-clock.mp4",
-   "ko": "현재시간 5:55",
-   "en": "(5:55 PM)",
-   "sec": 1.2
+   "file": "ep02/s1-clock558.mp4",
+   "ko": "현재시간 5:58",
+   "en": "(5:58 PM)"
   },
   {
    "file": "ep02/s3-butter-back.mp4",
@@ -52,8 +51,8 @@
   },
   {
    "file": "ep02/s8-gyul-haha.mp4",
-   "ko": "- 하하…",
-   "en": "- Ha… haha…"
+   "ko": "(퇴근인데?..)",
+   "en": "(but it's quitting time?..)"
   },
   {
    "file": "ep02/s9-butter-menu.mp4",
@@ -161,7 +160,7 @@
   ],
   [
    "brand/bgm/daily-comedy.m4a",
-   "s1-clock",
+   "s1-clock558",
    0,
    0.14,
    6.0,
