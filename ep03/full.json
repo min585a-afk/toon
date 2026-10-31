@@ -42,8 +42,20 @@
   },
   {
    "file": "ep03/s4-number.mp4",
-   "ko": "- 내가 남자였으면 바로 번호 땄어!",
-   "en": "- If I were a guy, I'd ask for your number!"
+   "subs": [
+    [
+     0,
+     1.4,
+     "- 내가 남자였으면",
+     "- If I were a guy…"
+    ],
+    [
+     1.4,
+     99,
+     "- 바로 번호 땄어!",
+     "- I'd get your number!"
+    ]
+   ]
   },
   {
    "file": "ep03/s5-work.mp4",
@@ -52,9 +64,8 @@
   },
   {
    "file": "ep03/s6-bride.mp4",
-   "ko": "- 1등 신부감이야!",
-   "en": "- You're total wife material!",
-   "sec": 2.2
+   "ko": "- 1등 신붓감이야!",
+   "en": "- You're total wife material!"
   },
   {
    "file": "ep03/s8-mirror.mp4",
@@ -109,18 +120,6 @@
    "sfx/anime/shutter-syn.wav",
    "s3-fashion",
    1.5,
-   0.45
-  ],
-  [
-   "sfx/anime/shutter-syn.wav",
-   "s3-fashion",
-   2.2,
-   0.45
-  ],
-  [
-   "sfx/anime/shutter-syn.wav",
-   "s3-fashion",
-   2.7,
    0.45
   ],
   [
