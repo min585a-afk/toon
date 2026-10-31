@@ -1,6 +1,6 @@
 {
- "reel_title": "내가 |조언해줄게",
- "reel_title_en": "LET ME GIVE YOU |ADVICE",
+ "reel_title": "자신감을 |가져!",
+ "reel_title_en": "BE |CONFIDENT!",
  "title_color": "#6dffd9",
  "watermark": "@byeoltoon",
  "cuts": [
@@ -26,7 +26,7 @@
      "- You're more than enough!"
     ]
    ],
-   "sec": 5.4
+   "sec": 5.2
   },
   {
    "file": "ep03/s2-sharala.mp4",
@@ -84,13 +84,13 @@
   [
    "voice/ep03/take-face.wav",
    "s2-sharala",
-   0.2,
+   0.05,
    1.0
   ],
   [
    "voice/ep03/take-cloth.wav",
    "s3-fashion",
-   0.15,
+   0.05,
    1.0
   ],
   [
@@ -124,15 +124,9 @@
    0.45
   ],
   [
-   "sfx/anime/heartbeat-syn.wav",
-   "s4-number",
-   0.0,
-   0.35
-  ],
-  [
    "voice/ep03/take-number.wav",
    "s4-number",
-   0.25,
+   0.05,
    1.0
   ],
   [
@@ -144,7 +138,7 @@
   [
    "voice/ep03/take-work.wav",
    "s5-work",
-   0.15,
+   0.05,
    1.0
   ],
   [
@@ -162,7 +156,7 @@
   [
    "voice/ep03/take-bride.wav",
    "s6-bride",
-   0.2,
+   0.05,
    1.0
   ],
   [
