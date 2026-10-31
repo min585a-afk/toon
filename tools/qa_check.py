@@ -10,7 +10,7 @@ spec, video = json.load(open(sys.argv[1])), sys.argv[2]; FPS, bad = 24, []
 dur = lambda p: float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p], capture_output=True, text=True).stdout)
 st, t = {}, 0.0
 for c in spec['cuts']:
-    n = c['file'].split('/')[-1][:-4]; st[n] = (t, round(dur(c['file']) * FPS) / FPS); t += st[n][1]
+    n = c['file'].split('/')[-1][:-4]; st[n] = (t, round((c.get('sec') or dur(c['file'])) * FPS) / FPS); t += st[n][1]
 # 1) 가운데
 cap = cv2.VideoCapture(video)
 for n, (a, d) in st.items():
