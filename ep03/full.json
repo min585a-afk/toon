@@ -9,24 +9,24 @@
    "subs": [
     [
      0,
-     2.46,
+     2.5,
      "- 흐음……",
      "- Hmm……"
     ],
     [
-     2.46,
+     2.5,
      3.3,
-     "- 아니야!",
-     "- Nope!"
+     "- 아니야…",
+     "- Nope…"
     ],
     [
      3.3,
      99,
-     "- 너는 부족한 게 없어!",
-     "- You're not lacking anything!"
+     "- 넌 부족하지 않아!",
+     "- You're more than enough!"
     ]
    ],
-   "sec": 6.1
+   "sec": 5.4
   },
   {
    "file": "ep03/s2-sharala.mp4",
@@ -72,7 +72,7 @@
   [
    "voice/ep03/s1-place.wav",
    "s1-think-talk",
-   0.45,
+   0.4,
    1.0
   ],
   [
@@ -82,13 +82,13 @@
    0.3
   ],
   [
-   "voice/ep03/s2-1-use.wav",
+   "voice/ep03/take-face.wav",
    "s2-sharala",
    0.2,
    1.0
   ],
   [
-   "voice/ep03/s3-1-use.wav",
+   "voice/ep03/take-cloth.wav",
    "s3-fashion",
    0.15,
    1.0
@@ -130,7 +130,7 @@
    0.35
   ],
   [
-   "voice/ep03/s4-1-use.wav",
+   "voice/ep03/take-number.wav",
    "s4-number",
    0.25,
    1.0
@@ -142,9 +142,9 @@
    0.35
   ],
   [
-   "voice/ep03/s5-1-use.wav",
+   "voice/ep03/take-work.wav",
    "s5-work",
-   0.2,
+   0.15,
    1.0
   ],
   [
@@ -160,7 +160,7 @@
    0.25
   ],
   [
-   "voice/ep03/s6-1-use.wav",
+   "voice/ep03/take-bride.wav",
    "s6-bride",
    0.2,
    1.0
@@ -172,9 +172,9 @@
    0.45
   ],
   [
-   "voice/ep03/s8-1-use.wav",
+   "voice/ep03/take-go.wav",
    "s8-mirror",
-   0.45,
+   0.25,
    1.0
   ],
   [
