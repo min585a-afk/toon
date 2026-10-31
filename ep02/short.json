@@ -61,6 +61,11 @@
    "en": "(5:59 PM)"
   },
   {
+   "file": "ep02/s12-butter-wine.mp4",
+   "ko": "- 어머나~ 갈비도 맛있겠다~",
+   "en": "- Oh~ I like LA galbi~"
+  },
+  {
    "file": "ep02/s14-clock600.mp4",
    "subs": [
     [
@@ -158,6 +163,18 @@
    0.5,
    1.4,
    3.0
+  ],
+  [
+   "voice/ep02/butter-lines/s12-1-use.wav",
+   "s12-butter-wine",
+   0.15,
+   1.0
+  ],
+  [
+   "sfx/anime/pyororong-syn.wav",
+   "s12-butter-wine",
+   3.05,
+   0.4
   ]
  ]
 }
