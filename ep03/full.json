@@ -1,6 +1,6 @@
 {
- "reel_title": "",
- "reel_title_en": "",
+ "reel_title": "내가 |조언해줄게",
+ "reel_title_en": "LET ME GIVE YOU |ADVICE",
  "title_color": "#6dffd9",
  "watermark": "@byeoltoon",
  "cuts": [
@@ -25,17 +25,20 @@
      "- 너는 부족한 게 없어!",
      "- You're not lacking anything!"
     ]
-   ]
+   ],
+   "sec": 6.1
   },
   {
    "file": "ep03/s2-sharala.mp4",
    "ko": "- 얼굴도 이쁘지~",
-   "en": "- So pretty~"
+   "en": "- So pretty~",
+   "sec": 2.7
   },
   {
    "file": "ep03/s3-fashion.mp4",
    "ko": "- 옷도 잘 입지!",
-   "en": "- Great style, too!"
+   "en": "- Great style, too!",
+   "sec": 2.0
   },
   {
    "file": "ep03/s4-number.mp4",
@@ -50,37 +53,26 @@
   {
    "file": "ep03/s6-bride.mp4",
    "ko": "- 1등 신부감이야!",
-   "en": "- You're total wife material!"
+   "en": "- You're total wife material!",
+   "sec": 2.2
   },
   {
-   "file": "ep03/s10-door.mp4",
-   "subs": [
-    [
-     0,
-     5.17,
-     "- 모과야, 다녀올게!",
-     "- Mogwa, I'm off!"
-    ],
-    [
-     5.17,
-     7.42,
-     "",
-     ""
-    ],
-    [
-     7.42,
-     99,
-     "(왜 저래…)",
-     "(what's up with her…)"
-    ]
-   ]
+   "file": "ep03/s8-mirror.mp4",
+   "ko": "- 좋아, 출근하자!",
+   "en": "- Alright, off to work!"
+  },
+  {
+   "file": "ep03/e-end.mp4",
+   "ko": "",
+   "en": "",
+   "no_title": true
   }
  ],
  "sfx": [
   [
    "voice/ep03/s1-place.wav",
    "s1-think-talk",
-   0.0,
+   0.45,
    1.0
   ],
   [
@@ -174,10 +166,22 @@
    1.0
   ],
   [
-   "voice/ep03/s10-2-use.wav",
-   "s10-door",
-   0.35,
+   "sfx/anime/whoosh-syn.wav",
+   "s8-mirror",
+   0.0,
+   0.45
+  ],
+  [
+   "voice/ep03/s8-1-use.wav",
+   "s8-mirror",
+   0.45,
    1.0
+  ],
+  [
+   "sfx/anime/tiring-syn.wav",
+   "e-end",
+   0.35,
+   0.45
   ]
  ]
 }
