@@ -66,12 +66,12 @@
    "file": "ep03/s6-bride.mp4",
    "ko": "- 1등 신붓감이야!",
    "en": "- You're total wife material!",
-   "sec": 2.2
+   "sec": 2.0
   },
   {
    "file": "ep03/s8-mirror.mp4",
-   "ko": "- 좋아, 출근하자!",
-   "en": "- Alright, off to work!"
+   "ko": "- 좋아! 출근하자!",
+   "en": "- Okay! Off to work!"
   },
   {
    "file": "ep03/e-end.mp4",
@@ -176,6 +176,22 @@
    "e-end",
    0.35,
    0.45
+  ],
+  [
+   "brand/bgm/daily-comedy.m4a",
+   "s1-think-talk",
+   0,
+   0.12,
+   6.0,
+   0.5,
+   1.5,
+   3.0
+  ],
+  [
+   "sfx/anime/poyon-syn.wav",
+   "s8-mirror",
+   0.95,
+   0.4
   ]
  ]
 }
