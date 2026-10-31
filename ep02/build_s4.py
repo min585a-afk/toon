@@ -22,7 +22,8 @@ def src(t):                                                      # 출력 시간
     if t < s0: return int(t * vf)
     if t < s0 + VLEN: return int(M0 + (t - s0) / VLEN * (M1 - M0))
     return int(M1 + (t - s0 - VLEN) * vf)
-n = int((M0 / vf + VLEN + (len(v) - M1) / vf) * FPS); tmp = tempfile.mkdtemp()
+TAIL = len(v) - M1 - 6                                           # 10/31 혁: 대사 뒤 0.25초 줄임
+n = int((M0 / vf + VLEN + TAIL / vf) * FPS); tmp = tempfile.mkdtemp()
 STARS = [(735, 70, 0.0), (300, 160, 0.35), (820, 330, 0.7)]
 for k in range(n):
     t = (k - k % 2) / FPS; fr = v[min(len(v) - 1, src(t))].copy()
