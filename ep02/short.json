@@ -89,10 +89,9 @@
    "sec": 2.3
   },
   {
-   "file": "ep02/s15-butter-dream.mp4",
+   "file": "ep02/s15-butter-dream-short.mp4",
    "ko": "- 은서 씨, 어때~?",
-   "en": "- Eunseo, how about it~?",
-   "sec": 3.2
+   "en": "- Eunseo, how about it~?"
   },
   {
    "file": "ep02/s16-empty.mp4",
@@ -125,7 +124,7 @@
   ],
   [
    "sfx/anime/kirakira-syn.wav",
-   "s15-butter-dream",
+   "s15-butter-dream-short",
    0.1,
    0.25
   ],
@@ -148,8 +147,8 @@
    0.45
   ],
   [
-   "voice/ep02/butter-lines/s15-1-use.wav",
-   "s15-butter-dream",
+   "voice/ep02/butter-lines/s15-1-tight.wav",
+   "s15-butter-dream-short",
    0.2,
    1.0
   ],
